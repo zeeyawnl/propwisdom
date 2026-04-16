@@ -10,7 +10,7 @@ import {
   count,
 } from "drizzle-orm";
 
-import type { PropertyQuery, CreatePropertyInput } from "@/lib/validators/property";
+import type { PropertyQuery, CreatePropertyInput } from "@/lib/validations/property";
 
 // ✅ SORT MAP (clean + scalable)
 const SORT_MAP = {
@@ -70,7 +70,7 @@ export async function getProperties(filters: PropertyQuery) {
   };
 }
 
-export async function createProperty(data: CreatePropertyInput & { id: string }) {
+export async function createProperty(data: CreatePropertyInput & { id: string; userId: string }) {
   const [result] = await db.insert(properties).values(data as any).returning();
   return result;
 }

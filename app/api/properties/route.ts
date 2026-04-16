@@ -1,53 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProperties, createProperty } from "@/lib/db/properties";
-import { CreatePropertySchema, PropertyQuerySchema } from "@/lib/validators/property";
+import { CreatePropertySchema, PropertyQuerySchema } from "@/lib/validations/property";
+import { createProperty, getProperties } from "@/lib/db/properties";
+import { requireAuth, requireAdmin } from "@/lib/auth/getUser";
 import { v4 as uuid } from "uuid";
 
+// ── GET /api/properties → public, anyone can read ──────────────────────────
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = req.nextUrl;
 
-    const parsed = PropertyQuerySchema.safeParse(
-      Object.fromEntries(searchParams.entries())
-    );
+    const queryResult = PropertyQuerySchema.safeParse({
+      page: searchParams.get("page"),
+      limit: searchParams.get("limit"),
+      sort: searchParams.get("sort"),
+      type: searchParams.get("type"),
+      location: searchParams.get("location"),
+      listingType: searchParams.get("listingType"),
+      min: searchParams.get("min"),
+      max: searchParams.get("max"),
+    });
 
-    if (!parsed.success) {
+    if (!queryResult.success) {
       return NextResponse.json(
-        { error: "Invalid query params", details: parsed.error.flatten() },
+        { error: "Invalid query parameters", details: queryResult.error.flatten() },
         { status: 400 }
       );
     }
 
-    const result = await getProperties(parsed.data);
+    const result = await getProperties(queryResult.data);
+    return NextResponse.json(result, { status: 200 });
 
-    return NextResponse.json(result);
   } catch (error) {
-    console.error("GET ERROR:", error);
-    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
+    console.error("[GET /api/properties]", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-export async function POST(request: NextRequest) {
+// ── POST /api/properties → admin only ──────────────────────────────────────
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const validatedData = CreatePropertySchema.safeParse(body);
+    // 1. Auth check
+    const { user, response } = await requireAdmin();
+    if (response || !user) return response!;
 
-    if (!validatedData.success) {
+    // 2. Parse + validate body
+    const body = await req.json();
+    const parsed = CreatePropertySchema.safeParse(body);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: validatedData.error.flatten() },
+        { error: "Validation failed", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
 
-    const data = validatedData.data;
-    const newProperty = await createProperty({ id: uuid(), ...data });
-    
-    return NextResponse.json(newProperty, { status: 201 });
+    // 3. Attach owner + generate ID
+    const property = await createProperty({
+      id: uuid(),
+      ...parsed.data,
+      userId: user.id,
+    });
+
+    return NextResponse.json(property, { status: 201 });
+
   } catch (error) {
-    console.error("REAL ERROR (POST):", error);
-    return NextResponse.json(
-      { error: "Failed to create property" },
-      { status: 500 }
-    );
+    console.error("[POST /api/properties]", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

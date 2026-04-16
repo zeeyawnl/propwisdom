@@ -20,5 +20,6 @@ export const properties = pgTable("properties", {
   images: text("images").array(),
   featured: boolean("featured").default(false).notNull(),
   status: text("status").default("available"),
+  userId: text("user_id").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
