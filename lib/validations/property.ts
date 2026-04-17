@@ -16,6 +16,8 @@ export const CreatePropertySchema = z.object({
     .number()
     .positive("Price must be a positive number"),
 
+  priceLabel: z.string().optional(),
+
   location: z.string().min(2, "Location required"),
 
   type: z.enum(["apartment", "villa", "plot", "commercial"]),

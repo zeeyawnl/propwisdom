@@ -76,8 +76,9 @@ export async function createProperty(data: CreatePropertyInput & { id: string; u
 }
 
 export async function getPropertyById(id: string) {
-  const [result] = await db.select().from(properties).where(eq(properties.id, id)).limit(1);
-  return result;
+  return db.query.properties.findFirst({
+    where: eq(properties.id, id),
+  });
 }
 
 export async function updateProperty(id: string, data: any) {
