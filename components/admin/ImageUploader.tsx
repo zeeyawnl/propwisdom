@@ -1,162 +1,130 @@
 "use client";
 
 import { useRef } from "react";
-import { useImageUpload, type UploadedImage } from "@/hooks/useImageUpload";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 type ImageUploaderProps = {
-  initialImages?: UploadedImage[];
-  onChange: (urls: string[]) => void; // called whenever the image list changes
+  value: string[]; // controlled array of URLs
+  onChange: (urls: string[]) => void;
 };
 
-export default function ImageUploader({ initialImages = [], onChange }: ImageUploaderProps) {
+export default function ImageUploader({ value = [], onChange }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { images, uploading, uploadErrors, progress, upload, remove } = useImageUpload(
-    initialImages
-  );
+  const { uploadImages, uploading } = useImageUpload();
 
-  // Notify parent whenever the image list changes
-  function handleUpload(files: FileList | null) {
-    upload(files).then(() => {
-      // After upload completes the hook state is updated; we'll notify via useEffect
-    });
+  async function handleUpload(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) return;
+
+    try {
+      const newUrls = await uploadImages(fileList);
+      onChange([...value, ...newUrls]);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("One or more images failed to upload.");
+    }
   }
 
-  // Keep parent in sync every render where images change
-  // (We use a callback ref pattern — simple and reliable)
-  onChange(images.map((img) => img.url));
+  function removeImage(url: string) {
+    // 1. Notify parent immediately (Optimistic UI)
+    const next = value.filter((imgUrl) => imgUrl !== url);
+    onChange(next);
+
+    // 2. Optional: Extract publicId and cleanup Cloudinary
+    const publicId = extractPublicId(url);
+    if (publicId && publicId !== url) {
+      fetch("/api/cloudinary-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicIds: [publicId] }),
+      }).catch((err) => console.warn("Background delete failed:", err));
+    }
+  }
 
   return (
     <div className="space-y-4">
-      {/* ── Drop zone / trigger ─────────────────────────────────────────── */}
+      {/* ── Drop Zone ───────────────────────────────────────────────────── */}
       <div
+        onClick={() => !uploading && inputRef.current?.click()}
         className={`
-          relative flex flex-col items-center justify-center gap-2
-          border-2 border-dashed rounded-2xl px-6 py-8 cursor-pointer
+          relative flex flex-col items-center justify-center gap-3
+          border-2 border-dashed rounded-2xl px-6 py-10 cursor-pointer
           transition-all duration-200
-          ${uploading
-            ? "border-indigo-400 bg-indigo-50 cursor-not-allowed"
-            : "border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40"
+          ${
+            uploading
+              ? "border-indigo-400 bg-indigo-50/50 cursor-not-allowed"
+              : "border-slate-300 hover:border-indigo-500 hover:bg-slate-50/50"
           }
         `}
-        onClick={() => !uploading && inputRef.current?.click()}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          if (!uploading) handleUpload(e.dataTransfer.files);
-        }}
       >
         <input
           ref={inputRef}
           type="file"
           multiple
-          accept="image/jpeg,image/png,image/webp,image/avif"
+          accept="image/*"
           className="hidden"
           onChange={(e) => handleUpload(e.target.files)}
           disabled={uploading}
         />
 
-        {/* Icon */}
-        <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center">
-          <svg
-            className="w-6 h-6 text-indigo-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
-            />
-          </svg>
+        <div className="w-14 h-14 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-600">
+          {uploading ? (
+            <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+            </svg>
+          )}
         </div>
 
-        {uploading ? (
-          <div className="text-center space-y-2 w-full max-w-xs">
-            <p className="text-sm font-semibold text-indigo-600">Uploading…</p>
-            <div className="w-full bg-indigo-100 rounded-full h-2">
-              <div
-                className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="text-xs text-indigo-400">{progress}%</p>
-          </div>
-        ) : (
-          <div className="text-center">
-            <p className="text-sm font-semibold text-slate-700">
-              Click or drag &amp; drop images
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              JPEG, PNG, WebP, AVIF · Max 5 MB per file · Up to 10 images
-            </p>
-          </div>
-        )}
+        <div className="text-center">
+          <p className="text-sm font-bold text-slate-900">
+            {uploading ? "Uploading images..." : "Add property photos"}
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            JPEG, PNG or WebP · Up to 5MB
+          </p>
+        </div>
       </div>
 
-      {/* ── Errors ─────────────────────────────────────────────────────────── */}
-      {uploadErrors.length > 0 && (
-        <ul className="space-y-1">
-          {uploadErrors.map((err, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"
+      {/* ── Preview Grid ────────────────────────────────────────────────── */}
+      {value.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {value.map((url, i) => (
+            <div
+              key={`${url}-${i}`}
+              className="relative aspect-video rounded-xl overflow-hidden bg-slate-100 group border border-slate-200"
             >
-              <span className="mt-0.5">⚠️</span>
-              <span>
-                {err.file && <strong>{err.file}: </strong>}
-                {err.reason}
-              </span>
-            </li>
+              <img src={url} className="w-full h-full object-cover" alt="Property" />
+              
+              <button
+                type="button"
+                onClick={() => removeImage(url)}
+                className="absolute top-2 right-2 bg-black/60 hover:bg-red-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              {i === 0 && (
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest">Cover</span>
+                </div>
+              )}
+            </div>
           ))}
-        </ul>
-      )}
-
-      {/* ── Preview grid ───────────────────────────────────────────────────── */}
-      {images.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">
-            {images.length} / 10 images
-          </p>
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-            {images.map((img, i) => (
-              <div key={img.publicId} className="relative group rounded-xl overflow-hidden aspect-video bg-slate-100 shadow-sm">
-                {/* Badge for first image */}
-                {i === 0 && (
-                  <span className="absolute top-1 left-1 z-10 text-[10px] font-bold bg-indigo-600 text-white px-1.5 py-0.5 rounded-md">
-                    Cover
-                  </span>
-                )}
-
-                <img
-                  src={img.url}
-                  alt={`Property image ${i + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-                />
-
-                {/* Remove button */}
-                <button
-                  type="button"
-                  onClick={() => remove(img.publicId)}
-                  className="
-                    absolute top-1 right-1 z-10
-                    w-6 h-6 rounded-full
-                    bg-black/60 hover:bg-red-600
-                    text-white text-xs
-                    flex items-center justify-center
-                    opacity-0 group-hover:opacity-100
-                    transition-all duration-150
-                  "
-                  title="Remove image"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </div>
   );
+}
+
+function extractPublicId(url: string): string {
+  try {
+    const parts = url.split("/upload/");
+    if (parts.length < 2) return "";
+    return parts[1].replace(/^v\d+\//, "").replace(/\.[^/.]+$/, "");
+  } catch {
+    return "";
+  }
 }

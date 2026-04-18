@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/admin/ImageUploader";
 
@@ -26,6 +26,7 @@ type FormData = {
   type: string;
   listingType: string;
   description: string;
+  images: string[];
 };
 
 const TYPES = ["apartment", "villa", "plot", "commercial"];
@@ -42,17 +43,13 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     location: initial?.location ?? "",
     type: initial?.type ?? "apartment",
     listingType: initial?.listingType ?? "rent",
+    images: initial?.images || [],
   });
-
-  // Images managed by ImageUploader — we keep a ref to the latest URL list
-  const imageUrlsRef = useRef<string[]>(
-    initial?.images?.filter(Boolean) ?? []
-  );
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function updateField(key: keyof FormData, value: string | number) {
+  function updateField(key: keyof FormData, value: string | number | string[]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -65,7 +62,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       const payload = {
         ...form,
         price: Number(form.price),
-        images: imageUrlsRef.current,
+        priceLabel: form.priceLabel || null,
       };
 
       const res = await fetch(
@@ -89,15 +86,6 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       setLoading(false);
     }
   }
-
-  // Reconstruct initial images into UploadedImage[] shape for the uploader
-  // For existing properties, we derive publicId from the Cloudinary URL
-  const initialUploadedImages = (initial?.images ?? [])
-    .filter(Boolean)
-    .map((url) => ({
-      url,
-      publicId: extractPublicId(url),
-    }));
 
   return (
     <form
@@ -207,16 +195,14 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
           />
         </div>
 
-        {/* ── Image Upload Section ─────────────────────────────────────── */}
+        {/* ── 2. Image Upload Section (Controlled) ─────────────────────── */}
         <div>
           <label className="block text-sm font-bold text-slate-950 mb-2">
             Property Images
           </label>
-          <ImageUploader
-            initialImages={initialUploadedImages}
-            onChange={(urls) => {
-              imageUrlsRef.current = urls;
-            }}
+          <ImageUploader 
+            value={form.images || []} 
+            onChange={(imgs) => updateField("images", imgs)} 
           />
         </div>
       </div>
@@ -240,18 +226,4 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       </div>
     </form>
   );
-}
-
-// ── Utility: extract Cloudinary public_id from a secure_url ─────────────────
-// e.g. https://res.cloudinary.com/demo/image/upload/v1234/properties/abc.jpg
-// → "properties/abc"
-function extractPublicId(url: string): string {
-  try {
-    const parts = url.split("/upload/");
-    if (parts.length < 2) return url;
-    const path = parts[1].replace(/^v\d+\//, "").replace(/\.[^/.]+$/, "");
-    return path;
-  } catch {
-    return url;
-  }
 }
