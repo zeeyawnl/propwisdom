@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import { getPropertyById, updateProperty, deleteProperty } from "@/lib/db/properties";
 import { UpdatePropertySchema } from "@/lib/validations/property";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

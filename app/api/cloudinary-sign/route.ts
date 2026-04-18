@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { requireAdmin } from "@/lib/auth/getUser";
 
+export const dynamic = "force-dynamic";
+
 // POST /api/cloudinary-sign
 // Admin-only. Returns a signed upload signature so the client can upload
 // directly to Cloudinary without exposing the API secret.

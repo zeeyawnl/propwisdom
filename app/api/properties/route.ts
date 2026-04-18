@@ -3,6 +3,8 @@ import { getPropertyById, updateProperty, deleteProperty } from "@/lib/db/proper
 import { UpdatePropertySchema } from "@/lib/validations/property";
 import crypto from "crypto";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

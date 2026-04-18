@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { requireAdmin } from "@/lib/auth/getUser";
 
+export const dynamic = "force-dynamic";
+
 // POST /api/cloudinary-delete
 // Admin-only. Deletes one or more images from Cloudinary by public_id.
 // Called automatically when a property is deleted.
