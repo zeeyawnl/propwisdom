@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
 
     // 2. Validate env vars
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
-    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 
     if (!apiSecret || !apiKey || !cloudName) {
       return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     // 4. HMAC-SHA1 signature (Cloudinary standard)
     const signature = crypto
-      .createHash("sha256")
+      .createHash("sha1")
       .update(paramsToSign + apiSecret)
       .digest("hex");
 

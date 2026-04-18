@@ -71,12 +71,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
-    // 3. Clean up Cloudinary images (non-blocking — fire and forget)
+    // 3. Clean up Cloudinary images (Blocking to prevent orphaned files)
     const imageUrls: string[] = (property.images ?? []).filter(Boolean) as string[];
     if (imageUrls.length > 0) {
-      deleteCloudinaryImages(imageUrls).catch((err) =>
-        console.warn("[DELETE] Cloudinary cleanup failed:", err)
-      );
+      await deleteCloudinaryImages(imageUrls);
     }
 
     return NextResponse.json({ message: "Property deleted successfully" });
@@ -89,8 +87,8 @@ export async function DELETE(
 // ── Helper: delete images from Cloudinary on the server ─────────────────────
 async function deleteCloudinaryImages(urls: string[]) {
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
-  const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 
   if (!apiSecret || !apiKey || !cloudName) return;
 
@@ -100,8 +98,9 @@ async function deleteCloudinaryImages(urls: string[]) {
     publicIds.map(async (publicId) => {
       const timestamp = Math.round(Date.now() / 1000);
       const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}`;
+
       const signature = crypto
-        .createHash("sha256")
+        .createHash("sha1")
         .update(paramsToSign + apiSecret)
         .digest("hex");
 
