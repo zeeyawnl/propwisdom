@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 type PropertyFormProps = {
   initial?: {
@@ -12,8 +13,9 @@ type PropertyFormProps = {
     location?: string;
     type?: string;
     listingType?: string;
+    images?: string[];
   };
-  id?: string; // if exists → edit mode
+  id?: string;
 };
 
 type FormData = {
@@ -42,6 +44,11 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     listingType: initial?.listingType ?? "rent",
   });
 
+  // Images managed by ImageUploader — we keep a ref to the latest URL list
+  const imageUrlsRef = useRef<string[]>(
+    initial?.images?.filter(Boolean) ?? []
+  );
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +62,11 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     setError(null);
 
     try {
-      const payload = form;
+      const payload = {
+        ...form,
+        price: Number(form.price),
+        images: imageUrlsRef.current,
+      };
 
       const res = await fetch(
         id ? `/api/properties/${id}` : "/api/properties",
@@ -71,23 +82,35 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
 
       router.push("/admin/properties");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Failed to save property");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to save property";
+      setError(message);
     } finally {
       setLoading(false);
     }
   }
 
+  // Reconstruct initial images into UploadedImage[] shape for the uploader
+  // For existing properties, we derive publicId from the Cloudinary URL
+  const initialUploadedImages = (initial?.images ?? [])
+    .filter(Boolean)
+    .map((url) => ({
+      url,
+      publicId: extractPublicId(url),
+    }));
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-xl mx-auto space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-slate-200"
+      className="max-w-2xl mx-auto space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-slate-200"
     >
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
           {id ? "Edit Property" : "Add Property Listing"}
         </h2>
-        <p className="text-slate-950 text-sm font-semibold">Submit property details below to update or create a listing.</p>
+        <p className="text-slate-950 text-sm font-semibold">
+          Submit property details below to update or create a listing.
+        </p>
       </div>
 
       {error && (
@@ -135,15 +158,15 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         </div>
 
         <div>
-           <label className="block text-sm font-bold text-slate-950 mb-1">Location</label>
-            <input
-              type="text"
-              placeholder="e.g. Pune"
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
-              value={form.location}
-              onChange={(e) => updateField("location", e.target.value)}
-              required
-            />
+          <label className="block text-sm font-bold text-slate-950 mb-1">Location</label>
+          <input
+            type="text"
+            placeholder="e.g. Pune"
+            className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+            value={form.location}
+            onChange={(e) => updateField("location", e.target.value)}
+            required
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -155,9 +178,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
               className="w-full px-4 py-3 rounded-xl border border-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
             >
               {TYPES.map((t) => (
-                <option key={t} value={t} className="capitalize">
-                  {t}
-                </option>
+                <option key={t} value={t} className="capitalize">{t}</option>
               ))}
             </select>
           </div>
@@ -169,9 +190,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
             >
               {LISTING_TYPES.map((t) => (
-                <option key={t} value={t} className="capitalize">
-                  {t.replace('_', ' ')}
-                </option>
+                <option key={t} value={t} className="capitalize">{t.replace("_", " ")}</option>
               ))}
             </select>
           </div>
@@ -180,11 +199,24 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         <div>
           <label className="block text-sm font-bold text-slate-950 mb-1">Description</label>
           <textarea
-            placeholder="Briefly describe the property..."
+            placeholder="Briefly describe the property…"
             value={form.description}
             onChange={(e) => updateField("description", e.target.value)}
             rows={4}
             className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+          />
+        </div>
+
+        {/* ── Image Upload Section ─────────────────────────────────────── */}
+        <div>
+          <label className="block text-sm font-bold text-slate-950 mb-2">
+            Property Images
+          </label>
+          <ImageUploader
+            initialImages={initialUploadedImages}
+            onChange={(urls) => {
+              imageUrlsRef.current = urls;
+            }}
           />
         </div>
       </div>
@@ -195,7 +227,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
           disabled={loading}
           className="flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 shadow-md transition-all active:scale-95 disabled:bg-slate-300"
         >
-          {loading ? "Processing..." : id ? "Update Property" : "Create Listing"}
+          {loading ? "Processing…" : id ? "Update Property" : "Create Listing"}
         </button>
 
         <button
@@ -208,4 +240,18 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       </div>
     </form>
   );
+}
+
+// ── Utility: extract Cloudinary public_id from a secure_url ─────────────────
+// e.g. https://res.cloudinary.com/demo/image/upload/v1234/properties/abc.jpg
+// → "properties/abc"
+function extractPublicId(url: string): string {
+  try {
+    const parts = url.split("/upload/");
+    if (parts.length < 2) return url;
+    const path = parts[1].replace(/^v\d+\//, "").replace(/\.[^/.]+$/, "");
+    return path;
+  } catch {
+    return url;
+  }
 }
