@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/admin/ImageUploader";
 
@@ -49,6 +49,22 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // CRITICAL FIX: Sync initial props to state if they arrive late
+  useEffect(() => {
+    if (initial) {
+      setForm({
+        title: initial.title ?? "",
+        description: initial.description ?? "",
+        price: initial.price ?? 0,
+        priceLabel: initial.priceLabel ?? "",
+        location: initial.location ?? "",
+        type: initial.type ?? "apartment",
+        listingType: initial.listingType ?? "rent",
+        images: initial.images ?? [],
+      });
+    }
+  }, [initial]);
+
   function updateField(key: keyof FormData, value: string | number | string[]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
@@ -59,6 +75,12 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     setError(null);
 
     try {
+      // FRONTEND VALIDATION
+      if (!form.title.trim()) throw new Error("Title is required");
+      if (!form.location.trim()) throw new Error("Location is required");
+      if (form.price <= 0) throw new Error("Price must be greater than 0");
+      if (form.images.length === 0) throw new Error("At least 1 image is required");
+
       const payload = {
         ...form,
         price: Number(form.price),
@@ -129,7 +151,6 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
               value={form.priceLabel}
               onChange={(e) => updateField("priceLabel", e.target.value)}
-              required
             />
           </div>
           <div>
