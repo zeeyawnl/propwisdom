@@ -10,6 +10,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-teal-forest: #174E4F;
+  --color-vanilla-latte: #F3E5C3;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +25,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes subtle-zoom {
+  from { transform: scale(1.05); }
+  to { transform: scale(1); }
+}
+
+.animate-subtle-zoom {
+  animation: subtle-zoom 10s ease-out forwards;
 }

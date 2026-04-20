@@ -52,7 +52,17 @@ export async function PATCH(
       );
     }
 
-    const updatedProperty = await updateProperty(id, validatedData.data);
+    // Strip undefined keys so we only update fields the client explicitly sent.
+    // Without this, Drizzle could interpret `{ images: undefined }` as a null write.
+    const cleanData = Object.fromEntries(
+      Object.entries(validatedData.data).filter(([, v]) => v !== undefined)
+    );
+
+    if (Object.keys(cleanData).length === 0) {
+      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+    }
+
+    const updatedProperty = await updateProperty(id, cleanData);
     if (!updatedProperty) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }

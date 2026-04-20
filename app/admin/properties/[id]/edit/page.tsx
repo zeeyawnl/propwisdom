@@ -37,7 +37,7 @@ export default async function EditPropertyPage({ params }: Props) {
           type: property.type,
           listingType: property.listingType,
           description: property.description ?? "",
-          images: property.images || [],
+          images: property.images ?? [],
         }}
       />
     </div>

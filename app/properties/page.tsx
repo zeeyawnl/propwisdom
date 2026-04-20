@@ -37,8 +37,7 @@ export default async function PropertiesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {properties.map((property) => {
               // Ensure we safely pull the first image or a fallback
-              const images = property.images || [];
-              const coverImage = images.length > 0 ? images[0] : "/placeholder-property.jpg";
+              const coverImage = property.images?.[0] || "/placeholder-property.jpg";
 
               return (
                 <Link

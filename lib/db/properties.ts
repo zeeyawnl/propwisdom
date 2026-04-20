@@ -81,10 +81,10 @@ export async function getPropertyById(id: string) {
   });
 }
 
-export async function updateProperty(id: string, data: any) {
+export async function updateProperty(id: string, data: Partial<CreatePropertyInput>) {
   const [result] = await db
     .update(properties)
-    .set({ ...data, updatedAt: new Date() })
+    .set(data as any)
     .where(eq(properties.id, id))
     .returning();
   return result;
