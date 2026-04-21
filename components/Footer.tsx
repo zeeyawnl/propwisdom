@@ -21,6 +21,21 @@ const Facebook = ({ size = 24, className = "" }: { size?: number; className?: st
   </svg>
 );
 
+const Youtube = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" />
+    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+  </svg>
+);
+
+const Linkedin = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
 export default function Footer() {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
@@ -90,12 +105,18 @@ export default function Footer() {
             <p className="text-vanilla-latte/70 font-light text-lg max-w-sm leading-relaxed mb-8">
               Elevating the art of living. Curating Pune&apos;s finest real estate opportunities with unmatched precision and care.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
+            <div className="flex gap-4 flex-wrap">
+              <a href="https://www.instagram.com/propwisdom" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
                 <Instagram size={16} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
+              <a href="https://www.facebook.com/share/1EeGxVqnft/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
                 <Facebook size={16} />
+              </a>
+              <a href="https://youtube.com/@propwisdom-pune?si=1krNtYLXKILOPwMq" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
+                <Youtube size={16} />
+              </a>
+              <a href="https://www.linkedin.com/company/propwisdom/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-vanilla-latte/30 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-all">
+                <Linkedin size={14} />
               </a>
             </div>
           </div>
@@ -123,7 +144,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50 mb-6">Contact</h3>
             <ul className="space-y-4">
-              <li className="text-vanilla-latte/80 font-light">+91 98765 43210</li>
+              <li className="text-vanilla-latte/80 font-light">+91 89751 23786</li>
               <li className="text-vanilla-latte/80 font-light">propwisdom@gmail.com</li>
               <li className="text-vanilla-latte/80 font-light mt-4 pt-4 border-t border-white/10">
                 Shop No.6, Ground floor, Chintamani Capital,<br />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -16,7 +17,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center bg-teal-forest">
+    <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center bg-teal-forest">
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/30 z-10" />
@@ -81,14 +82,14 @@ export default function Hero() {
             transition={{ delay: 0.8 }}
             className="hidden mt-10 md:pb-10 md:flex md:justify-end"
           >
-            <button className="group flex items-center gap-4 text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
+            <Link href="/properties" className="group flex items-center gap-4 text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
               <span className="border-b border-white/20 pb-1 group-hover:border-vanilla-latte group-hover:text-vanilla-latte transition-all">
                 View Properties
               </span>
               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-vanilla-latte group-hover:text-teal-forest transition-all duration-500">
                 <ArrowUpRight size={18} />
               </div>
-            </button>
+            </Link>
           </motion.div>
 
         </motion.div>
@@ -101,11 +102,11 @@ export default function Hero() {
         transition={{ delay: 0.8 }}
         className="md:hidden absolute bottom-12 left-0 w-full flex justify-center z-30"
       >
-        <button className="group flex items-center text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
+        <Link href="/properties" className="group flex items-center text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
           <span className="border-b border-white/20 pb-1 group-hover:border-vanilla-latte group-hover:text-vanilla-latte transition-all">
             View Properties
           </span>
-        </button>
+        </Link>
       </motion.div>
 
 

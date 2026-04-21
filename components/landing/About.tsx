@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { TrendingUp, ShieldCheck, Headset, ArrowUpRight } from "lucide-react";
 
 export default function About() {
   const containerVariants: Variants = {
@@ -51,7 +52,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* Bottom Row: Bento Box Cards Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -59,57 +59,81 @@ export default function About() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-
-          {/* Card 1: Wide Card (Span 2) */}
+          {/* Card 1: Wide Card (Span 2) - The Hero Card */}
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-2 bg-vanilla-latte/60 rounded-[2rem] p-8 md:p-10 relative overflow-hidden flex flex-col justify-between min-h-[350px] group"
+            className="lg:col-span-2 bg-vanilla-latte rounded-[2rem] p-8 md:p-10 relative overflow-hidden flex flex-col justify-between min-h-[350px] group cursor-pointer border border-vanilla-latte/50 hover:shadow-xl transition-all duration-500"
           >
-            {/* Minimalist Graphic/Image (Replaces the flower/coin) */}
-            <div className="absolute -bottom-10 -right-10 w-2/3 h-full opacity-40 mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
+            {/* Dynamic Background Image */}
+            <div className="absolute top-0 right-0 w-2/3 h-full transition-transform duration-700 ease-out group-hover:scale-105 origin-right">
+              {/* A gradient mask so the image fades smoothly into the vanilla background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-vanilla-latte via-vanilla-latte/80 to-transparent z-10" />
               <img
                 src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop"
                 alt="Luxury Interior Abstract"
-                className="w-full h-full object-cover rounded-tl-[4rem]"
+                className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
               />
             </div>
 
-            <div className="relative z-10">
-              <h3 className="text-3xl font-medium text-teal-forest mb-4">
-                Smart Property Decisions
-              </h3>
+            {/* Content */}
+            <div className="relative z-20 flex justify-between items-start">
+              <div className="w-14 h-14 bg-white/60 backdrop-blur-md rounded-2xl flex items-center justify-center text-teal-forest shadow-sm group-hover:-translate-y-1 transition-transform duration-300">
+                <TrendingUp size={24} strokeWidth={1.5} />
+              </div>
+              {/* Interactive Arrow */}
+              <div className="w-10 h-10 rounded-full border border-teal-forest/20 flex items-center justify-center text-teal-forest opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 bg-white/50 backdrop-blur-sm">
+                <ArrowUpRight size={18} />
+              </div>
             </div>
 
-            <div className="relative z-10 mt-auto pt-12 max-w-sm">
-              <p className="text-teal-forest/90 text-lg leading-relaxed font-light">
+            <div className="relative z-20 mt-auto pt-12 max-w-sm">
+              <h3 className="text-3xl font-medium text-teal-forest mb-4 group-hover:tracking-wide transition-all duration-300">
+                Smart Property <br className="hidden md:block" /> Decisions
+              </h3>
+              <p className="text-teal-forest/90 text-base leading-relaxed font-light">
                 Find the right opportunities with expert guidance across primary sales, resale properties, and land investments exactly for your goals.
               </p>
             </div>
           </motion.div>
 
-          {/* Card 2: Square Card */}
+          {/* Card 2: Square Card - The Trust Card */}
           <motion.div
             variants={itemVariants}
-            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
+            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px] relative overflow-hidden group border border-teal-forest hover:border-teal-forest/80 transition-colors"
           >
-            <h3 className="text-2xl font-medium text-white leading-tight">
-              Verified Listings, <br />
-              Real Value.
-            </h3>
-            <p className="text-vanilla-latte/90 text-base md:text-lg font-light leading-relaxed lg:mt-10 text-lg leading-relaxed font-light ">
-              Access homes, flats, commercial spaces, and plots in Pune. No guesswork, just genuine Deals.
+            {/* Subtle glowing orb background effect */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-teal-400/20 rounded-full blur-3xl group-hover:bg-teal-400/30 transition-colors duration-700" />
+
+            <div className="relative z-10">
+              <ShieldCheck size={32} className="text-vanilla-latte mb-8 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 origin-left" strokeWidth={1.5} />
+              <h3 className="text-2xl font-medium text-white leading-tight">
+                Verified Listings, <br />
+                <span className="font-serif italic text-vanilla-latte">Real Value.</span>
+              </h3>
+            </div>
+            <p className="relative z-10 text-vanilla-latte/90 text-sm md:text-base font-light leading-relaxed mt-8 group-hover:text-vanilla-latte/90 transition-colors">
+              Access homes, flats, commercial spaces, and plots in Pune. No guesswork, just genuine deals.
             </p>
           </motion.div>
 
-          {/* Card 3: Square Card */}
+          {/* Card 3: Square Card - The Service Card */}
           <motion.div
             variants={itemVariants}
-            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
+            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px] relative overflow-hidden group border border-teal-forest hover:border-teal-forest/80 transition-colors"
           >
-            <h3 className="text-2xl font-medium text-white leading-tight">
-              End-to-End <br />Support
-            </h3>
-            <p className="text-vanilla-latte/90 text-base md:text-lg font-light leading-relaxed lg:mt-10 text-lg leading-relaxed font-light ">
+            {/* Architectural line pattern background */}
+            <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500 pointer-events-none"
+              style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}
+            />
+
+            <div className="relative z-10">
+              <Headset size={32} className="text-vanilla-latte mb-8 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 origin-left" strokeWidth={1.5} />
+              <h3 className="text-2xl font-medium text-white leading-tight">
+                End-to-End <br />
+                <span className="font-serif italic text-vanilla-latte">Support.</span>
+              </h3>
+            </div>
+            <p className="relative z-10 text-vanilla-latte/90 text-sm md:text-base font-light leading-relaxed mt-8 group-hover:text-vanilla-latte/90 transition-colors">
               From property search to final deal, we handle everything so you can focus on making the right move.
             </p>
           </motion.div>
