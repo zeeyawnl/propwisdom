@@ -1,51 +1,225 @@
-const SERVICES = [
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+
+const SERVICES_DATA = [
   {
-    title: "Property Buying",
-    desc: "Find the perfect home from our curated premium collection.",
-    icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+    id: "01",
+    title: "Property Consulting",
+    subtitle: "Make informed decisions with expert guidance",
+    desc: "Real estate decisions involve more than just choosing a property — they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
+    points: [
+      "Personalized consultation based on your goals",
+      "Market insights across Pune’s micro-markets",
+      "Price benchmarking and negotiation guidance",
+      "Risk assessment before finalizing any deal"
+    ],
+    closing: "We ensure you don’t just buy property — you buy the right property.",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"
   },
   {
-    title: "Property Selling",
-    desc: "Get maximum value and immediate visibility for your property.",
-    icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+    id: "02",
+    title: "Residential & Commercial",
+    subtitle: "From homes to business spaces — we handle it all",
+    desc: "We assist in buying and selling across all major real estate categories, ensuring every listing is evaluated for authenticity, pricing, and location value.",
+    points: [
+      "Flats, apartments, villas, and independent houses",
+      "Commercial offices, shops, and retail spaces",
+      "New launches (primary sales) and resale properties"
+    ],
+    closing: "Ensuring you deal only with genuine opportunities.",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
   },
   {
-    title: "Rental Assistance",
-    desc: "Hassle-free tenancy management and premium rental listings.",
-    icon: "M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z",
+    id: "03",
+    title: "Rental Services",
+    subtitle: "Finding the right space, made simple",
+    desc: "Whether you're looking to rent a home or lease a commercial space, we streamline the process to save you time and hassle.",
+    points: [
+      "Curated rental options based on your needs",
+      "Verified landlords and properties",
+      "Assistance with negotiations and agreements"
+    ],
+    closing: "Our goal is to ensure a smooth and hassle-free rental experience.",
+    image: "/assets/images/rental.jpg"
   },
   {
-    title: "Investment Consulting",
-    desc: "High ROI opportunities tailored by market experts.",
-    icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+    id: "04",
+    title: "Plots & Land Investments",
+    subtitle: "Invest in high-potential land opportunities",
+    desc: "Land remains one of the most strategic real estate investments when chosen correctly. With proper due diligence, we guide you toward secure investments.",
+    points: [
+      "Residential plots",
+      "Agricultural and NA land",
+      "High-growth zones in and around Pune"
+    ],
+    closing: "Guiding you toward secure and high-value land investments.",
+    image: "/assets/images/landinvestment.jpg"
   },
+  {
+    id: "05",
+    title: "Investment Planning",
+    subtitle: "Build wealth through real estate",
+    desc: "We go beyond transactions to help you plan strategically, ensuring your investment decisions are data-backed and future-ready.",
+    points: [
+      "ROI-focused property recommendations",
+      "Short-term vs long-term investment strategies",
+      "Portfolio diversification across property types",
+      "Insights into upcoming growth corridors"
+    ],
+    closing: "Strategic planning for future-ready wealth generation.",
+    image: "/assets/images/investmentplanning.jpg"
+  },
+  {
+    id: "06",
+    title: "Legal Advisory Support",
+    subtitle: "Secure transactions with complete transparency",
+    desc: "Legal clarity is critical in real estate. We help minimize risks and ensure every transaction is safe, compliant, and transparent.",
+    points: [
+      "Document verification and due diligence",
+      "Title checks and ownership validation",
+      "Agreement drafting guidance",
+      "Coordination with legal professionals"
+    ],
+    closing: "Secure, compliant, and fully transparent processing.",
+    image: "/assets/images/legaladvisory.jpg"
+  }
 ];
 
 export default function Services() {
-  return (
-    <section id="services" className="py-24 bg-slate-900 text-white text-center">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-extrabold mb-4 tracking-tight">Our Services</h2>
-        <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto mb-16">
-          Comprehensive real estate solutions designed for your success.
-        </p>
+  const [activeIndex, setActiveIndex] = useState(0);
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SERVICES.map((service, i) => (
-            <div
-              key={i}
-              className="bg-slate-800 p-10 rounded-[2rem] border border-slate-700 hover:border-indigo-500 transition-colors flex flex-col items-center group"
-            >
-              <div className="bg-slate-700/50 p-4 rounded-2xl mb-6 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={service.icon} />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-              <p className="text-slate-400 font-medium">{service.desc}</p>
-            </div>
-          ))}
+  return (
+    <section id="services" className="pt-8 pb-24 md:pt-12 md:pb-32 bg-white relative">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+
+        {/* Section Header */}
+        <div className="mb-16 md:mb-24 max-w-3xl">
+          <span className="text-teal-forest text-[12px] uppercase tracking-[0.4em] font-bold mb-4 block">
+            Our Expertise
+          </span>
+          <h2 className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-tight">
+            Comprehensive <br />
+            <span className="font-serif italic text-teal-forest">Real Estate Solutions</span>
+          </h2>
         </div>
+
+        {/* Split Layout Container */}
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 relative">
+
+          {/* Left: Interactive Accordion List */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-center">
+            {SERVICES_DATA.map((service, index) => {
+              const isActive = activeIndex === index;
+
+              return (
+                <div
+                  key={service.id}
+                  className="group border-b border-slate-200 cursor-pointer"
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => setActiveIndex(index)}
+                >
+                  {/* Service Title Bar */}
+                  <div className={`py-8 flex items-center justify-between transition-all duration-500 ${isActive ? 'pl-4 lg:pl-8' : 'hover:pl-4'}`}>
+                    <div className="flex items-center gap-6">
+                      <span className={`text-sm font-bold transition-colors duration-300 ${isActive ? 'text-teal-forest' : 'text-slate-300'}`}>
+                        {service.id}
+                      </span>
+                      <h3 className={`text-2xl md:text-4xl font-light tracking-tight transition-colors duration-300 ${isActive ? 'text-teal-forest' : 'text-slate-800'}`}>
+                        {service.title}
+                      </h3>
+                    </div>
+                    <ArrowRight
+                      className={`transition-all duration-500 ${isActive ? 'text-teal-forest opacity-100 translate-x-0' : 'text-slate-300 opacity-0 -translate-x-4'}`}
+                    />
+                  </div>
+
+                  {/* Expandable Content (Framer Motion) */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className={`pb-10 ${isActive ? 'pl-4 lg:pl-8' : ''}`}>
+                          <h4 className="text-lg font-medium text-slate-900 mb-4">
+                            {service.subtitle}
+                          </h4>
+                          <p className="text-slate-500 font-light leading-relaxed mb-6">
+                            {service.desc}
+                          </p>
+
+                          <ul className="space-y-3 mb-6">
+                            {service.points.map((point, idx) => (
+                              <li key={idx} className="flex items-start gap-3 text-slate-600 font-light text-sm md:text-base">
+                                <CheckCircle2 size={18} className="text-teal-forest shrink-0 mt-0.5" />
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+
+                          <p className="text-teal-forest font-medium italic border-l-2 border-vanilla-latte pl-4 py-1">
+                            {service.closing}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right: Sticky Image Viewport (Hidden on Mobile for cleaner UX) */}
+          <div className="hidden lg:block w-full lg:w-1/2 relative">
+            <div className="sticky top-32 w-full h-[700px] rounded-[2rem] overflow-hidden bg-slate-100 shadow-2xl">
+              <div className="absolute inset-0 bg-teal-forest/10 z-10 mix-blend-multiply" /> {/* Subtle color grade overlay */}
+
+              {SERVICES_DATA.map((service, index) => (
+                <div
+                  key={service.id}
+                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${activeIndex === index ? "opacity-100 z-0" : "opacity-0 -z-10"
+                    }`}
+                >
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className={`w-full h-full object-cover transition-transform duration-[10s] ease-out ${activeIndex === index ? "scale-105" : "scale-100"
+                      }`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Closing Trust Section & CTA */}
+        <div className="mt-8 lg:mt-32 pt-8 lg:pt-20 lg:border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-10">
+          <p className="text-xl md:text-2xl text-slate-600 font-light max-w-3xl leading-relaxed">
+            At <span className="font-medium text-teal-forest"><span className="font-bold">PROP</span>Wisdom</span>, we don’t just facilitate transactions we build long-term relationships by delivering clarity, trust, and results at every step of your real estate journey.
+          </p>
+
+          <div className="shrink-0 flex flex-col items-center gap-4">
+            <Link
+              href="/#contact"
+              className="px-10 py-5 bg-teal-forest text-vanilla-latte rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-1 shadow-lg shadow-teal-forest/20 flex items-center gap-3"
+            >
+              Start Your Journey
+              <ArrowRight size={16} />
+            </Link>
+            <span className="text-[11px] uppercase tracking-widest text-slate-400 font-light">
+              Explore Opportunities Today
+            </span>
+          </div>
+        </div>
+
       </div>
     </section>
   );

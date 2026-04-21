@@ -1,76 +1,210 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { MapPin, Phone, Mail, MessageCircle, Send } from "lucide-react";
+
+// Lucide removed brand icons, so we provide our own standard SVG components
+const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
+);
+
+const Facebook = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 bg-indigo-600 relative overflow-hidden">
-      {/* Background blobs */}
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-black/10 rounded-full blur-3xl" />
+    <section id="contact" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-2xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-              Let&apos;s Discuss Your Needs
-            </h2>
-            <p className="text-xl text-slate-600 font-medium">
-              Leave your details below, or connect with us directly on WhatsApp.
-            </p>
-          </div>
+        {/* Header */}
+        <div className="mb-16 md:mb-24 max-w-2xl">
+          <span className="text-teal-forest text-[11px] uppercase tracking-[0.5em] font-bold mb-4 block">
+            Get in Touch
+          </span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-slate-900 tracking-tight leading-tight">
+            Start the <span className="font-serif italic text-teal-forest">Conversation.</span>
+          </h2>
+        </div>
 
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-slate-900"
-                  placeholder="John Doe"
-                />
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+
+          {/* Left Side: Minimalist Form */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="flex-1 w-full"
+          >
+            <form className="space-y-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {/* Minimalist Input Field */}
+                <div className="relative group">
+                  <input
+                    type="text"
+                    id="name"
+                    required
+                    className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                    placeholder="Full Name"
+                  />
+                  <label
+                    htmlFor="name"
+                    className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+                  >
+                    Full Name
+                  </label>
+                </div>
+
+                <div className="relative group">
+                  <input
+                    type="tel"
+                    id="phone"
+                    required
+                    className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                    placeholder="Phone Number"
+                  />
+                  <label
+                    htmlFor="phone"
+                    className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+                  >
+                    Phone Number
+                  </label>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
-                  Phone Number
-                </label>
+
+              <div className="relative group">
                 <input
-                  type="tel"
-                  className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-slate-900"
-                  placeholder="+91 98765 43210"
+                  type="email"
+                  id="email"
+                  required
+                  className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                  placeholder="Email Address"
                 />
+                <label
+                  htmlFor="email"
+                  className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+                >
+                  Email Address
+                </label>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
-                Message
-              </label>
-              <textarea
-                rows={4}
-                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium text-slate-900 resize-none"
-                placeholder="I am looking for properties in..."
-              />
-            </div>
+              <div className="relative group">
+                <textarea
+                  id="message"
+                  rows={4}
+                  required
+                  className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent resize-none"
+                  placeholder="Tell us about your requirements..."
+                />
+                <label
+                  htmlFor="message"
+                  className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+                >
+                  Your Message
+                </label>
+              </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                type="button"
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg border-b-4 border-indigo-800 hover:border-indigo-900"
-              >
-                Submit Request
-              </button>
-              <a
-                href="https://wa.me/919876543210"
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 flex justify-center items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg border-b-4 border-emerald-700 hover:border-emerald-800"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.125-.395-.179-1.29-.481-2.457-1.523-1.077-.962-1.782-2.146-1.929-2.399-.144-.253-.016-.39.11-.516.113-.112.253-.298.379-.447.126-.149.168-.255.253-.424.085-.169.043-.318-.021-.444-.063-.127-.584-1.408-.8-1.925-.213-.505-.429-.437-.584-.444-.143-.008-.309-.008-.474-.008-.168 0-.441.063-.671.314-.23.253-.88.86-.88 2.096 0 1.236.902 2.433 1.026 2.599.125.166 1.776 2.71 4.3 3.8.599.258 1.066.413 1.431.528.601.192 1.15.165 1.58.1.474-.072 1.455-.595 1.66-1.17.205-.575.205-1.068.144-1.17-.061-.103-.227-.165-.48-.291z" />
-                </svg>
-                Chat on WhatsApp
-              </a>
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  className="group flex items-center gap-4 px-10 py-5 bg-teal-forest text-vanilla-latte uppercase text-[11px] tracking-[0.3em] font-bold hover:bg-teal-forest/90 transition-all rounded-full"
+                >
+                  Submit Inquiry
+                  <Send size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </button>
+              </div>
+            </form>
+          </motion.div>
+
+          {/* Right Side: Contact Information Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            viewport={{ once: true }}
+            className="flex-1 w-full"
+          >
+            <div className="bg-teal-forest rounded-[2rem] p-10 md:p-14 h-full flex flex-col justify-between text-white relative overflow-hidden">
+              {/* Decorative Abstract Shape */}
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 border border-vanilla-latte/10 rounded-full blur-xl" />
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-vanilla-latte/5 rounded-full blur-2xl" />
+
+              <div className="relative z-10 space-y-12">
+                <div>
+                  <h3 className="text-2xl font-serif italic text-vanilla-latte mb-8">PropWisdom HQ</h3>
+
+                  <ul className="space-y-8">
+                    <li className="flex items-start gap-4">
+                      <MapPin className="text-vanilla-latte shrink-0 mt-1" size={20} />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/50 font-bold mb-1">Visit Us</span>
+                        <p className="font-light leading-relaxed opacity-90">
+                          Shop No.6, Ground floor, Chintamani Capital,<br />
+                          opposite to Paranjape Forestrail Bhugaon,<br />
+                          Pune Maharashtra 412115
+                        </p>
+                      </div>
+                    </li>
+
+                    <li className="flex items-start gap-4">
+                      <Phone className="text-vanilla-latte shrink-0 mt-1" size={20} />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/50 font-bold mb-1">Call Us</span>
+                        <a href="tel:+919876543210" className="font-light opacity-90 hover:text-vanilla-latte transition-colors">
+                          +91 98765 43210
+                        </a>
+                      </div>
+                    </li>
+
+                    <li className="flex items-start gap-4">
+                      <Mail className="text-vanilla-latte shrink-0 mt-1" size={20} />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/50 font-bold mb-1">Email Us</span>
+                        <a href="mailto:propwisdom@gmail.com" className="font-light opacity-90 hover:text-vanilla-latte transition-colors">
+                          propwisdom@gmail.com
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* WhatsApp Direct Action */}
+                <a
+                  href="https://wa.me/919876543210"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-4 rounded-full transition-all backdrop-blur-md group w-fit"
+                >
+                  <MessageCircle size={18} className="text-[#25D366]" />
+                  <span className="text-[12px] uppercase tracking-widest font-bold">Chat on WhatsApp</span>
+                </a>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="relative z-10 pt-12 mt-12 border-t border-white/10 flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Connect</span>
+                <div className="flex gap-4">
+                  <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-colors">
+                    <Instagram size={16} />
+                  </a>
+                  <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-colors">
+                    <Facebook size={16} />
+                  </a>
+                  <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-vanilla-latte hover:text-teal-forest transition-colors">
+                    <MessageCircle size={16} />
+                  </a>
+                </div>
+              </div>
+
             </div>
-          </form>
+          </motion.div>
         </div>
       </div>
     </section>

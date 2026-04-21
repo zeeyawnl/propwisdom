@@ -1,71 +1,120 @@
+"use client";
+
+import Link from "next/link";
+import { motion, Variants } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
 export default function About() {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+
   return (
-    <section id="about" className="py-24 bg-white relative border-y border-slate-100 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
-        {/* Left — Image */}
-        <div className="flex-1 w-full mx-auto relative hidden lg:block">
-          <div className="absolute inset-0 bg-indigo-100 rounded-[3rem] transform -rotate-3 blur-[2px]" />
-          {/* Replace with your own team / office image in /public */}
-          <img
-            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1973&q=80"
-            alt="Real estate agents at work"
-            className="relative z-10 rounded-[3rem] border-8 border-white shadow-xl h-[500px] w-full object-cover"
-          />
+    <section id="about" className="py-24 bg-[#FAFAFA]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        {/* Top Row: Header & Subtext (Matching USD Bloom Layout) */}
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 mb-16 lg:mb-24">
+
+          {/* Left: Heading & CTA */}
+          <div className="flex-1 space-y-8">
+            <h2 className="text-5xl md:text-6xl font-light text-slate-900 tracking-tight">
+              What is <span className="font-serif italic text-teal-forest">PropWisdom?</span>
+            </h2>
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-teal-forest text-vanilla-latte rounded-full text-[13px] uppercase tracking-[0.2em] font-medium hover:bg-teal-forest/90 transition-all hover:scale-105 active:scale-95"
+            >
+              Know More
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          {/* Right: Subtext */}
+          <div className="flex-1 lg:pl-10">
+            <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
+              PROPWisdom is a Pune based real estate company helping you buy, sell, and rent properties with clarity and confidence across residential, commercial, and land investments.
+            </p>
+          </div>
         </div>
 
-        {/* Right — Copy */}
-        <div className="flex-1 space-y-8">
-          <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-            Your Trusted Advisors in Real Estate
-          </h2>
-          <p className="text-xl text-slate-600 leading-relaxed font-medium">
-            We don&apos;t just sell properties; we find properties that match
-            your lifestyle and dreams. With over a decade of market presence, we
-            bring clarity and security to real estate transactions.
-          </p>
+        {/* Bottom Row: Bento Box Cards Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
 
-          <ul className="space-y-6 pt-4">
-            <li className="flex gap-4 items-start">
-              <div className="flex-shrink-0 bg-indigo-100 p-3 rounded-2xl text-indigo-600">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Expert Market Knowledge</h3>
-                <p className="text-slate-600 font-medium">
-                  Our agents live and breathe the local market data &amp; trends.
-                </p>
-              </div>
-            </li>
-            <li className="flex gap-4 items-start">
-              <div className="flex-shrink-0 bg-indigo-100 p-3 rounded-2xl text-indigo-600">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">100% Genuine Listings</h3>
-                <p className="text-slate-600 font-medium">
-                  Every property is physically verified by our team.
-                </p>
-              </div>
-            </li>
-            <li className="flex gap-4 items-start">
-              <div className="flex-shrink-0 bg-indigo-100 p-3 rounded-2xl text-indigo-600">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Dedicated Support</h3>
-                <p className="text-slate-600 font-medium">
-                  Personal guidance from property search to final handover.
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
+          {/* Card 1: Wide Card (Span 2) */}
+          <motion.div
+            variants={itemVariants}
+            className="lg:col-span-2 bg-vanilla-latte/60 rounded-[2rem] p-8 md:p-10 relative overflow-hidden flex flex-col justify-between min-h-[350px] group"
+          >
+            {/* Minimalist Graphic/Image (Replaces the flower/coin) */}
+            <div className="absolute -bottom-10 -right-10 w-2/3 h-full opacity-40 mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
+              <img
+                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop"
+                alt="Luxury Interior Abstract"
+                className="w-full h-full object-cover rounded-tl-[4rem]"
+              />
+            </div>
+
+            <div className="relative z-10">
+              <h3 className="text-3xl font-medium text-teal-forest mb-4">
+                Smart Property Decisions
+              </h3>
+            </div>
+
+            <div className="relative z-10 mt-auto pt-12 max-w-sm">
+              <p className="text-teal-forest/90 text-lg leading-relaxed font-light">
+                Find the right opportunities with expert guidance across primary sales, resale properties, and land investments exactly for your goals.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Square Card */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
+          >
+            <h3 className="text-2xl font-medium text-white leading-tight">
+              Verified Listings, <br />
+              Real Value.
+            </h3>
+            <p className="text-vanilla-latte/90 text-base md:text-lg font-light leading-relaxed lg:mt-10 text-lg leading-relaxed font-light ">
+              Access homes, flats, commercial spaces, and plots in Pune. No guesswork, just genuine Deals.
+            </p>
+          </motion.div>
+
+          {/* Card 3: Square Card */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-teal-forest rounded-[2rem] p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
+          >
+            <h3 className="text-2xl font-medium text-white leading-tight">
+              End-to-End <br />Support
+            </h3>
+            <p className="text-vanilla-latte/90 text-base md:text-lg font-light leading-relaxed lg:mt-10 text-lg leading-relaxed font-light ">
+              From property search to final deal, we handle everything so you can focus on making the right move.
+            </p>
+          </motion.div>
+
+        </motion.div>
       </div>
     </section>
   );

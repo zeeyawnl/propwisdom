@@ -62,7 +62,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/80 hover:text-teal-forest transition-colors relative group"
+                className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />

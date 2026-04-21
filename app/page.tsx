@@ -1,5 +1,5 @@
 import { getProperties } from "@/lib/db/properties";
-import { Hero, FeaturedProperties, About, Services, Contact } from "@/components/landing";
+import { Hero, FeaturedProperties, About, Services, Contact, Testimonials } from "@/components/landing";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +18,11 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col">
       <Hero />
-      <FeaturedProperties properties={displayProperties} />
       <About />
+      <FeaturedProperties properties={displayProperties} />
+
       <Services />
+      <Testimonials />
       <Contact />
     </div>
   );
