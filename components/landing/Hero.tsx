@@ -39,7 +39,7 @@ export default function Hero() {
         >
           <div className="max-w-4xl">
             {/* Static Top Line */}
-            <h1 className=" md:pt-28  text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
+            <h1 className=" pt:24  md:pt-28  text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
               Step into a space <br />
               that feels like
             </h1>
