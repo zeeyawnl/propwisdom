@@ -2,6 +2,8 @@ import PropertyForm from '@/components/admin/PropertyForm';
 import Link from 'next/link';
 import { getPropertyById } from '@/lib/db/properties';
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ id: string }>;
 };

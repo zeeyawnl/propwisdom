@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImage } from "@/lib/utils";
 
 export default function ImageCarousel({ images, title }: { images: string[], title: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,7 +28,7 @@ export default function ImageCarousel({ images, title }: { images: string[], tit
         className="w-full lg:w-[80%] mx-auto h-[40vh] sm:h-[50vh] lg:h-[60vh] rounded-[2rem] overflow-hidden relative mb-12 group bg-slate-900 shadow-xl border border-slate-100 cursor-pointer"
       >
         <img
-          src={images[currentIndex]}
+          src={optimizeImage(images[currentIndex], "f_auto,q_auto,w_1200")}
           alt={`${title} - View ${currentIndex + 1}`}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-90 group-hover:opacity-100"
         />
@@ -92,7 +93,7 @@ export default function ImageCarousel({ images, title }: { images: string[], tit
             {/* Core expanded image viewer set to pure standard ratio */}
             <div className="relative w-full max-w-[500px] md:max-w-[600px] aspect-[4/5] bg-black/50 rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
               <img
-                src={images[currentIndex]}
+                src={optimizeImage(images[currentIndex], "f_auto,q_auto,w_1200")}
                 alt={`${title} - View ${currentIndex + 1}`}
                 className="w-full h-full object-contain"
               />

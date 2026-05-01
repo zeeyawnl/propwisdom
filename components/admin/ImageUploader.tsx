@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { optimizeImage } from "@/lib/utils";
 
 type ImageUploaderProps = {
   value: string[]; // controlled array of URLs
@@ -94,8 +95,7 @@ export default function ImageUploader({ value = [], onChange }: ImageUploaderPro
               key={`${url}-${i}`}
               className="relative aspect-video rounded-xl overflow-hidden bg-slate-100 group border border-slate-200"
             >
-              <img src={url} className="w-full h-full object-cover" alt="Property" />
-              
+              <img src={optimizeImage(url, "f_auto,q_auto,w_400")} className="w-full h-full object-cover" alt="Property" />
               <button
                 type="button"
                 onClick={() => removeImage(url)}

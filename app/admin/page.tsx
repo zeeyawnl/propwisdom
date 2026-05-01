@@ -3,6 +3,8 @@ import { getProperties } from "@/lib/db/properties";
 import PropertyTable from "@/components/admin/PropertyTable";
 import { type Property } from "@/lib/types/property";
 
+export const dynamic = "force-dynamic";
+
 export default async function PropertiesPage() {
   const { data: properties } = await getProperties({
     page: 1,

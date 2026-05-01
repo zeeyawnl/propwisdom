@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Bed, Bath, Maximize, Heart, ArrowUpRight, MessageCircle } from "lucide-react";
+import { optimizeImage } from "@/lib/utils";
 
 type Property = {
   id: string;
@@ -22,7 +23,7 @@ type Property = {
 };
 
 export default function PropertyCard({ property, index }: { property: Property; index: number }) {
-  const coverImage = property.images?.[0] || "/assets/images/legaladvisory.jpg";
+  const coverImage = optimizeImage(property.images?.[0] || "/assets/images/legaladvisory.jpg", "f_auto,q_auto,w_800");
   const waMessage = `Hi, I am interested in ${property.title} located at ${property.location}. I would like to discuss more.`;
   const waUrl = `https://wa.me/918975123786?text=${encodeURIComponent(waMessage)}`;
 
