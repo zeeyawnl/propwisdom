@@ -39,7 +39,7 @@ export default function Hero() {
         >
           <div className="max-w-4xl">
             {/* Static Top Line */}
-            <h1 className=" pt-20  md:pt-28  text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
+            <h1 className=" pt-14  md:pt-28  text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
               Step into a space <br />
               that feels like
             </h1>
@@ -68,7 +68,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 1 }}
-              className="mt-12 text-white/70 font-light text-base md:text-lg max-w-md tracking-wide leading-relaxed"
+              className="mt-12 text-white/80 font-light text-base md:text-lg max-w-md tracking-wide leading-relaxed"
             >
               Pune Homes You Can Trust.<br />
               From New Launches to Resale & Rentals
@@ -82,7 +82,7 @@ export default function Hero() {
             className="mt-10 md:pb-10 flex justify-center md:justify-end"
           >
             <Link href="/properties" className="group inline-flex items-center gap-4 text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
-              <span className="border-b border-white/20 pb-1 md:text-xl group-hover:border-vanilla-latte group-hover:text-vanilla-latte transition-all">
+              <span className="border-b border-white/20 pb-1 font-medium text-xl group-hover:border-vanilla-latte group-hover:text-vanilla-latte transition-all">
                 View Properties
               </span>
               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-vanilla-latte group-hover:text-teal-forest transition-all duration-500 shrink-0">
