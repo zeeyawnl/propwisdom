@@ -95,7 +95,7 @@ export default function Testimonials() {
                 </div>
 
                 <p className="text-slate-600 font-light leading-relaxed text-lg md:text-xl mb-10 flex-grow">
-                  "{testimonial.text}"
+                  &quot;{testimonial.text}&quot;
                 </p>
 
                 <div className="flex items-center gap-4 mt-auto pt-6 border-t border-slate-100">

@@ -56,6 +56,7 @@ export default function FeaturedProperties({ properties }: FeaturedPropertiesPro
           {properties.map((property, idx) => (
             <PropertyCard 
               key={property.id} 
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               property={property as any} 
               index={idx} 
             />

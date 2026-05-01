@@ -11,17 +11,17 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Hide Navbar completely on admin routes
-  if (pathname?.startsWith("/admin")) {
-    return null;
-  }
-
   // Handle scroll effect for glassmorphism
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Hide Navbar completely on admin routes
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const navLinks = [
     { name: "Home", href: "/#hero" },

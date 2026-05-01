@@ -86,6 +86,19 @@ const SERVICES_DATA = [
     ],
     closing: "Secure, compliant, and fully transparent processing.",
     image: "/assets/images/legaladvisory.jpg"
+  },
+  {
+    id: "07",
+    title: "Mandate Property Services",
+    subtitle: "End-to-end property development, tailored to your vision",
+    desc: "We design and build homes or commercial spaces tailored to your needs, managing everything from planning to final handover with quality and transparency.",
+    points: [
+      "Custom-built homes and purpose-driven commercial properties",
+      "End-to-end management from planning to handover",
+      "Expert guidance at every stage of development"
+    ],
+    closing: "We bring your vision to life with expert guidance at every stage.",
+    image: "/assets/images/seventhpoint.jpg"
   }
 ];
 

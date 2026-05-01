@@ -18,11 +18,16 @@ export default async function PropertiesPage() {
   // Filter properties into two arrays based on listingType
   // Adjust the ".includes('rent')" string if your DB uses a different exact term (e.g., 'for_rent')
   const rentals = allProperties.filter((p) =>
-    p.listingType.toLowerCase().includes("rent")
+    p.listingType.toLowerCase() === "rent"
+  );
+
+  const mandate = allProperties.filter((p) =>
+    p.listingType.toLowerCase() === "mandate"
   );
 
   const sales = allProperties.filter((p) =>
-    !p.listingType.toLowerCase().includes("rent")
+    !p.listingType.toLowerCase().includes("rent") &&
+    p.listingType.toLowerCase() !== "mandate"
   );
 
   return (
@@ -30,27 +35,17 @@ export default async function PropertiesPage() {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
         {/* Navigation / Back Action */}
-        <div className="mb-12">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] font-bold text-slate-400 hover:text-teal-forest transition-colors group"
-          >
-            <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-        </div>
+
 
         {/* Content Header */}
-        <div className="mb-20">
-          <span className="text-teal-forest text-[11px] uppercase tracking-[0.5em] font-bold mb-4 block">
-            Our Portfolio
-          </span>
+        <div className="mb-14">
+
           <h1 className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-tight mb-8">
             Global Collection <br className="hidden md:block" />
-            <span className="font-serif italic text-teal-forest">of Pune's Finest.</span>
+            <span className="font-serif italic text-teal-forest">of Pune&apos;s Finest.</span>
           </h1>
           <p className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl">
-            A meticulously curated selection of Pune's most prestigious residences, commercial landmarks, and strategic assets.
+            A meticulously curated selection of Pune&apos;s most prestigious residences, commercial landmarks, and strategic assets.
           </p>
         </div>
 
@@ -78,6 +73,38 @@ export default async function PropertiesPage() {
                   {sales.map((property, idx) => (
                     <PropertyCard
                       key={property.id}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      property={property as any}
+                      index={idx}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* --- MANDATE PROJECTS SECTION --- */}
+            {mandate.length > 0 && (
+              <div className="pt-20 border-t border-slate-200">
+                <div className="mb-16 max-w-2xl">
+                  <h2 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight leading-tight mb-6">
+                    Mandate <span className="font-serif italic text-teal-forest">Projects.</span>
+                  </h2>
+                  <p className="text-slate-500 font-light leading-relaxed text-lg">
+                    Exclusive mandate listings — properties entrusted to us for direct, focused representation.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-end py-2 border-b border-slate-100 mb-12">
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
+                    Showing <span className="text-teal-forest">{mandate.length}</span> Results
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+                  {mandate.map((property, idx) => (
+                    <PropertyCard
+                      key={property.id}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       property={property as any}
                       index={idx}
                     />
@@ -88,12 +115,10 @@ export default async function PropertiesPage() {
 
             {/* --- LEASING & RENTALS SECTION --- */}
             {rentals.length > 0 && (
-              <div className="pt-24 border-t border-slate-200">
+              <div className="pt-20 border-t border-slate-200">
                 {/* Elegant Rental Header */}
                 <div className="mb-16 max-w-2xl">
-                  <span className="text-teal-forest text-[11px] uppercase tracking-[0.4em] font-bold mb-4 block">
-                    Flexible Living & Workspaces
-                  </span>
+
                   <h2 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight leading-tight mb-6">
                     Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span>
                   </h2>
@@ -103,7 +128,7 @@ export default async function PropertiesPage() {
                 </div>
 
                 {/* Rental Results Count */}
-                <div className="flex items-center justify-end py-4 border-b border-slate-100 mb-12">
+                <div className="flex items-center justify-end py-2 border-b border-slate-100 mb-12">
                   <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
                     Showing <span className="text-teal-forest">{rentals.length}</span> Results
                   </p>
@@ -114,6 +139,7 @@ export default async function PropertiesPage() {
                   {rentals.map((property, idx) => (
                     <PropertyCard
                       key={property.id}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       property={property as any}
                       // Resetting index here ensures the staggered animation starts from 0 for this grid
                       index={idx}

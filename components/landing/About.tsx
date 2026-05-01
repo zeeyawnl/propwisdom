@@ -69,9 +69,9 @@ export default function About() {
               {/* A gradient mask so the image fades smoothly into the vanilla background */}
               <div className="absolute inset-0 bg-gradient-to-r from-vanilla-latte via-vanilla-latte/80 to-transparent z-10" />
               <img
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop"
-                alt="Luxury Interior Abstract"
-                className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
+                src="/assets/images/imran.png"
+                alt="Imran Khan"
+                className="w-full h-full object-cover object-top grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
               />
             </div>
 

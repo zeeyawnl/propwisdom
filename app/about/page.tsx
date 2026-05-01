@@ -37,7 +37,7 @@ export default function AboutContent() {
             <span className="font-serif italic text-teal-forest">in Pune.</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl mx-auto">
-            We believe that finding a sanctuary shouldn't be a transaction, but a seamless transition. PropWisdom brings clarity, curation, and confidence to your property journey.
+            We believe that finding a sanctuary shouldn&apos;t be a transaction, but a seamless transition. PropWisdom brings clarity, curation, and confidence to your property journey.
           </motion.p>
         </motion.div>
       </section>
@@ -104,7 +104,7 @@ export default function AboutContent() {
               </h2>
               <div className="space-y-6 text-slate-500 font-light text-lg leading-relaxed">
                 <p>
-                  Real estate isn't just about finding a space; it's about securing your future. Based in the heart of Pune, PropWisdom was founded to bridge the gap between aspirational living and transparent transactions.
+                  Real estate isn&apos;t just about finding a space; it&apos;s about securing your future. Based in the heart of Pune, PropWisdom was founded to bridge the gap between aspirational living and transparent transactions.
                 </p>
                 <p>
                   Whether you are investing in a high-yield commercial space, acquiring strategic land parcels, or searching for a residential sanctuary, our approach remains the same: rigorous due diligence, data-backed valuations, and an unwavering commitment to your goals.
@@ -115,11 +115,11 @@ export default function AboutContent() {
             {/* Minimalist Stats/Quote Block */}
             <div className="flex-1 w-full bg-vanilla-latte/30 p-12 md:p-16 rounded-[2rem] border border-vanilla-latte/50">
               <h3 className="text-3xl md:text-4xl font-serif italic text-teal-forest leading-tight mb-8">
-                "We measure our success not by the volume of transactions, but by the generational wealth and peace of mind we build for our clients."
+                &quot;We measure our success not by the volume of transactions, but by the generational wealth and peace of mind we build for our clients.&quot;
               </h3>
               <div className="flex items-center gap-4 pt-8 border-t border-teal-forest/10">
-                <div className="w-12 h-12 bg-teal-forest text-vanilla-latte rounded-full flex items-center justify-center font-serif text-xl">
-                  IK
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-teal-forest/20">
+                  <img src="/assets/images/imran.png" alt="Imran Khan, CEO" className="w-full h-full object-cover object-top" />
                 </div>
                 <div>
                   <p className="text-slate-900 font-medium">Imran Khan, CEO.</p>

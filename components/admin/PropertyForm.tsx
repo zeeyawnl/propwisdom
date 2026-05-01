@@ -25,12 +25,19 @@ type FormData = {
   location: string;
   type: string;
   listingType: string;
+  bedrooms: number;
+  area: string;
   description: string;
   images: string[];
 };
 
 const TYPES = ["apartment", "villa", "plot", "commercial"];
-const LISTING_TYPES = ["rent", "resale", "new_project"];
+const LISTING_TYPES = [
+  { value: "rent",        label: "Rental" },
+  { value: "resale",      label: "Resale" },
+  { value: "new_project", label: "New Project" },
+  { value: "mandate",     label: "Mandate Project" },
+];
 
 export default function PropertyForm({ initial, id }: PropertyFormProps) {
   const router = useRouter();
@@ -43,6 +50,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     location: initial?.location ?? "",
     type: initial?.type ?? "apartment",
     listingType: initial?.listingType ?? "rent",
+    bedrooms: (initial as { bedrooms?: number } | undefined)?.bedrooms ?? 0,
+    area: (initial as { area?: string | null } | undefined)?.area ?? "",
     images: initial?.images || [],
   });
 
@@ -60,6 +69,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         location: initial.location ?? "",
         type: initial.type ?? "apartment",
         listingType: initial.listingType ?? "rent",
+        bedrooms: (initial as { bedrooms?: number })?.bedrooms ?? 0,
+        area: (initial as { area?: string | null })?.area ?? "",
         images: initial.images ?? [],
       });
     }
@@ -85,6 +96,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         ...form,
         price: Number(form.price),
         priceLabel: form.priceLabel || null,
+        bedrooms: form.bedrooms ? Number(form.bedrooms) : 0,
+        area: form.area || null,
       };
 
       const res = await fetch(
@@ -199,9 +212,34 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
             >
               {LISTING_TYPES.map((t) => (
-                <option key={t} value={t} className="capitalize">{t.replace("_", " ")}</option>
+                <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>
+          </div>
+        </div>
+
+        {/* BHK & Carpet Area */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-bold text-slate-950 mb-1">BHK</label>
+            <input
+              type="number"
+              min={0}
+              placeholder="BHK (e.g. 2)"
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+              value={form.bedrooms || ""}
+              onChange={(e) => updateField("bedrooms", Number(e.target.value))}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Carpet Area (sq ft)</label>
+            <input
+              type="text"
+              placeholder="Carpet Area (sq ft)"
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+              value={form.area}
+              onChange={(e) => updateField("area", e.target.value)}
+            />
           </div>
         </div>
 

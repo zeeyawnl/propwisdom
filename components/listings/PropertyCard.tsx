@@ -33,10 +33,10 @@ export default function PropertyCard({ property, index }: { property: Property; 
       viewport={{ once: true, margin: "-50px" }}
       // Staggered entrance based on the index in the grid
       transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex flex-col bg-white rounded-[2rem] overflow-hidden border border-slate-100 hover:shadow-[0_20px_40px_-15px_rgba(23,78,79,0.12)] transition-all duration-500"
+      className="group relative flex flex-col bg-white rounded-[1.5rem] overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500"
     >
       {/* 1. Cinematic Image Section (70% visual focus) */}
-      <div className="relative h-[350px] md:h-[400px] w-full overflow-hidden bg-slate-100 cursor-pointer">
+      <div className="relative h-[250px] md:h-[280px] w-full overflow-hidden bg-slate-100 cursor-pointer">
         <Link href={`/properties/${property.id}`} className="absolute inset-0 z-10" aria-label={`View ${property.title}`} />
 
         <img
@@ -67,11 +67,11 @@ export default function PropertyCard({ property, index }: { property: Property; 
       </div>
 
       {/* 2. Minimalist Data Panel (30% informational focus) */}
-      <div className="p-8 flex flex-col flex-grow relative bg-white">
+      <div className="p-5 md:p-6 flex flex-col flex-grow relative bg-white">
 
         {/* Header: Price, Title & Location */}
-        <div className="mb-6">
-          <p className="text-2xl font-serif text-teal-forest mb-3">
+        <div className="mb-5">
+          <p className="text-2xl font-serif text-teal-forest mb-2">
             {property.priceLabel || `₹${property.price.toLocaleString("en-IN")}`}
           </p>
           <Link href={`/properties/${property.id}`}>
@@ -79,41 +79,38 @@ export default function PropertyCard({ property, index }: { property: Property; 
               {property.title}
             </h3>
           </Link>
-          <div className="flex items-center gap-2 text-slate-400 mt-4 text-[10px] uppercase tracking-[0.2em] font-bold">
+          <div className="flex items-center gap-2 text-slate-400 mt-3 text-[10px] uppercase tracking-[0.2em] font-bold">
             <MapPin size={14} className="text-teal-forest" />
             <span className="truncate">{property.location}</span>
           </div>
         </div>
 
         {/* Elegant Divider */}
-        <div className="w-full h-px bg-slate-100 mb-6" />
+        <div className="w-full h-px bg-slate-100 mb-4" />
 
         {/* Amenities Footer */}
-        <div className="flex items-center justify-between mt-auto">
-          <div className="flex gap-6 text-slate-500 font-light text-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-auto">
+          {/* Pills for BHK & Area */}
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Bedrooms">
+              <Bed size={14} className="text-teal-forest" strokeWidth={2} />
+              <span>
+                {property.bedrooms && property.bedrooms > 0
+                  ? `${property.bedrooms} BHK`
+                  : "-- BHK"}
+              </span>
+            </div>
 
-            {(property.bedrooms ?? 0) > 0 && (
-              <div className="flex items-center gap-2" title="Bedrooms">
-                <Bed size={18} className="text-teal-forest/50" strokeWidth={1.5} />
-                <span>{property.bedrooms}</span>
-              </div>
-            )}
-
-            {(property.bathrooms ?? 0) > 0 && (
-              <div className="flex items-center gap-2" title="Bathrooms">
-                <Bath size={18} className="text-teal-forest/50" strokeWidth={1.5} />
-                <span>{property.bathrooms}</span>
-              </div>
-            )}
-
-            {property.area && (
-              <div className="flex items-center gap-2" title="Square Footage">
-                <Maximize size={16} className="text-teal-forest/50" strokeWidth={1.5} />
-                <span>{property.area} <span className="text-[10px] uppercase tracking-widest opacity-60">sqft</span></span>
-              </div>
-            )}
-
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Square Footage">
+              <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
+              <span>
+                {property.area
+                  ? `${property.area} sq.ft`
+                  : "-- sq.ft"}
+              </span>
+            </div>
           </div>
+
           <div className="flex items-center gap-3">
             {/* WhatsApp Inquiry Button */}
             <a 
@@ -121,17 +118,17 @@ export default function PropertyCard({ property, index }: { property: Property; 
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 px-4 h-10 rounded-full border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all duration-300 text-[10px] uppercase tracking-widest font-bold"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-300 text-xs font-bold tracking-wide"
               title="Inquire via WhatsApp"
             >
-              <MessageCircle size={15} />
-              <span className="hidden sm:inline">WhatsApp</span>
+              <MessageCircle size={16} />
+              <span>WhatsApp</span>
             </a>
 
             {/* Subtle Action Icon that reacts on card hover */}
             <Link
               href={`/properties/${property.id}`}
-              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-teal-forest group-hover:border-teal-forest group-hover:text-vanilla-latte transition-all duration-500 hover:scale-110"
+              className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-teal-forest group-hover:border-teal-forest group-hover:text-white transition-all duration-300"
             >
               <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>

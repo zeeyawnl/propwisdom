@@ -22,7 +22,7 @@ export const CreatePropertySchema = z.object({
 
   type: z.enum(["apartment", "villa", "plot", "commercial"]),
 
-  listingType: z.enum(["rent", "resale", "new_project"]),
+  listingType: z.enum(["rent", "resale", "new_project", "mandate"]),
 
   bedrooms: z.number().int().min(0).optional().default(0),
 
@@ -52,7 +52,7 @@ export const UpdatePropertySchema = z.object({
   priceLabel: z.string().nullable().optional(),
   location: z.string().min(2).optional(),
   type: z.enum(["apartment", "villa", "plot", "commercial"]).optional(),
-  listingType: z.enum(["rent", "resale", "new_project"]).optional(),
+  listingType: z.enum(["rent", "resale", "new_project", "mandate"]).optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().int().min(0).optional(),
   area: z.string().nullable().optional(),
@@ -68,7 +68,7 @@ export const PropertyQuerySchema = z.object({
 
   type: z.string().optional(),
   location: z.string().optional(),
-  listingType: z.enum(["rent", "sale"]).optional(),
+  listingType: z.enum(["rent", "resale", "new_project", "mandate"]).optional(),
 
   min: z.coerce.number().positive().optional(),
   max: z.coerce.number().positive().optional(),
