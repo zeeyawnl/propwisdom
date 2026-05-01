@@ -71,7 +71,7 @@ export default function About() {
               <img
                 src="/assets/images/imran.png"
                 alt="Imran Khan"
-                className="w-full h-full object-cover object-top grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
+                className="w-full h-full object-cover object-top grayscale-[10%] group-hover:grayscale-0 transition-all duration-500"
               />
             </div>
 
@@ -80,10 +80,7 @@ export default function About() {
               <div className="w-14 h-14 bg-white/60 backdrop-blur-md rounded-2xl flex items-center justify-center text-teal-forest shadow-sm group-hover:-translate-y-1 transition-transform duration-300">
                 <TrendingUp size={24} strokeWidth={1.5} />
               </div>
-              {/* Interactive Arrow */}
-              <div className="w-10 h-10 rounded-full border border-teal-forest/20 flex items-center justify-center text-teal-forest opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 bg-white/50 backdrop-blur-sm">
-                <ArrowUpRight size={18} />
-              </div>
+
             </div>
 
             <div className="relative z-20 mt-auto pt-12 max-w-sm">
