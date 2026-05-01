@@ -38,6 +38,9 @@ export default async function EditPropertyPage({ params }: Props) {
           listingType: property.listingType,
           description: property.description ?? "",
           images: property.images ?? [],
+          bedrooms: property.bedrooms ?? null,
+          bathrooms: property.bathrooms ?? null,
+          area: property.area ?? "",
         }}
       />
     </div>

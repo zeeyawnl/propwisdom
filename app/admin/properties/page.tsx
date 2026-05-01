@@ -1,6 +1,7 @@
 import PropertyTable from '@/components/admin/PropertyTable';
 import Link from 'next/link';
 import { getProperties } from "@/lib/db/properties";
+import { type Property } from "@/lib/types/property";
 export const dynamic = "force-dynamic";
 export default async function PropertiesAdminPage() {
   const { data: properties } = await getProperties({
@@ -25,7 +26,7 @@ export default async function PropertiesAdminPage() {
         </Link>
       </div>
 
-      <PropertyTable properties={properties} />
+      <PropertyTable properties={properties as Property[]} />
     </div>
   );
 }

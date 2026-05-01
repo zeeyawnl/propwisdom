@@ -8,8 +8,6 @@ export async function requireAdmin() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("SERVER USER:", user);
-
   if (!user) {
     return {
       user: null,

@@ -14,6 +14,9 @@ type PropertyFormProps = {
     type?: string;
     listingType?: string;
     images?: string[];
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+    area?: string | null;
   };
   id?: string;
 };
@@ -25,7 +28,8 @@ type FormData = {
   location: string;
   type: string;
   listingType: string;
-  bedrooms: number;
+  bedrooms: string;
+  bathrooms: string;
   area: string;
   description: string;
   images: string[];
@@ -50,8 +54,9 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     location: initial?.location ?? "",
     type: initial?.type ?? "apartment",
     listingType: initial?.listingType ?? "rent",
-    bedrooms: (initial as { bedrooms?: number } | undefined)?.bedrooms ?? 0,
-    area: (initial as { area?: string | null } | undefined)?.area ?? "",
+    bedrooms: initial?.bedrooms != null ? String(initial.bedrooms) : "",
+    bathrooms: initial?.bathrooms != null ? String(initial.bathrooms) : "",
+    area: initial?.area ?? "",
     images: initial?.images || [],
   });
 
@@ -69,8 +74,9 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         location: initial.location ?? "",
         type: initial.type ?? "apartment",
         listingType: initial.listingType ?? "rent",
-        bedrooms: (initial as { bedrooms?: number })?.bedrooms ?? 0,
-        area: (initial as { area?: string | null })?.area ?? "",
+        bedrooms: initial.bedrooms != null ? String(initial.bedrooms) : "",
+        bathrooms: initial.bathrooms != null ? String(initial.bathrooms) : "",
+        area: initial.area ?? "",
         images: initial.images ?? [],
       });
     }
@@ -96,7 +102,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         ...form,
         price: Number(form.price),
         priceLabel: form.priceLabel || null,
-        bedrooms: form.bedrooms ? Number(form.bedrooms) : 0,
+        bedrooms: form.bedrooms !== "" ? Number(form.bedrooms) : null,
+        bathrooms: form.bathrooms !== "" ? Number(form.bathrooms) : null,
         area: form.area || null,
       };
 
@@ -218,24 +225,35 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
           </div>
         </div>
 
-        {/* BHK & Carpet Area */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* BHK, Bathrooms & Carpet Area */}
+        <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">BHK</label>
+            <label className="block text-sm font-bold text-slate-950 mb-1">BHK <span className="font-normal text-slate-400">(optional)</span></label>
             <input
               type="number"
               min={0}
-              placeholder="BHK (e.g. 2)"
+              placeholder="e.g. 2"
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
-              value={form.bedrooms || ""}
-              onChange={(e) => updateField("bedrooms", Number(e.target.value))}
+              value={form.bedrooms}
+              onChange={(e) => updateField("bedrooms", e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Carpet Area (sq ft)</label>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Bathrooms <span className="font-normal text-slate-400">(optional)</span></label>
+            <input
+              type="number"
+              min={0}
+              placeholder="e.g. 2"
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+              value={form.bathrooms}
+              onChange={(e) => updateField("bathrooms", e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Carpet Area <span className="font-normal text-slate-400">(optional)</span></label>
             <input
               type="text"
-              placeholder="Carpet Area (sq ft)"
+              placeholder="sq ft"
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
               value={form.area}
               onChange={(e) => updateField("area", e.target.value)}

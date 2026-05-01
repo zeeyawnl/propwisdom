@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getProperties } from "@/lib/db/properties";
 import PropertyTable from "@/components/admin/PropertyTable";
+import { type Property } from "@/lib/types/property";
 
 export default async function PropertiesPage() {
   const { data: properties } = await getProperties({
@@ -19,7 +20,7 @@ export default async function PropertiesPage() {
         </Link>
       </div>
 
-      <PropertyTable properties={properties} />
+      <PropertyTable properties={properties as Property[]} />
     </div>
   );
 }
