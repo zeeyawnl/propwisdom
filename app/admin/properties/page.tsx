@@ -1,10 +1,10 @@
 import PropertyTable from '@/components/admin/PropertyTable';
 import Link from 'next/link';
-import { getProperties } from "@/lib/db/properties";
+import { getPropertiesSupabase } from "@/lib/supabase/queries";
 import { type Property } from "@/lib/types/property";
 export const dynamic = "force-dynamic";
 export default async function PropertiesAdminPage() {
-  const { data: properties } = await getProperties({
+  const { data: properties } = await getPropertiesSupabase({
     page: 1,
     limit: 100,
     sort: "latest"

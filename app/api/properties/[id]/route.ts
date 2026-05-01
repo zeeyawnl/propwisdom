@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getPropertyById, updateProperty, deleteProperty } from "@/lib/db/properties";
+import { getPropertyByIdSupabase } from "@/lib/supabase/queries";
+import { updateProperty, deleteProperty } from "@/lib/db/properties";
 import { UpdatePropertySchema } from "@/lib/validations/property";
 import { requireAdmin } from "@/lib/auth/getUser";
 import crypto from "crypto";
@@ -13,7 +14,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const property = await getPropertyById(id);
+    const property = await getPropertyByIdSupabase(id);
 
     if (!property) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
@@ -86,7 +87,7 @@ export async function DELETE(
     const { id } = await params;
 
     // 1. Fetch property first to get image URLs
-    const property = await getPropertyById(id);
+    const property = await getPropertyByIdSupabase(id);
     if (!property) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }

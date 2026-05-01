@@ -1,6 +1,6 @@
 import PropertyForm from '@/components/admin/PropertyForm';
 import Link from 'next/link';
-import { getPropertyById } from '@/lib/db/properties';
+import { getPropertyByIdSupabase } from '@/lib/supabase/queries';
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ type Props = {
 export default async function EditPropertyPage({ params }: Props) {
   const { id } = await params;
 
-  const property = await getPropertyById(id);
+  const property = await getPropertyByIdSupabase(id);
 
   if (!property) {
     return <div>Property not found</div>;

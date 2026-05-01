@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getProperties, createProperty } from "@/lib/db/properties";
+import { getPropertiesSupabase } from "@/lib/supabase/queries";
+import { createProperty } from "@/lib/db/properties";
 import { CreatePropertySchema, PropertyQuerySchema } from "@/lib/validations/property";
 import { requireAdmin } from "@/lib/auth/getUser";
 import { v4 as uuidv4 } from "uuid";
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = PropertyQuerySchema.parse(Object.fromEntries(searchParams));
-    const data = await getProperties(query);
+    const data = await getPropertiesSupabase(query);
     
     // Safely enforce `images: string[]` for every property globally
     const safeData = {
