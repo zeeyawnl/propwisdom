@@ -8,6 +8,7 @@ import {
   gte,
   lte,
   count,
+  sql,
 } from "drizzle-orm";
 
 import type { PropertyQuery, CreatePropertyInput } from "@/lib/validations/property";
@@ -52,7 +53,7 @@ export async function getProperties(filters: PropertyQuery) {
       .offset(offset),
 
     db
-      .select({ count: count() })
+      .select({ count: sql<number>`count(*)::int` })
       .from(properties)
       .where(whereClause),
   ]);

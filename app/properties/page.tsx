@@ -1,5 +1,5 @@
 import { getProperties } from "@/lib/db/properties";
-import PropertyCard from "@/components/listings/PropertyCard";
+import PropertySection from "@/components/listings/PropertySection";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
@@ -60,94 +60,25 @@ export default async function PropertiesPage() {
         ) : (
           <>
             {/* --- PRIMARY SALES SECTION --- */}
-            {sales.length > 0 && (
-              <div className="mb-24">
-                <div className="flex items-center justify-between py-6 border-b border-slate-200 mb-12">
-                  <h2 className="text-xl font-medium text-slate-900">Purchase Opportunities</h2>
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
-                    Showing <span className="text-teal-forest">{sales.length}</span> Results
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-                  {sales.map((property, idx) => (
-                    <PropertyCard
-                      key={property.id}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      property={property as any}
-                      index={idx}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+            <PropertySection
+              title={<>Purchase <span className="font-serif italic text-teal-forest">Opportunities.</span></>}
+              subtitle="Find your next strategic asset from our curated list of resale properties and new projects."
+              properties={sales}
+            />
 
             {/* --- MANDATE PROJECTS SECTION --- */}
-            {mandate.length > 0 && (
-              <div className="pt-20 border-t border-slate-200">
-                <div className="mb-16 max-w-2xl">
-                  <h2 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight leading-tight mb-6">
-                    Mandate <span className="font-serif italic text-teal-forest">Projects.</span>
-                  </h2>
-                  <p className="text-slate-500 font-light leading-relaxed text-lg">
-                    Exclusive mandate listings — properties entrusted to us for direct, focused representation.
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-end py-2 border-b border-slate-100 mb-12">
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
-                    Showing <span className="text-teal-forest">{mandate.length}</span> Results
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-                  {mandate.map((property, idx) => (
-                    <PropertyCard
-                      key={property.id}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      property={property as any}
-                      index={idx}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+            <PropertySection
+              title={<>Mandate <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              subtitle="Exclusive mandate listings — properties entrusted to us for direct, focused representation."
+              properties={mandate}
+            />
 
             {/* --- LEASING & RENTALS SECTION --- */}
-            {rentals.length > 0 && (
-              <div className="pt-20 border-t border-slate-200">
-                {/* Elegant Rental Header */}
-                <div className="mb-16 max-w-2xl">
-
-                  <h2 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight leading-tight mb-6">
-                    Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span>
-                  </h2>
-                  <p className="text-slate-500 font-light leading-relaxed text-lg">
-                    Find your perfect temporary sanctuary or commercial lease with our meticulously vetted, hassle-free rental portfolio.
-                  </p>
-                </div>
-
-                {/* Rental Results Count */}
-                <div className="flex items-center justify-end py-2 border-b border-slate-100 mb-12">
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
-                    Showing <span className="text-teal-forest">{rentals.length}</span> Results
-                  </p>
-                </div>
-
-                {/* Rentals Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-                  {rentals.map((property, idx) => (
-                    <PropertyCard
-                      key={property.id}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      property={property as any}
-                      // Resetting index here ensures the staggered animation starts from 0 for this grid
-                      index={idx}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+            <PropertySection
+              title={<>Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span></>}
+              subtitle="Find your perfect temporary sanctuary or commercial lease with our meticulously vetted, hassle-free rental portfolio."
+              properties={rentals}
+            />
           </>
         )}
       </div>

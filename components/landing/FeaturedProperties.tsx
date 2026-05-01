@@ -29,7 +29,7 @@ export default function FeaturedProperties({ properties }: FeaturedPropertiesPro
   if (properties.length === 0) return null;
 
   return (
-    <section className="py-24 bg-white relative">
+    <section id="properties" className="py-24 bg-white relative">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
         {/* Section Header */}

@@ -85,54 +85,54 @@ export default function PropertyCard({ property, index }: { property: Property; 
           </div>
         </div>
 
+        {/* Amenities (Moved above divider for better structure) */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Bedrooms">
+            <Bed size={14} className="text-teal-forest" strokeWidth={2} />
+            <span>
+              {property.bedrooms && property.bedrooms > 0
+                ? `${property.bedrooms} BHK`
+                : "-- BHK"}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Square Footage">
+            <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
+            <span>
+              {property.area
+                ? `${property.area} sq.ft`
+                : "-- sq.ft"}
+            </span>
+          </div>
+        </div>
+
         {/* Elegant Divider */}
-        <div className="w-full h-px bg-slate-100 mb-4" />
+        <div className="w-full h-px bg-slate-100 mb-4 mt-auto" />
 
-        {/* Amenities Footer */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-auto">
-          {/* Pills for BHK & Area */}
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Bedrooms">
-              <Bed size={14} className="text-teal-forest" strokeWidth={2} />
-              <span>
-                {property.bedrooms && property.bedrooms > 0
-                  ? `${property.bedrooms} BHK`
-                  : "-- BHK"}
-              </span>
-            </div>
+        {/* Action Footer */}
+        <div className="flex items-center gap-3 w-full">
+          {/* WhatsApp Inquiry Button - 50% */}
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-300 text-[11px] uppercase tracking-widest font-bold"
+            title="Inquire via WhatsApp"
+          >
+            <MessageCircle size={15} />
+            <span>WhatsApp</span>
+          </a>
 
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Square Footage">
-              <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
-              <span>
-                {property.area
-                  ? `${property.area} sq.ft`
-                  : "-- sq.ft"}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* WhatsApp Inquiry Button */}
-            <a 
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-300 text-xs font-bold tracking-wide"
-              title="Inquire via WhatsApp"
-            >
-              <MessageCircle size={16} />
-              <span>WhatsApp</span>
-            </a>
-
-            {/* Subtle Action Icon that reacts on card hover */}
-            <Link
-              href={`/properties/${property.id}`}
-              className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-teal-forest group-hover:border-teal-forest group-hover:text-white transition-all duration-300"
-            >
-              <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
-          </div>
+          {/* View Details Button - 50% */}
+          <Link
+            href={`/properties/${property.id}`}
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl border border-slate-200 text-slate-500 hover:bg-teal-forest hover:border-teal-forest hover:text-white transition-all duration-300 text-[11px] uppercase tracking-widest font-bold group/btn"
+            title="View Details"
+          >
+            <span>Details</span>
+            <ArrowUpRight size={15} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+          </Link>
         </div>
       </div>
     </motion.div>

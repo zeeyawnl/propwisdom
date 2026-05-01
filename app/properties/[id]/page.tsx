@@ -1,8 +1,9 @@
 import { getPropertyById } from "@/lib/db/properties";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Heart, Share2 } from "lucide-react";
+import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Heart, Share2, Phone, MessageCircle } from "lucide-react";
 import ImageCarousel from "@/components/listings/ImageCarousel";
+import ShareButton from "@/components/listings/ShareButton";
 
 export const dynamic = "force-dynamic";
 
@@ -37,9 +38,7 @@ export default async function PropertyDetailPage({ params }: Props) {
           </Link>
 
           <div className="flex gap-4">
-            <button className="text-slate-400 hover:text-teal-forest transition-colors flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold">
-              <Share2 size={14} /> Share
-            </button>
+            <ShareButton title={property.title} />
           </div>
         </div>
       </div>
@@ -140,28 +139,28 @@ export default async function PropertyDetailPage({ params }: Props) {
 
                 <div className="space-y-4">
                   <a
-                    href="#contact"
-                    className="flex items-center justify-center w-full py-4 bg-vanilla-latte text-teal-forest uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-white transition-colors"
+                    href="tel:+918975123786"
+                    className="flex items-center justify-center gap-3 w-full py-4 bg-vanilla-latte text-teal-forest uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-white transition-colors shadow-sm"
                   >
-                    Request Details
+                    <Phone size={16} /> Call Expert
                   </a>
                   <a
-                    href="https://wa.me/919876543210"
+                    href={`https://wa.me/918975123786?text=${encodeURIComponent(`Hi, I am interested in ${property.title} located at ${property.location}. I would like to schedule a viewing or discuss more.`)}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center w-full py-4 bg-transparent border border-white/30 text-white uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-white/10 transition-colors"
+                    className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-[#20bd5a] transition-colors shadow-sm"
                   >
-                    Chat on WhatsApp
+                    <MessageCircle size={16} /> Chat on WhatsApp
                   </a>
                 </div>
 
                 <div className="mt-10 pt-8 border-t border-white/10 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-serif text-xl text-vanilla-latte">
-                    P
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-vanilla-latte/20 flex-shrink-0 bg-white/10">
+                    <img src="/assets/images/imran.png" alt="Imran Khan" className="w-full h-full object-cover object-top" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">PropWisdom Concierge</p>
-                    <p className="text-[10px] text-white/50 uppercase tracking-widest mt-1">Available 24/7</p>
+                    <p className="text-sm font-medium text-white">Imran Khan</p>
+                    <p className="text-[10px] text-white/60 uppercase tracking-widest mt-1">Property Specialist</p>
                   </div>
                 </div>
               </div>

@@ -62,8 +62,9 @@ export default function PropertyTable({ properties }: { properties: Property[] }
           <tr className="text-left font-semibold text-slate-700">
             <th className="px-5 py-4">Title</th>
             <th className="px-5 py-4">Location</th>
-            <th className="px-5 py-4">Price</th>
-            <th className="px-5 py-4">Status</th>
+            <th className="px-5 py-4">Display Price</th>
+            <th className="px-5 py-4">Actual Price</th>
+            <th className="px-5 py-4">Date Added</th>
             <th className="px-5 py-4 text-right">Actions</th>
           </tr>
         </thead>
@@ -75,10 +76,13 @@ export default function PropertyTable({ properties }: { properties: Property[] }
               <td className="px-5 py-4 font-mono text-slate-900">
                 {p.priceLabel || `₹${(p.price ?? 0).toLocaleString("en-IN")}`}
               </td>
-              <td className="px-5 py-4">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${STATUS_COLOR[p.status ?? 'AVAILABLE']}`}>
-                  {p.status}
-                </span>
+              <td className="px-5 py-4 font-mono text-teal-700 font-semibold bg-teal-50/50">
+                ₹{(p.price ?? 0).toLocaleString("en-IN")}
+              </td>
+              <td className="px-5 py-4 text-slate-500 whitespace-nowrap">
+                {p.createdAt ? new Date(p.createdAt).toLocaleDateString("en-IN", {
+                  day: "numeric", month: "short", year: "numeric"
+                }) : "N/A"}
               </td>
               <td className="px-5 py-4 text-right">
                 <div className="flex justify-end items-center gap-3">
