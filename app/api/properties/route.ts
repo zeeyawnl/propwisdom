@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/properties (Create new — Admin only)
+// POST /api/properties (Create new: Admin only)
 export async function POST(request: NextRequest) {
   try {
     const { user, response } = await requireAdmin();

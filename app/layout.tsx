@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PropWisdom — Find Your Dream Property",
+  title: "PropWisdom | Find Your Dream Property",
   description:
     "Verified listings, trusted deals, and expert guidance. Browse premium properties for buying, selling, and renting.",
 };

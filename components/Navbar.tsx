@@ -39,7 +39,16 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
 
           {/* Logo - Replaced with dummy image and gradient text */}
-          <Link href="/" className="group flex items-center gap-3">
+          <Link
+            href="/"
+            className="group flex items-center gap-3"
+            onClick={(e) => {
+              if (pathname === "/") {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+          >
             <img
               src="/assets/images/logo2.png"
               className="w-20 h-20 object-contain"
@@ -62,6 +71,12 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={(e) => {
+                  if (link.href === "/" && pathname === "/") {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
                 className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group"
               >
                 {link.name}
@@ -109,7 +124,13 @@ export default function Navbar() {
                 >
                   <Link
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(e) => {
+                      if (link.href === "/" && pathname === "/") {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }
+                      setIsOpen(false);
+                    }}
                     className="text-4xl font-bold text-teal-forest flex items-center justify-between group"
                   >
                     {link.name}

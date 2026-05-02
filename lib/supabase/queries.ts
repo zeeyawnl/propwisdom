@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { PropertyQuery } from "@/lib/validations/property";
 
-// Service-role-free anonymous client for reads — uses HTTP, works perfectly on Vercel edge
+// Service-role-free anonymous client for reads, uses HTTP, works perfectly on Vercel edge
 function getSupabaseClient() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     throw new Error("Missing Supabase environment variables");

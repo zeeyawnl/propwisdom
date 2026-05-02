@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
@@ -39,6 +40,7 @@ const Linkedin = ({ size = 24, className = "" }: { size?: number; className?: st
 export default function Footer() {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Register ScrollTrigger inside useEffect to guarantee client-side only
@@ -85,7 +87,16 @@ export default function Footer() {
 
           {/* Brand Column */}
           <div className="lg:col-span-5">
-            <Link href="/" className="group flex items-center gap-6 mb-8 w-fit">
+            <Link 
+              href="/" 
+              className="group flex items-center gap-6 mb-8 w-fit"
+              onClick={(e) => {
+                if (pathname === "/") {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+            >
               <div className="relative w-12 h-12 bg-vanilla-latte flex items-center justify-center rounded-sm rotate-45 group-hover:rotate-0 transition-transform duration-500">
                 <img
                   src="/assets/images/logo2.png"
@@ -125,7 +136,20 @@ export default function Footer() {
           <div className="lg:col-span-2 lg:col-start-7">
             <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50 mb-6">Explore</h3>
             <ul className="space-y-4">
-              <li><Link href="/" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Home <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+              <li>
+                <Link 
+                  href="/" 
+                  className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group"
+                  onClick={(e) => {
+                    if (pathname === "/") {
+                      e.preventDefault();
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
+                >
+                  Home <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              </li>
               <li><Link href="/properties" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Collection <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
               <li><Link href="/about" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">About Us <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
               <li><Link href="/services" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Expertise <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
@@ -160,7 +184,15 @@ export default function Footer() {
       <div className="relative w-full flex items-end justify-center mt-auto select-none pt-20 pb-12" style={{ perspective: "1200px" }}>
         <h1
           ref={textRef}
-          className="text-[14vw] leading-[0.85] tracking-tight font-sans m-0 flex justify-center w-full text-vanilla-latte/90"
+          onClick={(e) => {
+            if (pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              window.location.href = "/";
+            }
+          }}
+          className="text-[14vw] leading-[0.85] tracking-tight font-sans m-0 flex justify-center w-full text-vanilla-latte/90 cursor-pointer"
           style={{ transformStyle: "preserve-3d", willChange: "transform, opacity" }}
         >
           <span className="uppercase font-bold">

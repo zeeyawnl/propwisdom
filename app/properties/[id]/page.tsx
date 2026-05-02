@@ -81,20 +81,20 @@ export default async function PropertyDetailPage({ params }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 border-y border-slate-200 py-8 mb-16">
           <div className="flex flex-col gap-1 border-r border-slate-200 px-4 md:px-8 first:pl-0">
             <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-slate-400 font-bold"><Bed size={14} /> Bedrooms</span>
-            <span className="text-2xl font-light text-slate-900">{property.bedrooms || "—"}</span>
+            <span className="text-2xl font-light text-slate-900">{property.bedrooms || "N/A"}</span>
           </div>
           <div className="flex flex-col gap-1 md:border-r border-slate-200 px-4 md:px-8">
             <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-slate-400 font-bold"><Bath size={14} /> Bathrooms</span>
-            <span className="text-2xl font-light text-slate-900">{property.bathrooms || "—"}</span>
+            <span className="text-2xl font-light text-slate-900">{property.bathrooms || "N/A"}</span>
           </div>
           <div className="flex flex-col gap-1 border-r border-slate-200 px-4 md:px-8 mt-6 md:mt-0">
             <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-slate-400 font-bold"><Maximize size={14} /> Area</span>
-            <span className="text-2xl font-light text-slate-900">{property.area || "—"} <span className="text-sm text-slate-400">sqft</span></span>
+            <span className="text-2xl font-light text-slate-900">{property.area || "N/A"} <span className="text-sm text-slate-400">sqft</span></span>
           </div>
           <div className="flex flex-col gap-1 px-4 md:px-8 mt-6 md:mt-0">
             <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-slate-400 font-bold"><Calendar size={14} /> Listed On</span>
             <span className="text-2xl font-light text-slate-900">
-              {property.createdAt ? new Date(property.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "—"}
+              {property.createdAt ? new Date(property.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "N/A"}
             </span>
           </div>
         </div>

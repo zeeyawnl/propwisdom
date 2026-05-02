@@ -10,20 +10,20 @@ const SERVICES_DATA = [
     id: "01",
     title: "Property Consulting",
     subtitle: "Make informed decisions with expert guidance",
-    desc: "Real estate decisions involve more than just choosing a property — they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
+    desc: "Real estate decisions involve more than just choosing a property; they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
     points: [
       "Personalized consultation based on your goals",
       "Market insights across Pune’s micro-markets",
       "Price benchmarking and negotiation guidance",
       "Risk assessment before finalizing any deal"
     ],
-    closing: "We ensure you don’t just buy property — you buy the right property.",
+    closing: "We ensure you don’t just buy property; you buy the right property.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"
   },
   {
     id: "02",
     title: "Residential & Commercial",
-    subtitle: "From homes to business spaces — we handle it all",
+    subtitle: "From homes to business spaces, we handle it all",
     desc: "We assist in buying and selling across all major real estate categories, ensuring every listing is evaluated for authenticity, pricing, and location value.",
     points: [
       "Flats, apartments, villas, and independent houses",
@@ -104,7 +104,7 @@ const SERVICES_DATA = [
     id: "08",
     title: "Home & Property Loans",
     subtitle: "Hassle-free financing for your property dreams",
-    desc: "We've partnered with leading banks and NBFCs to provide competitive loan options with the best interest rates and fastest approvals — so financing never stands in the way of your dream property.",
+    desc: "We've partnered with leading banks and NBFCs to provide competitive loan options with the best interest rates and fastest approvals, so financing never stands in the way of your dream property.",
     points: [
       "Home loans with competitive interest rates from top banks",
       "Loan against property (LAP) for business or personal needs",

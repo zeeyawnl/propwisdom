@@ -15,6 +15,7 @@ import {
   Building2,
   Users,
   Award,
+  ArrowUpRight,
 } from "lucide-react";
 
 export default function AboutContent() {
@@ -65,7 +66,7 @@ export default function AboutContent() {
             variants={fadeUp}
             className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl mx-auto mb-10"
           >
-            At PropWisdom, we don&apos;t just help you find property — we help
+            At PropWisdom, we don&apos;t just help you find property; we help
             you build wealth, secure your future, and make every real estate
             decision with confidence. Our MahaRERA registered team brings
             10+ years of market expertise to every transaction.
@@ -162,7 +163,7 @@ export default function AboutContent() {
               </h2>
               <div className="space-y-6 text-slate-500 font-light text-lg leading-relaxed">
                 <p>
-                  Real estate isn&apos;t just about four walls and a roof —
+                  Real estate isn&apos;t just about four walls and a roof;
                   it&apos;s about securing your family&apos;s future, growing
                   your wealth, and finding a place where life happens. Based in
                   the heart of Pune, PropWisdom was founded to bring
@@ -172,13 +173,13 @@ export default function AboutContent() {
                 <p>
                   Whether you are investing in a high-yield commercial space,
                   acquiring strategic land parcels, renting a home, or searching
-                  for your dream residential property — our approach remains the
+                  for your dream residential property, our approach remains the
                   same: rigorous due diligence, data-backed valuations, and an
                   unwavering commitment to your success.
                 </p>
                 <p className="text-teal-forest font-medium">
                   When you work with PropWisdom, you&apos;re not just getting a
-                  real estate agent — you&apos;re getting a dedicated partner who
+                  real estate agent; you&apos;re getting a dedicated partner who
                   treats your goals as their own.
                 </p>
               </div>
@@ -250,7 +251,7 @@ export default function AboutContent() {
             />
 
             <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-              {/* Left – RERA Info */}
+              {/* Left: RERA Info */}
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-14 h-14 bg-vanilla-latte/20 rounded-2xl flex items-center justify-center">
@@ -286,7 +287,7 @@ export default function AboutContent() {
                 </p>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8 w-full">
                     <div>
                       <p className="text-white/50 text-[10px] uppercase tracking-widest font-bold mb-1">
                         RERA Registration Number
@@ -299,9 +300,18 @@ export default function AboutContent() {
                       href="https://maharera.mahaonline.gov.in"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-vanilla-latte text-teal-forest rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shrink-0"
+                      className="hidden md:inline-flex items-center justify-center gap-2 px-6 py-3 bg-vanilla-latte text-teal-forest rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shrink-0"
                     >
                       Verify on MahaRERA
+                      <ExternalLink size={14} />
+                    </a>
+                    <a
+                      href="https://maharera.mahaonline.gov.in"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex md:hidden w-full items-center justify-center gap-2 px-6 py-3 bg-vanilla-latte text-teal-forest rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shrink-0"
+                    >
+                      Verify
                       <ExternalLink size={14} />
                     </a>
                   </div>
@@ -328,11 +338,11 @@ export default function AboutContent() {
                 </ul>
               </div>
 
-              {/* Right – Trust Stats */}
+              {/* Right: Trust Stats */}
               <div className="flex-shrink-0 w-full lg:w-auto grid grid-cols-2 gap-4 lg:gap-5">
                 {[
-                  { icon: Users, num: "500+", label: "Happy Clients" },
-                  { icon: Building2, num: "₹200Cr+", label: "Portfolio Value" },
+                  { icon: Users, num: "450+", label: "Happy Clients" },
+                  { icon: Building2, num: "₹850Cr+", label: "Portfolio Value" },
                   { icon: Award, num: "10+", label: "Years Experience" },
                   { icon: ShieldCheck, num: "100%", label: "Verified Listings" },
                 ].map((stat, i) => (
@@ -433,39 +443,41 @@ export default function AboutContent() {
         </motion.div>
       </section>
 
-      {/* 6. CTA Section */}
-      <section className="bg-teal-forest py-20 md:py-24 relative overflow-hidden">
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-vanilla-latte/10 rounded-full blur-3xl" />
+      {/* 6. Floating CTA Banner */}
+      <section className="pb-24 px-6 lg:px-12 max-w-[1440px] mx-auto">
+        <div className="bg-teal-forest rounded-[2rem] md:rounded-[3rem] p-12 md:p-20 lg:p-24 relative overflow-hidden text-center shadow-2xl">
+          {/* Decorative Orbs */}
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-vanilla-latte/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-light text-white tracking-tight leading-tight mb-6">
-            Let&apos;s Build Your{" "}
-            <br className="hidden md:block" />
-            <span className="font-serif italic text-vanilla-latte">
-              Real Estate Success Story
-            </span>
-          </h2>
-          <p className="text-white/70 font-light text-lg max-w-2xl mx-auto mb-10">
-            Whether it&apos;s your first property or your tenth investment, our
-            RERA-registered team is ready to guide you with clarity,
-            confidence, and care.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/#contact"
-              className="px-10 py-5 bg-vanilla-latte text-teal-forest rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all hover:-translate-y-1 shadow-lg flex items-center gap-3"
-            >
-              Get Free Consultation
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              href="/properties"
-              className="px-10 py-5 bg-transparent border border-white/30 text-white rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-white/10 transition-all hover:-translate-y-1 flex items-center gap-3"
-            >
-              Browse Properties
-              <ArrowRight size={16} />
-            </Link>
+          <div className="relative z-10">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight mb-6">
+              Let&apos;s Build Your <br className="hidden md:block" />
+              <span className="font-serif italic text-vanilla-latte">
+                Real Estate Success Story
+              </span>
+            </h2>
+            <p className="text-white/70 font-light text-lg max-w-2xl mx-auto mb-12">
+              Whether it&apos;s your first property or your tenth investment, our
+              RERA-registered team is ready to guide you with clarity,
+              confidence, and care.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link
+                href="/#contact"
+                className="w-full sm:w-auto px-10 py-5 bg-vanilla-latte text-teal-forest rounded-sm text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all hover:-translate-y-1 flex items-center justify-center gap-3"
+              >
+                Get Free Consultation
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/properties"
+                className="w-full sm:w-auto px-10 py-5 bg-transparent border border-white/30 text-white rounded-sm text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+              >
+                Browse Properties
+                <ArrowUpRight size={16} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

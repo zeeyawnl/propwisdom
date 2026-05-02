@@ -80,7 +80,7 @@ export default function PropertySection({
       {/* Full-width scroll area with edge buttons and fade masks */}
       <div className="relative">
 
-        {/* ── Left scroll button – pinned to page edge ── */}
+        {/* ── Left scroll button: pinned to page edge ── */}
         <button
           onClick={() => scroll("left")}
           className={`absolute left-3 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/60 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white hover:border-teal-forest hover:scale-110 active:scale-95 transition-all duration-300 ${
@@ -91,7 +91,7 @@ export default function PropertySection({
           <ChevronLeft size={24} strokeWidth={1.5} />
         </button>
 
-        {/* ── Right scroll button – pinned to page edge ── */}
+        {/* ── Right scroll button: pinned to page edge ── */}
         <button
           onClick={() => scroll("right")}
           className={`absolute right-3 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/60 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white hover:border-teal-forest hover:scale-110 active:scale-95 transition-all duration-300 ${

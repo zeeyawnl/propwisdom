@@ -31,14 +31,14 @@ const SERVICES = [
     tagline: "Expert guidance for every decision",
     hero: "Make informed decisions with expert guidance",
     description:
-      "Real estate decisions involve more than just choosing a property — they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
+      "Real estate decisions involve more than just choosing a property; they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
     points: [
       "Personalized consultation based on your goals",
       "Market insights across Pune's micro-markets",
       "Price benchmarking and negotiation guidance",
       "Risk assessment before finalizing any deal",
     ],
-    closing: "We ensure you don't just buy property — you buy the right property.",
+    closing: "We ensure you don't just buy property; you buy the right property.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
   },
   {
@@ -50,9 +50,9 @@ const SERVICES = [
     description:
       "Whether you are a first-time homebuyer, looking to upgrade, or planning to sell your existing property, our residential division covers the full spectrum. We specialize in primary sales from top developers, verified resale properties, and curated rental homes across Pune.",
     points: [
-      "Primary sales — brand new flats & villas",
-      "Resale properties — pre-owned homes",
-      "Rental services — verified landlords",
+      "Primary sales: brand new flats & villas",
+      "Resale properties: pre-owned homes",
+      "Rental services: verified landlords",
       "End-to-end support from visits to registration",
     ],
     closing: "From a cozy 1BHK to a sprawling villa, we match you with the right home.",
@@ -67,9 +67,9 @@ const SERVICES = [
     description:
       "The right commercial space can accelerate your business growth. We help entrepreneurs, startups, and established businesses find, lease, or purchase commercial properties that align with their operational needs and budget.",
     points: [
-      "Primary commercial sales — new office spaces",
+      "Primary commercial sales: new office spaces",
       "Resale commercial properties at market-best rates",
-      "Commercial rentals — flexible lease options",
+      "Commercial rentals: flexible lease options",
       "Location analysis for maximum footfall",
     ],
     closing: "Position your business for success with the right commercial address.",
@@ -150,7 +150,7 @@ const SERVICES = [
     tagline: "Secure & transparent transactions",
     hero: "Complete legal clarity for every deal",
     description:
-      "Legal clarity is critical in real estate. We help minimize risks and ensure every transaction is safe, compliant, and transparent — from title checks to agreement drafting.",
+      "Legal clarity is critical in real estate. We help minimize risks and ensure every transaction is safe, compliant, and transparent, from title checks to agreement drafting.",
     points: [
       "Document verification and due diligence",
       "Title checks and ownership validation",
@@ -235,7 +235,7 @@ export default function ServicesPage() {
             className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl mx-auto"
           >
             From property consulting to home loans, rentals to land investments
-            — we deliver end-to-end expertise so you can make every real estate
+            We deliver end-to-end expertise so you can make every real estate
             decision with absolute confidence.
           </motion.p>
         </motion.div>
@@ -291,7 +291,7 @@ export default function ServicesPage() {
         </motion.div>
       </section>
 
-      {/* ── Detailed Services – Editorial 3-Column Layout ── */}
+      {/* ── Detailed Services: Editorial 3-Column Layout ── */}
       <section className="py-24 md:py-32 border-t border-slate-200 bg-white">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
@@ -515,7 +515,7 @@ export default function ServicesPage() {
             { num: "10+", label: "Years Expertise", desc: "A decade of deep market knowledge in Pune's ever-evolving real estate landscape." },
             { num: "100%", label: "Verified Listings", desc: "Every property is checked for legal clearance, title validity, and fair pricing." },
             { num: "50+", label: "Builder Partners", desc: "Direct relationships with top developers for the best primary sale deals." },
-            { num: "RERA", label: "Registered Agent", desc: "MahaRERA Reg. No. A52100013636 — verify at maharera.mahaonline.gov.in" },
+            { num: "RERA", label: "Registered Agent", desc: "MahaRERA Reg. No. A52100013636. Verify at maharera.mahaonline.gov.in" },
           ].map((stat, i) => (
             <motion.div key={i} variants={fadeUp} className="border-t border-slate-200 pt-6">
               <span className="text-5xl md:text-6xl font-serif text-slate-400 block mb-4 transition-colors hover:text-teal-forest cursor-default">
@@ -548,7 +548,7 @@ export default function ServicesPage() {
             </h2>
             <p className="text-white/70 font-light text-lg max-w-2xl mx-auto mb-12">
               Whether you're buying your first home, investing in commercial
-              property, or looking for the best loan rates — our team is here to
+              property, or looking for the best loan rates, our team is here to
               guide you every step of the way.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

@@ -69,7 +69,7 @@ export default async function PropertiesPage() {
             {/* --- MANDATE PROJECTS SECTION --- */}
             <PropertySection
               title={<>Mandate <span className="font-serif italic text-teal-forest">Projects.</span></>}
-              subtitle="Exclusive mandate listings — properties entrusted to us for direct, focused representation."
+              subtitle="Exclusive mandate listings, properties entrusted to us for direct, focused representation."
               properties={mandate}
             />
 

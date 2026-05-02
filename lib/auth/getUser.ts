@@ -12,7 +12,7 @@ export async function requireAdmin() {
     return {
       user: null,
       response: new Response(
-        JSON.stringify({ error: "Unauthorized — please sign in" }),
+        JSON.stringify({ error: "Unauthorized: please sign in" }),
         { status: 401, headers: { "Content-Type": "application/json" } }
       ),
     };
@@ -24,7 +24,7 @@ export async function requireAdmin() {
     return {
       user: null,
       response: new Response(
-        JSON.stringify({ error: "Forbidden — admin only" }),
+        JSON.stringify({ error: "Forbidden: admin only" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       ),
     };
@@ -42,7 +42,7 @@ export async function requireAuth() {
     return {
       user: null,
       response: new Response(
-        JSON.stringify({ error: "Unauthorized — please sign in" }),
+        JSON.stringify({ error: "Unauthorized: please sign in" }),
         { status: 401, headers: { "Content-Type": "application/json" } }
       ),
     };
