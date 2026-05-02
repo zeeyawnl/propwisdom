@@ -4,16 +4,16 @@ import { useState, useRef } from "react";
 import PropertyCard from "@/components/listings/PropertyCard";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function PropertySection({ 
-  title, 
-  subtitle, 
-  properties, 
-  id 
-}: { 
-  title: React.ReactNode; 
-  subtitle?: string; 
+export default function PropertySection({
+  title,
+  subtitle,
+  properties,
+  id
+}: {
+  title: React.ReactNode;
+  subtitle?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  properties: any[]; 
+  properties: any[];
   id?: string;
 }) {
   const [visibleCount, setVisibleCount] = useState(10);
@@ -48,60 +48,62 @@ export default function PropertySection({
             </p>
           )}
         </div>
-        
+
         <div className="flex items-center gap-6">
           <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 whitespace-nowrap">
             Showing <span className="text-teal-forest">{visibleProperties.length}</span> of {properties.length}
           </p>
-          
-          {/* Desktop Scroll Controls */}
-          <div className="hidden md:flex gap-2">
-            <button 
-              onClick={() => scroll("left")}
-              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-teal-forest hover:text-white hover:border-teal-forest transition-all"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button 
-              onClick={() => scroll("right")}
-              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-teal-forest hover:text-white hover:border-teal-forest transition-all"
-              aria-label="Scroll right"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Horizontal Scroll Container */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto gap-6 md:gap-8 pb-10 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-6 px-6 lg:mx-0 lg:px-0 scroll-smooth"
-      >
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        {visibleProperties.map((property: any, idx: number) => (
-          <div key={property.id} className="w-[85vw] md:w-[420px] lg:w-[480px] snap-center shrink-0">
-            <PropertyCard property={property} index={idx} />
-          </div>
-        ))}
+      {/* Horizontal Scroll Container with edge nav buttons */}
+      <div className="relative group md:mx-14">
+        {/* Left button — sits in the gutter to the left of cards */}
+        <button
+          onClick={() => scroll("left")}
+          className="absolute -left-14 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft size={22} />
+        </button>
 
-        {hasMore && (
-          <div className="w-[85vw] md:w-[350px] snap-center shrink-0 flex items-center justify-center bg-slate-50/50 rounded-[1.5rem] border border-slate-200/50 hover:bg-slate-50 transition-colors">
-            <button
-              onClick={() => {
-                setVisibleCount(prev => prev + 10);
-                setTimeout(() => scroll("right"), 100);
-              }}
-              className="flex flex-col items-center justify-center gap-4 text-teal-forest group p-12 w-full h-full"
-            >
-              <div className="w-16 h-16 rounded-full border-2 border-teal-forest flex items-center justify-center group-hover:bg-teal-forest group-hover:text-white transition-all duration-300 group-hover:scale-110">
-                <ArrowRight size={24} />
-              </div>
-              <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Load More</span>
-            </button>
-          </div>
-        )}
+        {/* Right button — sits in the gutter to the right of cards */}
+        <button
+          onClick={() => scroll("right")}
+          className="absolute -right-14 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
+          aria-label="Scroll right"
+        >
+          <ChevronRight size={22} />
+        </button>
+
+        <div
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto gap-6 md:gap-8 pb-10 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-6 px-6 lg:mx-0 lg:px-0 scroll-smooth"
+        >
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {visibleProperties.map((property: any, idx: number) => (
+            <div key={property.id} className="w-[85vw] md:w-[420px] lg:w-[480px] snap-center shrink-0">
+              <PropertyCard property={property} index={idx} />
+            </div>
+          ))}
+
+          {hasMore && (
+            <div className="w-[85vw] md:w-[350px] snap-center shrink-0 flex items-center justify-center bg-slate-50/50 rounded-[1.5rem] border border-slate-200/50 hover:bg-slate-50 transition-colors">
+              <button
+                onClick={() => {
+                  setVisibleCount(prev => prev + 10);
+                  setTimeout(() => scroll("right"), 100);
+                }}
+                className="flex flex-col items-center justify-center gap-4 text-teal-forest group p-12 w-full h-full"
+              >
+                <div className="w-16 h-16 rounded-full border-2 border-teal-forest flex items-center justify-center group-hover:bg-teal-forest group-hover:text-white transition-all duration-300 group-hover:scale-110">
+                  <ArrowRight size={24} />
+                </div>
+                <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Load More</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

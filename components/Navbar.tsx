@@ -125,6 +125,7 @@ export default function Navbar() {
               >
                 <Link
                   href="/#contact"
+                  onClick={() => setIsOpen(false)}
                   className="block w-full text-center py-5 bg-teal-forest text-white uppercase tracking-widest font-bold"
                 >
                   Contact Us
