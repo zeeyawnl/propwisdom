@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import PropertyCard from "@/components/listings/PropertyCard";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -18,16 +18,37 @@ export default function PropertySection({
 }) {
   const [visibleCount, setVisibleCount] = useState(10);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   if (!properties || properties.length === 0) return null;
 
   const visibleProperties = properties.slice(0, visibleCount);
   const hasMore = visibleCount < properties.length;
 
+  // Check scroll position to toggle fade + button visibility
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const updateScrollState = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    // Initial check
+    updateScrollState();
+    return () => el.removeEventListener("scroll", updateScrollState);
+  }, [updateScrollState, visibleProperties.length]);
+
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
       const { current } = scrollContainerRef;
-      const scrollAmount = current.clientWidth * 0.8;
+      const scrollAmount = current.clientWidth * 0.75;
       current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth"
@@ -37,7 +58,7 @@ export default function PropertySection({
 
   return (
     <div className="mb-20 md:mb-32" id={id}>
-      <div className="flex flex-col md:flex-row md:items-end justify-between py-6 border-b border-slate-200 mb-8 md:mb-12 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between py-6 border-b border-slate-200 mb-8 md:mb-12 gap-4 max-w-[1440px] mx-auto px-6 lg:px-12">
         <div className="max-w-2xl">
           <h2 className="text-3xl md:text-4xl font-light text-slate-900 tracking-tight leading-tight">
             {title}
@@ -56,29 +77,49 @@ export default function PropertySection({
         </div>
       </div>
 
-      {/* Horizontal Scroll Container with edge nav buttons */}
-      <div className="relative group md:mx-14">
-        {/* Left button — sits in the gutter to the left of cards */}
+      {/* Full-width scroll area with edge buttons and fade masks */}
+      <div className="relative">
+
+        {/* ── Left scroll button – pinned to page edge ── */}
         <button
           onClick={() => scroll("left")}
-          className="absolute -left-14 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
+          className={`absolute left-3 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/60 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white hover:border-teal-forest hover:scale-110 active:scale-95 transition-all duration-300 ${
+            canScrollLeft ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
           aria-label="Scroll left"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={24} strokeWidth={1.5} />
         </button>
 
-        {/* Right button — sits in the gutter to the right of cards */}
+        {/* ── Right scroll button – pinned to page edge ── */}
         <button
           onClick={() => scroll("right")}
-          className="absolute -right-14 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
+          className={`absolute right-3 md:right-6 lg:right-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/60 hidden md:flex items-center justify-center text-slate-600 hover:bg-teal-forest hover:text-white hover:border-teal-forest hover:scale-110 active:scale-95 transition-all duration-300 ${
+            canScrollRight ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
           aria-label="Scroll right"
         >
-          <ChevronRight size={22} />
+          <ChevronRight size={24} strokeWidth={1.5} />
         </button>
 
+        {/* ── Left fade mask ── */}
+        <div
+          className={`absolute left-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-r from-white to-transparent transition-opacity duration-500 ${
+            canScrollLeft ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* ── Right fade mask ── */}
+        <div
+          className={`absolute right-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-l from-white to-transparent transition-opacity duration-500 ${
+            canScrollRight ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* ── Horizontal scroll container ── */}
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-6 md:gap-8 pb-10 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-6 px-6 lg:mx-0 lg:px-0 scroll-smooth"
+          className="flex overflow-x-auto gap-6 md:gap-8 pb-10 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-6 lg:px-12 scroll-smooth"
         >
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {visibleProperties.map((property: any, idx: number) => (

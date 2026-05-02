@@ -518,7 +518,7 @@ export default function ServicesPage() {
             { num: "RERA", label: "Registered Agent", desc: "MahaRERA Reg. No. A52100013636 — verify at maharera.mahaonline.gov.in" },
           ].map((stat, i) => (
             <motion.div key={i} variants={fadeUp} className="border-t border-slate-200 pt-6">
-              <span className="text-5xl md:text-6xl font-serif text-slate-200 block mb-4 transition-colors hover:text-teal-forest cursor-default">
+              <span className="text-5xl md:text-6xl font-serif text-slate-400 block mb-4 transition-colors hover:text-teal-forest cursor-default">
                 {stat.num}
               </span>
               <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-3">
