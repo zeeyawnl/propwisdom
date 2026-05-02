@@ -99,6 +99,20 @@ const SERVICES_DATA = [
     ],
     closing: "We bring your vision to life with expert guidance at every stage.",
     image: "/assets/images/seventhpoint.jpg"
+  },
+  {
+    id: "08",
+    title: "Home & Property Loans",
+    subtitle: "Hassle-free financing for your property dreams",
+    desc: "We've partnered with leading banks and NBFCs to provide competitive loan options with the best interest rates and fastest approvals — so financing never stands in the way of your dream property.",
+    points: [
+      "Home loans with competitive interest rates from top banks",
+      "Loan against property (LAP) for business or personal needs",
+      "Balance transfer facility for existing high-interest loans",
+      "Complete documentation support until disbursement"
+    ],
+    closing: "We simplify the financing maze so you can focus on your new property.",
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2011&auto=format&fit=crop"
   }
 ];
 
@@ -216,19 +230,19 @@ export default function Services() {
         {/* Closing Trust Section & CTA */}
         <div className="mt-8 lg:mt-32 pt-8 lg:pt-20 lg:border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-10">
           <p className="text-xl md:text-2xl text-slate-600 font-light max-w-3xl leading-relaxed">
-            At <span className="font-medium text-teal-forest"><span className="font-bold">PROP</span>Wisdom</span>, we don’t just facilitate transactions we build long-term relationships by delivering clarity, trust, and results at every step of your real estate journey.
+            At <span className="font-medium text-teal-forest"><span className="font-bold">PROP</span>Wisdom</span>, we don't just facilitate transactions we build long-term relationships by delivering clarity, trust, and results at every step of your real estate journey.
           </p>
 
           <div className="shrink-0 flex flex-col items-center gap-4">
             <Link
-              href="/#contact"
+              href="/services"
               className="px-10 py-5 bg-teal-forest text-vanilla-latte rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-1 shadow-lg shadow-teal-forest/20 flex items-center gap-3"
             >
-              Start Your Journey
+              View All Services
               <ArrowRight size={16} />
             </Link>
             <span className="text-[11px] uppercase tracking-widest text-slate-400 font-light">
-              Explore Opportunities Today
+              Explore Our Full Expertise
             </span>
           </div>
         </div>

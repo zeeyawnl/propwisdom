@@ -46,9 +46,13 @@ export default function About() {
 
           {/* Right: Subtext */}
           <div className="flex-1 lg:pl-10">
-            <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
-              PROPWisdom is a Pune based real estate company helping you buy, sell, and rent properties with clarity and confidence across residential, commercial, and land investments.
+            <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed mb-4">
+              PROPWisdom is a MahaRERA registered, Pune-based real estate company helping you buy, sell, rent, and invest in properties with clarity, confidence, and complete transparency.
             </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-forest/10 rounded-full">
+              <ShieldCheck size={16} className="text-teal-forest" />
+              <span className="text-teal-forest text-[11px] uppercase tracking-widest font-bold">RERA: A52100013636</span>
+            </div>
           </div>
         </div>
 
