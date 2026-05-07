@@ -67,7 +67,12 @@ export const PropertyQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(10),
 
   type: z.string().optional(),
+  // Free-text partial match (ILIKE) on location
   location: z.string().optional(),
+  // Numeric area search — buffer zone applied in the query layer
+  area: z.coerce.number().positive().optional(),
+  // BHK / bedrooms exact match
+  bedrooms: z.coerce.number().int().min(0).optional(),
   listingType: z.enum(["rent", "resale", "new_project", "mandate"]).optional(),
 
   min: z.coerce.number().positive().optional(),

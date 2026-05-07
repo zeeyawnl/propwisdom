@@ -70,10 +70,14 @@ export default function PropertySection({
           )}
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-2 md:mt-0">
           <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 whitespace-nowrap">
             Showing <span className="text-teal-forest">{visibleProperties.length}</span> of {properties.length}
           </p>
+          <div className={`flex md:hidden items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-teal-forest transition-opacity duration-300 ${canScrollRight ? "opacity-100 animate-pulse" : "opacity-0 pointer-events-none"}`}>
+            <span>Swipe</span>
+            <ArrowRight size={14} />
+          </div>
         </div>
       </div>
 
@@ -104,14 +108,14 @@ export default function PropertySection({
 
         {/* ── Left fade mask ── */}
         <div
-          className={`absolute left-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-r from-white to-transparent transition-opacity duration-500 ${
+          className={`absolute left-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-r from-white to-transparent transition-opacity duration-500 hidden md:block ${
             canScrollLeft ? "opacity-100" : "opacity-0"
           }`}
         />
 
         {/* ── Right fade mask ── */}
         <div
-          className={`absolute right-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-l from-white to-transparent transition-opacity duration-500 ${
+          className={`absolute right-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-l from-white to-transparent transition-opacity duration-500 hidden md:block ${
             canScrollRight ? "opacity-100" : "opacity-0"
           }`}
         />

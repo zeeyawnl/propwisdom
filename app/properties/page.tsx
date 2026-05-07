@@ -1,45 +1,74 @@
+import { Suspense } from "react";
 import { getProperties } from "@/lib/db/properties";
 import PropertySection from "@/components/listings/PropertySection";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import PropertySearchBar from "@/components/listings/PropertySearchBar";
 
-// Make the route dynamic so it fetches fresh data
+// Make the route dynamic so it always fetches fresh data
 export const dynamic = "force-dynamic";
 
-export default async function PropertiesPage() {
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface PageProps {
+  searchParams: Promise<{
+    location?: string;
+    area?: string;
+    bedrooms?: string;
+    listingType?: string;
+    sort?: string;
+    page?: string;
+  }>;
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+export default async function PropertiesPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  // Parse bedrooms safely
+  const bedroomsRaw = params.bedrooms ? parseInt(params.bedrooms, 10) : undefined;
+  const bedrooms = bedroomsRaw !== undefined && !isNaN(bedroomsRaw) ? bedroomsRaw : undefined;
+
+  // Parse area safely — must be a positive number for the buffer-range query
+  const areaRaw = params.area ? parseFloat(params.area) : undefined;
+  const area = areaRaw !== undefined && !isNaN(areaRaw) && areaRaw > 0 ? areaRaw : undefined;
+
   const result = await getProperties({
-    sort: "latest",
-    page: 1,
+    sort: (params.sort as "price_asc" | "price_desc" | "latest") ?? "latest",
+    page: params.page ? Math.max(1, parseInt(params.page, 10)) : 1,
     limit: 50,
+    location: params.location || undefined,
+    area,
+    bedrooms,
+    listingType: params.listingType as "rent" | "resale" | "new_project" | "mandate" | undefined,
   });
 
   const allProperties = result.data;
 
-  // Filter properties into two arrays based on listingType
-  // Adjust the ".includes('rent')" string if your DB uses a different exact term (e.g., 'for_rent')
-  const rentals = allProperties.filter((p) =>
-    p.listingType.toLowerCase() === "rent"
-  );
+  // Determine if any search filter is active
+  const hasActiveSearch = !!(params.location || params.area || params.bedrooms);
 
-  const mandate = allProperties.filter((p) =>
-    p.listingType.toLowerCase() === "mandate"
-  );
+  // When search is active, show all results in a single section
+  // When no search, split by listing type
+  const rentals = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "rent");
 
-  const sales = allProperties.filter((p) =>
-    !p.listingType.toLowerCase().includes("rent") &&
-    p.listingType.toLowerCase() !== "mandate"
-  );
+  const mandate = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "mandate");
+
+  const sales = hasActiveSearch
+    ? []
+    : allProperties.filter(
+        (p) =>
+          !p.listingType.toLowerCase().includes("rent") &&
+          p.listingType.toLowerCase() !== "mandate"
+      );
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] pt-32 pb-24">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
-        {/* Navigation / Back Action */}
-
-
         {/* Content Header */}
-        <div className="mb-14">
-
+        <div className="mb-10">
           <h1 className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-tight mb-8">
             Global Collection <br className="hidden md:block" />
             <span className="font-serif italic text-teal-forest">of Pune&apos;s Finest.</span>
@@ -49,15 +78,49 @@ export default async function PropertiesPage() {
           </p>
         </div>
 
-        {/* Global Empty State */}
+        {/* ── Search Bar (client-side, wrapped in Suspense for useSearchParams) ── */}
+        <Suspense fallback={<SearchBarSkeleton />}>
+          <PropertySearchBar />
+        </Suspense>
+
+        {/* ── Results ── */}
         {allProperties.length === 0 ? (
           <div className="bg-white rounded-[2rem] p-20 text-center border border-slate-100 shadow-sm">
-            <h3 className="text-2xl font-light text-slate-400 uppercase tracking-widest">
-              Collections currently in curation.
-            </h3>
-            <p className="text-slate-400 mt-4 font-light">Check back soon for our latest acquisitions.</p>
+            {hasActiveSearch ? (
+              <>
+                <h3 className="text-2xl font-light text-slate-400 uppercase tracking-widest">
+                  No properties match your search.
+                </h3>
+                <p className="text-slate-400 mt-4 font-light">
+                  Try adjusting your filters — we&apos;re always adding new listings.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-2xl font-light text-slate-400 uppercase tracking-widest">
+                  Collections currently in curation.
+                </h3>
+                <p className="text-slate-400 mt-4 font-light">
+                  Check back soon for our latest acquisitions.
+                </p>
+              </>
+            )}
           </div>
+        ) : hasActiveSearch ? (
+          // ── Single results section for search mode ──
+          <PropertySection
+            id="search-results"
+            title={
+              <>
+                Search{" "}
+                <span className="font-serif italic text-teal-forest">Results.</span>
+              </>
+            }
+            subtitle={`${allProperties.length} propert${allProperties.length === 1 ? "y" : "ies"} found`}
+            properties={allProperties}
+          />
         ) : (
+          // ── Regular view: split by type ──
           <>
             {/* --- PRIMARY SALES SECTION --- */}
             <PropertySection
@@ -83,5 +146,14 @@ export default async function PropertiesPage() {
         )}
       </div>
     </main>
+  );
+}
+
+// ─── Skeleton fallback for the search bar ─────────────────────────────────────
+function SearchBarSkeleton() {
+  return (
+    <div className="w-full mb-12">
+      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm h-[68px] animate-pulse" />
+    </div>
   );
 }

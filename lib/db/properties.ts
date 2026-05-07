@@ -7,6 +7,7 @@ import {
   eq,
   gte,
   lte,
+  ilike,
   count,
   sql,
 } from "drizzle-orm";
@@ -20,10 +21,33 @@ const SORT_MAP = {
   latest: [desc(properties.featured), desc(properties.createdAt)],
 } as const;
 
+/**
+ * Compute a buffered area range so that searching for e.g. 600 sq.ft
+ * returns properties in the range [500, 700] (±100, or ±15% — whichever is
+ * larger). This prevents overly strict exact-match results for text-stored area values.
+ *
+ * Buffer formula: Math.max(MIN_BUFFER, Math.round(value * BUFFER_FACTOR))
+ *   600 → max(100, 90)  = 100  →  [500, 700]
+ *  2000 → max(100, 300) = 300  → [1700, 2300]
+ *  5000 → max(100, 750) = 750  → [4250, 5750]
+ */
+const AREA_BUFFER_FACTOR = 0.15;
+const AREA_MIN_BUFFER    = 100;
+
+function getAreaRange(area: number): { areaMin: number; areaMax: number } {
+  const buffer = Math.max(AREA_MIN_BUFFER, Math.round(area * AREA_BUFFER_FACTOR));
+  return {
+    areaMin: Math.max(0, area - buffer),
+    areaMax: area + buffer,
+  };
+}
+
 export async function getProperties(filters: PropertyQuery) {
   const {
     type,
     location,
+    area,
+    bedrooms,
     listingType,
     min,
     max,
@@ -34,7 +58,21 @@ export async function getProperties(filters: PropertyQuery) {
 
   const conditions = [
     type && eq(properties.type, type),
-    location && eq(properties.location, location),
+    // Partial, case-insensitive match on location (e.g. "Baner" matches "Baner, Pune")
+    location && ilike(properties.location, `%${location}%`),
+    // Numeric range with buffer: CAST(area AS NUMERIC) BETWEEN areaMin AND areaMax
+    // NULLIF guards against non-numeric values stored in the text column.
+    ...(area !== undefined
+      ? (() => {
+          const { areaMin, areaMax } = getAreaRange(area);
+          return [
+            sql`CAST(NULLIF(${properties.area}, '') AS NUMERIC) >= ${areaMin}`,
+            sql`CAST(NULLIF(${properties.area}, '') AS NUMERIC) <= ${areaMax}`,
+          ];
+        })()
+      : []),
+    // Exact bedrooms/BHK match
+    bedrooms !== undefined && eq(properties.bedrooms, bedrooms),
     listingType && eq(properties.listingType, listingType),
     min && gte(properties.price, min),
     max && lte(properties.price, max),

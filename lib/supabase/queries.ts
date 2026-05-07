@@ -12,15 +12,40 @@ function getSupabaseClient() {
   );
 }
 
+/**
+ * Same buffer logic as lib/db/properties.ts — keep in sync.
+ *   600 → [500, 700]  |  2000 → [1700, 2300]  |  5000 → [4250, 5750]
+ */
+const AREA_BUFFER_FACTOR = 0.15;
+const AREA_MIN_BUFFER    = 100;
+
+function getAreaRange(area: number): { areaMin: number; areaMax: number } {
+  const buffer = Math.max(AREA_MIN_BUFFER, Math.round(area * AREA_BUFFER_FACTOR));
+  return {
+    areaMin: Math.max(0, area - buffer),
+    areaMax: area + buffer,
+  };
+}
+
 export async function getPropertiesSupabase(filters: PropertyQuery) {
   const supabase = getSupabaseClient();
-  const { type, location, listingType, min, max, sort, page, limit } = filters;
+  const { type, location, area, bedrooms, listingType, min, max, sort, page, limit } = filters;
 
   let query = supabase.from("properties").select("*", { count: "exact" });
 
   // Apply filters
   if (type) query = query.eq("type", type);
-  if (location) query = query.eq("location", location);
+  // Partial, case-insensitive match on location
+  if (location) query = query.ilike("location", `%${location}%`);
+  // Numeric buffered range on area: PostgREST supports "column::numeric" casting
+  if (area !== undefined) {
+    const { areaMin, areaMax } = getAreaRange(area);
+    query = query
+      .gte("area::numeric", areaMin)
+      .lte("area::numeric", areaMax);
+  }
+  // Exact BHK / bedrooms match
+  if (bedrooms !== undefined) query = query.eq("bedrooms", bedrooms);
   if (listingType) query = query.eq("listing_type", listingType);
   if (min) query = query.gte("price", min);
   if (max) query = query.lte("price", max);
