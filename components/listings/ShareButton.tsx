@@ -29,7 +29,7 @@ export default function ShareButton({ title }: { title?: string }) {
   return (
     <button 
       onClick={handleShare}
-      className={`transition-colors flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold ${
+      className={`transition-colors flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold p-2 -mr-2 ${
         copied ? "text-teal-forest" : "text-slate-400 hover:text-teal-forest"
       }`}
     >

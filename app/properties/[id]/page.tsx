@@ -27,11 +27,11 @@ export default async function PropertyDetailPage({ params }: Props) {
     <div className="min-h-screen bg-[#FAFAFA] pt-24 md:pt-32 pb-24">
 
       {/* 1. Minimalist Top Navigation */}
-      <div className="bg-[#FAFAFA] pb-8">
+      <div className="bg-[#FAFAFA] pt-6 lg:pt-10 pb-8 relative z-20">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex items-center justify-between">
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] font-bold text-slate-400 hover:text-teal-forest transition-colors group"
+            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] font-bold text-slate-400 hover:text-teal-forest transition-colors group p-2 -ml-2"
           >
             <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             Back to Collection
