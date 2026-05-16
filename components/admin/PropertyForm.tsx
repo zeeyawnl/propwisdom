@@ -35,12 +35,14 @@ type FormData = {
   images: string[];
 };
 
-const TYPES = ["apartment", "villa", "plot", "commercial"];
+const TYPES = ["residential", "villa", "plot", "commercial"];
 const LISTING_TYPES = [
+  { value: "resale",      label: "Residential Properties" },
   { value: "rent",        label: "Rental" },
-  { value: "resale",      label: "Resale" },
-  { value: "new_project", label: "New Project" },
   { value: "mandate",     label: "Mandate Project" },
+  { value: "commercial",  label: "Commercial" },
+  { value: "new_project", label: "New Project" },
+  { value: "plot",        label: "Plot" },
 ];
 
 export default function PropertyForm({ initial, id }: PropertyFormProps) {
@@ -52,7 +54,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     price: initial?.price ?? 0,
     priceLabel: initial?.priceLabel ?? "",
     location: initial?.location ?? "",
-    type: initial?.type ?? "apartment",
+    type: initial?.type ?? "residential",
     listingType: initial?.listingType ?? "rent",
     bedrooms: initial?.bedrooms != null ? String(initial.bedrooms) : "",
     bathrooms: initial?.bathrooms != null ? String(initial.bathrooms) : "",
@@ -72,7 +74,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         price: initial.price ?? 0,
         priceLabel: initial.priceLabel ?? "",
         location: initial.location ?? "",
-        type: initial.type ?? "apartment",
+        type: initial.type ?? "residential",
         listingType: initial.listingType ?? "rent",
         bedrooms: initial.bedrooms != null ? String(initial.bedrooms) : "",
         bathrooms: initial.bathrooms != null ? String(initial.bathrooms) : "",
@@ -212,7 +214,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Listing Variant</label>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Project Type</label>
             <select
               value={form.listingType}
               onChange={(e) => updateField("listingType", e.target.value)}

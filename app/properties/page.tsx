@@ -15,6 +15,8 @@ interface PageProps {
     listingType?: string;
     sort?: string;
     page?: string;
+    min?: string;
+    max?: string;
   }>;
 }
 
@@ -30,6 +32,12 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const areaRaw = params.area ? parseFloat(params.area) : undefined;
   const area = areaRaw !== undefined && !isNaN(areaRaw) && areaRaw > 0 ? areaRaw : undefined;
 
+  const minRaw = params.min ? parseFloat(params.min) : undefined;
+  const min = minRaw !== undefined && !isNaN(minRaw) && minRaw >= 0 ? minRaw : undefined;
+
+  const maxRaw = params.max ? parseFloat(params.max) : undefined;
+  const max = maxRaw !== undefined && !isNaN(maxRaw) && maxRaw > 0 ? maxRaw : undefined;
+
   const result = await getProperties({
     sort: (params.sort as "price_asc" | "price_desc" | "latest") ?? "latest",
     page: params.page ? Math.max(1, parseInt(params.page, 10)) : 1,
@@ -37,31 +45,48 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     location: params.location || undefined,
     area,
     bedrooms,
-    listingType: params.listingType as "rent" | "resale" | "new_project" | "mandate" | undefined,
+    listingType: params.listingType as "rent" | "resale" | "new_project" | "mandate" | "commercial" | "plot" | undefined,
+    min,
+    max,
   });
 
   const allProperties = result.data;
 
   // Determine if any search filter is active
-  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType);
+  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType || params.min || params.max);
 
-  // When search is active, show all results in a single section
-  // When no search, split by listing type
+  // ── When search is active: single unified results block
+  // ── When no search: split into 6 dedicated sections in display order
+
+  // 1. Residential Properties (listingType = "resale")
+  const residential = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "resale");
+
+  // 2. Rental
   const rentals = hasActiveSearch
     ? []
     : allProperties.filter((p) => p.listingType.toLowerCase() === "rent");
 
+  // 3. Mandate Projects
   const mandate = hasActiveSearch
     ? []
     : allProperties.filter((p) => p.listingType.toLowerCase() === "mandate");
 
-  const sales = hasActiveSearch
+  // 4. Commercial Properties
+  const commercial = hasActiveSearch
     ? []
-    : allProperties.filter(
-        (p) =>
-          !p.listingType.toLowerCase().includes("rent") &&
-          p.listingType.toLowerCase() !== "mandate"
-      );
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "commercial");
+
+  // 5. New Projects
+  const newProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "new_project");
+
+  // 6. Plots
+  const plots = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType.toLowerCase() === "plot");
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] pt-32 pb-24">
@@ -73,9 +98,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             Global Collection <br className="hidden md:block" />
             <span className="font-serif italic text-teal-forest">of Pune&apos;s Finest.</span>
           </h1>
-          <p className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl">
-            A meticulously curated selection of Pune&apos;s most prestigious residences, commercial landmarks, and strategic assets.
-          </p>
+
         </div>
 
         {/* ── Search Bar (client-side, wrapped in Suspense for useSearchParams) ── */}
@@ -120,27 +143,48 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             properties={allProperties}
           />
         ) : (
-          // ── Regular view: split by type ──
+          // ── Regular view: 6 dedicated sections in display order ──
           <>
-            {/* --- PRIMARY SALES SECTION --- */}
+            {/* 1. RESIDENTIAL PROPERTIES (resale) */}
             <PropertySection
-              title={<>Purchase <span className="font-serif italic text-teal-forest">Opportunities.</span></>}
-              subtitle="Find your next strategic asset from our curated list of resale properties and new projects."
-              properties={sales}
+              id="residential"
+              title={<>Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
+              properties={residential}
             />
 
-            {/* --- MANDATE PROJECTS SECTION --- */}
+            {/* 2. RENTAL */}
             <PropertySection
+              id="rental"
+              title={<>Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span></>}
+              properties={rentals}
+            />
+
+            {/* 3. MANDATE PROJECTS */}
+            <PropertySection
+              id="mandate"
               title={<>Mandate <span className="font-serif italic text-teal-forest">Projects.</span></>}
-              subtitle="Exclusive mandate listings, properties entrusted to us for direct, focused representation."
               properties={mandate}
             />
 
-            {/* --- LEASING & RENTALS SECTION --- */}
+            {/* 4. COMMERCIAL PROPERTIES */}
             <PropertySection
-              title={<>Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span></>}
-              subtitle="Find your perfect temporary sanctuary or commercial lease with our meticulously vetted, hassle-free rental portfolio."
-              properties={rentals}
+              id="commercial"
+              title={<>Commercial <span className="font-serif italic text-teal-forest">Properties.</span></>}
+              properties={commercial}
+            />
+
+            {/* 5. NEW PROJECTS */}
+            <PropertySection
+              id="new-projects"
+              title={<>New <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={newProjects}
+            />
+
+            {/* 6. PLOTS */}
+            <PropertySection
+              id="plots"
+              title={<>Land & <span className="font-serif italic text-teal-forest">Plots.</span></>}
+              properties={plots}
             />
           </>
         )}

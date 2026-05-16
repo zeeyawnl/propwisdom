@@ -21,20 +21,24 @@ export default function PropertySearchBar() {
 
   // Initialise from current URL params so state survives navigation
   const [location, setLocation] = useState(searchParams.get("location") ?? "");
-  const [area, setArea] = useState(searchParams.get("area") ?? "");
-  const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") ?? "");
   const [listingType, setListingType] = useState(searchParams.get("listingType") ?? "");
+  const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") ?? "");
+  const [area, setArea] = useState(searchParams.get("area") ?? "");
+  const [min, setMin] = useState(searchParams.get("min") ?? "");
+  const [max, setMax] = useState(searchParams.get("max") ?? "");
 
-  const hasFilters = location || area || bedrooms || listingType;
+  const hasFilters = location || area || bedrooms || listingType || min || max;
 
   const buildQuery = useCallback(
-    (overrides: { location?: string; area?: string; bedrooms?: string; listingType?: string }) => {
+    (overrides: { location?: string; area?: string; bedrooms?: string; listingType?: string; min?: string; max?: string }) => {
       const params = new URLSearchParams(searchParams.toString());
       const merged = {
         location: overrides.location ?? location,
-        area: overrides.area ?? area,
-        bedrooms: overrides.bedrooms ?? bedrooms,
         listingType: overrides.listingType ?? listingType,
+        bedrooms: overrides.bedrooms ?? bedrooms,
+        area: overrides.area ?? area,
+        min: overrides.min ?? min,
+        max: overrides.max ?? max,
       };
 
       // Reset to page 1 on every search
@@ -43,18 +47,24 @@ export default function PropertySearchBar() {
       if (merged.location) params.set("location", merged.location);
       else params.delete("location");
 
-      if (merged.area) params.set("area", merged.area);
-      else params.delete("area");
+      if (merged.listingType) params.set("listingType", merged.listingType);
+      else params.delete("listingType");
 
       if (merged.bedrooms) params.set("bedrooms", merged.bedrooms);
       else params.delete("bedrooms");
 
-      if (merged.listingType) params.set("listingType", merged.listingType);
-      else params.delete("listingType");
+      if (merged.area) params.set("area", merged.area);
+      else params.delete("area");
+
+      if (merged.min) params.set("min", merged.min);
+      else params.delete("min");
+
+      if (merged.max) params.set("max", merged.max);
+      else params.delete("max");
 
       return params.toString();
     },
-    [searchParams, location, area, bedrooms, listingType]
+    [searchParams, location, listingType, bedrooms, area, min, max]
   );
 
   const handleSearch = () => {
@@ -65,15 +75,19 @@ export default function PropertySearchBar() {
 
   const handleClear = () => {
     setLocation("");
-    setArea("");
-    setBedrooms("");
     setListingType("");
+    setBedrooms("");
+    setArea("");
+    setMin("");
+    setMax("");
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("location");
-      params.delete("area");
-      params.delete("bedrooms");
       params.delete("listingType");
+      params.delete("bedrooms");
+      params.delete("area");
+      params.delete("min");
+      params.delete("max");
       params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`);
     });
@@ -87,10 +101,10 @@ export default function PropertySearchBar() {
     <div className="w-full mb-12">
       {/* ── Search Card ── */}
       <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap">
 
           {/* Location Input */}
-          <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+          <div className="flex-1 min-w-[200px] flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
             <MapPin
               size={18}
               className="text-teal-forest shrink-0 group-focus-within:scale-110 transition-transform"
@@ -121,41 +135,35 @@ export default function PropertySearchBar() {
             )}
           </div>
 
-          {/* Area Input */}
-          <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
-            <Maximize2
+          {/* Project Type Selector */}
+          <div className="flex-1 min-w-[150px] flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+            <Tag
               size={18}
               className="text-teal-forest shrink-0 group-focus-within:scale-110 transition-transform"
             />
-            <div className="flex-1 min-w-0">
+            <div className="flex-1">
               <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
-                Area (sq.ft) <span className="normal-case tracking-normal font-normal text-slate-300">±100 sq.ft</span>
+                Project Type
               </p>
-              <input
-                id="search-area"
-                type="number"
-                min="1"
-                placeholder="e.g. 600, 1200, 2000"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="w-full bg-transparent text-sm font-medium text-slate-800 placeholder-slate-300 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                autoComplete="off"
-              />
-            </div>
-            {area && (
-              <button
-                onClick={() => setArea("")}
-                className="text-slate-300 hover:text-slate-500 transition-colors shrink-0"
-                aria-label="Clear area"
+              <select
+                id="search-listing-type"
+                value={listingType}
+                onChange={(e) => setListingType(e.target.value)}
+                className="w-full bg-transparent text-sm font-medium text-slate-800 outline-none cursor-pointer appearance-none pr-4"
               >
-                <X size={14} />
-              </button>
-            )}
+                <option value="">All Types</option>
+                <option value="resale">Residential Properties</option>
+                <option value="rent">Rental</option>
+                <option value="mandate">Mandate</option>
+                <option value="commercial">Commercial</option>
+                <option value="new_project">New Project</option>
+                <option value="plot">Plot</option>
+              </select>
+            </div>
           </div>
 
           {/* BHK Selector */}
-          <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+          <div className="flex-1 min-w-[110px] flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
             <Home
               size={18}
               className="text-teal-forest shrink-0 group-focus-within:scale-110 transition-transform"
@@ -179,33 +187,89 @@ export default function PropertySearchBar() {
             </div>
           </div>
 
-          {/* Listing Type Selector */}
-          <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
-            <Tag
+          {/* Area Input */}
+          <div className="flex-1 min-w-[150px] flex items-center gap-3 px-5 py-4 border-b lg:border-b-0 lg:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+            <Maximize2
               size={18}
               className="text-teal-forest shrink-0 group-focus-within:scale-110 transition-transform"
             />
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
-                Type
+                Carpet Area <span className="normal-case tracking-normal font-normal text-slate-300">±100 sq.ft</span>
               </p>
-              <select
-                id="search-listing-type"
-                value={listingType}
-                onChange={(e) => setListingType(e.target.value)}
-                className="w-full bg-transparent text-sm font-medium text-slate-800 outline-none cursor-pointer appearance-none pr-4"
-              >
-                <option value="">All Types</option>
-                <option value="resale">Resale</option>
-                <option value="new_project">New Project</option>
-                <option value="rent">Rent</option>
-                <option value="mandate">Mandate</option>
-              </select>
+              <input
+                id="search-area"
+                type="number"
+                min="1"
+                placeholder="e.g. 1200"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full bg-transparent text-sm font-medium text-slate-800 placeholder-slate-300 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                autoComplete="off"
+              />
             </div>
+            {area && (
+              <button
+                onClick={() => setArea("")}
+                className="text-slate-300 hover:text-slate-500 transition-colors shrink-0"
+                aria-label="Clear area"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* Price Range Input (Min - Max) */}
+          <div className="flex-[1.5] min-w-[220px] flex items-center gap-3 px-5 py-4 border-b lg:border-b-0 lg:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+            <div className="flex-1 min-w-0 flex items-center gap-2">
+              <div className="flex-1">
+                <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
+                  Min Price (₹)
+                </p>
+                <input
+                  id="search-min-price"
+                  type="number"
+                  min="0"
+                  placeholder="Min"
+                  value={min}
+                  onChange={(e) => setMin(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="w-full bg-transparent text-sm font-medium text-slate-800 placeholder-slate-300 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  autoComplete="off"
+                />
+              </div>
+              <span className="text-slate-300">-</span>
+              <div className="flex-1">
+                <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
+                  Max Price (₹)
+                </p>
+                <input
+                  id="search-max-price"
+                  type="number"
+                  min="0"
+                  placeholder="Max"
+                  value={max}
+                  onChange={(e) => setMax(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="w-full bg-transparent text-sm font-medium text-slate-800 placeholder-slate-300 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+            {(min || max) && (
+              <button
+                onClick={() => { setMin(""); setMax(""); }}
+                className="text-slate-300 hover:text-slate-500 transition-colors shrink-0"
+                aria-label="Clear price"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2 px-4 py-3 md:py-0 shrink-0">
+          <div className="w-full lg:w-auto flex items-center justify-end gap-2 px-4 py-3 shrink-0">
             {hasFilters && (
               <button
                 onClick={handleClear}
@@ -220,7 +284,7 @@ export default function PropertySearchBar() {
               id="search-submit"
               onClick={handleSearch}
               disabled={isPending}
-              className="h-11 px-6 rounded-xl bg-teal-forest text-vanilla-latte text-[11px] uppercase tracking-widest font-bold flex items-center gap-2 hover:bg-teal-forest/90 active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+              className="h-11 px-6 rounded-xl bg-teal-forest text-vanilla-latte text-[11px] uppercase tracking-widest font-bold flex items-center justify-center gap-2 hover:bg-teal-forest/90 active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm w-full lg:w-auto"
             >
               {isPending ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -283,6 +347,32 @@ export default function PropertySearchBar() {
                 startTransition(() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.delete("listingType");
+                  router.push(`${pathname}?${params.toString()}`);
+                });
+              }}
+            />
+          )}
+          {min && (
+            <FilterChip
+              label={`💰 Min: ₹${min}`}
+              onRemove={() => {
+                setMin("");
+                startTransition(() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("min");
+                  router.push(`${pathname}?${params.toString()}`);
+                });
+              }}
+            />
+          )}
+          {max && (
+            <FilterChip
+              label={`💰 Max: ₹${max}`}
+              onRemove={() => {
+                setMax("");
+                startTransition(() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("max");
                   router.push(`${pathname}?${params.toString()}`);
                 });
               }}

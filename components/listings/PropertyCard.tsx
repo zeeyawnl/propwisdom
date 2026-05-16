@@ -47,7 +47,7 @@ export default function PropertyCard({ property, index }: { property: Property; 
         />
 
         {/* Subtle top gradient to ensure badge readability */}
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/40 to-transparent z-0" />
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/20 to-transparent z-0" />
 
         {/* Status Badges */}
         <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">

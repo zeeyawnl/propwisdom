@@ -108,14 +108,14 @@ export default function PropertySection({
 
         {/* ── Left fade mask ── */}
         <div
-          className={`absolute left-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-r from-white to-transparent transition-opacity duration-500 hidden md:block ${
+          className={`absolute left-0 top-0 bottom-0 w-8 md:w-16 lg:w-20 z-20 pointer-events-none bg-gradient-to-r from-white/60 to-transparent transition-opacity duration-500 hidden md:block ${
             canScrollLeft ? "opacity-100" : "opacity-0"
           }`}
         />
 
         {/* ── Right fade mask ── */}
         <div
-          className={`absolute right-0 top-0 bottom-0 w-16 md:w-28 lg:w-36 z-20 pointer-events-none bg-gradient-to-l from-white to-transparent transition-opacity duration-500 hidden md:block ${
+          className={`absolute right-0 top-0 bottom-0 w-8 md:w-16 lg:w-20 z-20 pointer-events-none bg-gradient-to-l from-white/60 to-transparent transition-opacity duration-500 hidden md:block ${
             canScrollRight ? "opacity-100" : "opacity-0"
           }`}
         />
