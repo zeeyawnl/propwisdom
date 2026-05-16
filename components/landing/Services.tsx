@@ -2,198 +2,405 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronRight, Landmark, Home, Building2, TrendingUp, Handshake, KeyRound, MapPin, BadgeIndianRupee, Paintbrush, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 
-const SERVICES_DATA = [
+/* ------------------------------------------------------------------ */
+/*  Master Services Data Set                                          */
+/* ------------------------------------------------------------------ */
+const SERVICES = [
   {
     id: "01",
-    title: "Property Consulting",
-    subtitle: "Make informed decisions with expert guidance",
-    desc: "Real estate decisions involve more than just choosing a property; they require clarity on pricing, location potential, legal standing, and long-term value. Our consulting service is built to provide exactly that.",
-    points: [
-      "Personalized consultation based on your goals",
-      "Market insights across Pune’s micro-markets",
-      "Price benchmarking and negotiation guidance",
-      "Risk assessment before finalizing any deal"
-    ],
-    closing: "We ensure you don’t just buy property; you buy the right property.",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"
-  },
-  {
-    id: "02",
-    title: "Residential & Commercial",
-    subtitle: "From homes to business spaces, we handle it all",
-    desc: "We assist in buying and selling across all major real estate categories, ensuring every listing is evaluated for authenticity, pricing, and location value.",
-    points: [
-      "Flats, apartments, villas, and independent houses",
-      "Commercial offices, shops, and retail spaces",
-      "New launches (primary sales) and resale properties"
-    ],
-    closing: "Ensuring you deal only with genuine opportunities.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
-  },
-  {
-    id: "03",
-    title: "Rental Services",
-    subtitle: "Finding the right space, made simple",
-    desc: "Whether you're looking to rent a home or lease a commercial space, we streamline the process to save you time and hassle.",
-    points: [
-      "Curated rental options based on your needs",
-      "Verified landlords and properties",
-      "Assistance with negotiations and agreements"
-    ],
-    closing: "Our goal is to ensure a smooth and hassle-free rental experience.",
-    image: "/assets/images/rental.jpg"
-  },
-  {
-    id: "04",
-    title: "Plots & Land Investments",
-    subtitle: "Invest in high-potential land opportunities",
-    desc: "Land remains one of the most strategic real estate investments when chosen correctly. With proper due diligence, we guide you toward secure investments.",
-    points: [
-      "Residential plots",
-      "Agricultural and NA land",
-      "High-growth zones in and around Pune"
-    ],
-    closing: "Guiding you toward secure and high-value land investments.",
-    image: "/assets/images/landinvestment.jpg"
-  },
-  {
-    id: "05",
-    title: "Investment Planning",
-    subtitle: "Build wealth through real estate",
-    desc: "We go beyond transactions to help you plan strategically, ensuring your investment decisions are data-backed and future-ready.",
-    points: [
-      "ROI-focused property recommendations",
-      "Short-term vs long-term investment strategies",
-      "Portfolio diversification across property types",
-      "Insights into upcoming growth corridors"
-    ],
-    closing: "Strategic planning for future-ready wealth generation.",
-    image: "/assets/images/investmentplanning.jpg"
-  },
-  {
-    id: "06",
-    title: "Legal Advisory Support",
-    subtitle: "Secure transactions with complete transparency",
-    desc: "Legal clarity is critical in real estate. We help minimize risks and ensure every transaction is safe, compliant, and transparent.",
-    points: [
-      "Document verification and due diligence",
-      "Title checks and ownership validation",
-      "Agreement drafting guidance",
-      "Coordination with legal professionals"
-    ],
-    closing: "Secure, compliant, and fully transparent processing.",
-    image: "/assets/images/legaladvisory.jpg"
-  },
-  {
-    id: "07",
+    icon: Landmark,
     title: "Mandate Property Services",
-    subtitle: "End-to-end property development, tailored to your vision",
-    desc: "We design and build homes or commercial spaces tailored to your needs, managing everything from planning to final handover with quality and transparency.",
+    tagline: "Tailored to your vision",
+    hero: "End-to-end property development",
+    description: "Exclusive mandate listings and properties entrusted to us for direct, focused representation.",
     points: [
       "Custom-built homes and purpose-driven commercial properties",
       "End-to-end management from planning to handover",
       "Expert guidance at every stage of development"
     ],
     closing: "We bring your vision to life with expert guidance at every stage.",
-    image: "/assets/images/seventhpoint.jpg"
+    image: "/assets/images/seventhpoint.jpg",
+    actionLink: "/properties?listingType=mandate",
+    actionText: "View Mandate Properties"
+  },
+  {
+    id: "02",
+    icon: Home,
+    title: "Residential Projects",
+    tagline: "Your dream home awaits",
+    hero: "Find the perfect residential space",
+    description: "Discover a wide range of premium residential properties, carefully curated to match your lifestyle.",
+    points: [
+      "Flats, apartments, villas, and independent houses",
+      "Verified properties with clear titles",
+      "Prime locations across Pune"
+    ],
+    closing: "Finding the perfect home for you and your family.",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
+    actionLink: "/properties?listingType=new_project",
+    actionText: "View Residential Properties"
+  },
+  {
+    id: "03",
+    icon: Building2,
+    title: "Commercial Projects",
+    tagline: "Strategic spaces",
+    hero: "Strategic spaces for business growth",
+    description: "Find the ideal commercial space to elevate your business operations and visibility.",
+    points: [
+      "Premium office spaces and corporate hubs",
+      "Retail shops in high-footfall areas",
+      "Flexible layouts for diverse business needs"
+    ],
+    closing: "Empowering your business with the right real estate.",
+    image: "/assets/images/commercial.avif",
+    actionLink: "/properties?type=commercial",
+    actionText: "View Commercial Properties"
+  },
+  {
+    id: "04",
+    icon: TrendingUp,
+    title: "Upcoming Projects",
+    tagline: "Tomorrow's landmarks",
+    hero: "Be the first to invest",
+    description: "Get exclusive early access to the most promising pre-launch and under-construction projects.",
+    points: [
+      "Early bird pricing and preferential allocations",
+      "Vetted developers with proven track records",
+      "High appreciation potential"
+    ],
+    closing: "Securing your future with visionary investments.",
+    image: "/assets/images/investmentplanning.jpg",
+    actionLink: "/properties?listingType=new_project",
+    actionText: "View Upcoming Projects"
+  },
+  {
+    id: "05",
+    icon: Handshake,
+    title: "Selling Properties",
+    tagline: "Maximize your value",
+    hero: "Maximize the value of your real estate assets",
+    description: "Our expert team ensures a smooth and profitable selling experience for your property.",
+    points: [
+      "Accurate market valuation and pricing strategy",
+      "Targeted marketing to qualified buyers",
+      "End-to-end transaction management"
+    ],
+    closing: "Achieving the best possible return on your investment.",
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2011&auto=format&fit=crop",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
+  },
+  {
+    id: "06",
+    icon: KeyRound,
+    title: "Rental & Pre-lease",
+    tagline: "Made simple",
+    hero: "Finding the right space",
+    description: "Whether you're looking to rent a home or lease a commercial space, we streamline the process.",
+    points: [
+      "Curated rental options based on your needs",
+      "Verified landlords and properties",
+      "Assistance with negotiations and agreements"
+    ],
+    closing: "Ensuring a smooth and hassle-free rental experience.",
+    image: "/assets/images/rental.jpg",
+    actionLink: "/properties?listingType=rent",
+    actionText: "View Rental Properties"
+  },
+  {
+    id: "07",
+    icon: MapPin,
+    title: "Home & Property",
+    tagline: "Comprehensive solutions",
+    hero: "Holistic real estate services",
+    description: "From finding the perfect home to managing your property portfolio, we offer holistic services.",
+    points: [
+      "Extensive portfolio of diverse properties",
+      "Personalized consultation and guidance",
+      "Seamless buying and selling processes"
+    ],
+    closing: "Your trusted partner in every real estate endeavor.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+    actionLink: "/properties",
+    actionText: "View All Properties"
   },
   {
     id: "08",
-    title: "Home & Property Loans",
-    subtitle: "Hassle-free financing for your property dreams",
-    desc: "We've partnered with leading banks and NBFCs to provide competitive loan options with the best interest rates and fastest approvals, so financing never stands in the way of your dream property.",
+    icon: BadgeIndianRupee,
+    title: "Loan & Plots",
+    tagline: "Financing and investments",
+    hero: "Financing and foundational investments",
+    description: "Secure competitive financing and invest in high-potential land opportunities with our expert assistance.",
     points: [
-      "Home loans with competitive interest rates from top banks",
-      "Loan against property (LAP) for business or personal needs",
-      "Balance transfer facility for existing high-interest loans",
-      "Complete documentation support until disbursement"
+      "Hassle-free loan processing with top banks",
+      "Residential and NA plots in growth corridors",
+      "Complete documentation and legal support"
     ],
-    closing: "We simplify the financing maze so you can focus on your new property.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2011&auto=format&fit=crop"
+    closing: "Building your dreams from the ground up.",
+    image: "/assets/images/landinvestment.jpg",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
+  },
+  {
+    id: "09",
+    icon: Paintbrush,
+    title: "Interior Design",
+    tagline: "Transforming spaces",
+    hero: "Stunning environments",
+    description: "Elevate your property's aesthetics and functionality with our bespoke interior design solutions.",
+    points: [
+      "Customized design concepts tailored to your style",
+      "Space optimization and functional layouts",
+      "High-quality materials and flawless execution"
+    ],
+    closing: "Crafting beautiful spaces that inspire and delight.",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
+  },
+  {
+    id: "10",
+    icon: RefreshCcw,
+    title: "Resell",
+    tagline: "Secondary market",
+    hero: "Navigating the secondary market with ease",
+    description: "Discover prime resale opportunities or successfully list your property on the secondary market.",
+    points: [
+      "Thoroughly vetted resale properties",
+      "Fair market pricing assessments",
+      "Transparent negotiation and closing"
+    ],
+    closing: "Connecting buyers and sellers with confidence.",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop",
+    actionLink: "/properties?listingType=resale",
+    actionText: "View Resale Properties"
+  },
+  {
+    id: "11",
+    icon: Building2,
+    title: "Residential / Commercial",
+    tagline: "We handle it all",
+    hero: "From homes to business spaces",
+    description: "We assist in buying and selling across all major real estate categories, ensuring authenticity and value.",
+    points: [
+      "Comprehensive portfolio of diverse properties",
+      "Expert market analysis for every segment",
+      "Tailored strategies for different property types"
+    ],
+    closing: "Delivering excellence across the entire real estate spectrum.",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop",
+    actionLink: "/properties",
+    actionText: "View All Properties"
   }
 ];
 
 export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const currentService = SERVICES[activeIndex];
 
   return (
-    <section id="services" className="pt-8 pb-24 md:pt-12 md:pb-32 bg-white relative">
+    <section id="services" className="py-24 md:py-32 bg-white relative font-sans text-slate-900 overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
-        {/* Section Header */}
-        <div className="mb-16 md:mb-24 max-w-3xl">
-          <span className="text-teal-forest text-[12px] uppercase tracking-[0.4em] font-bold mb-4 block">
+        {/* ── Section Header ── */}
+        <div className="mb-20 md:mb-24 max-w-3xl">
+          <span className="text-teal-forest text-[11px] uppercase tracking-[0.4em] font-bold mb-4 block">
             Our Expertise
           </span>
-          <h2 className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-4xl md:text-6xl font-light text-slate-900 tracking-tight leading-[1.15]">
             Comprehensive <br />
             <span className="font-serif italic text-teal-forest">Real Estate Solutions</span>
           </h2>
         </div>
 
-        {/* Split Layout Container */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 relative">
+        {/* ── Master Split Layout Grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
-          {/* Left: Interactive Accordion List */}
-          <div className="w-full lg:w-1/2 flex flex-col justify-center">
-            {SERVICES_DATA.map((service, index) => {
+          {/* Left Column: Stable Menu Track (Handles 11 items smoothly without layout distortion) */}
+          <div className="hidden lg:flex w-full lg:col-span-5 flex-col border-t border-slate-100">
+            {SERVICES.map((service, index) => {
               const isActive = activeIndex === index;
+              const MenuIcon = service.icon;
 
               return (
-                <div
+                <button
                   key={service.id}
-                  className="group border-b border-slate-200 cursor-pointer"
-                  onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => setActiveIndex(index)}
+                  className="w-full py-5 px-4 lg:px-6 border-b border-slate-100 text-left flex items-center justify-between group transition-all duration-300 relative outline-none"
                 >
-                  {/* Service Title Bar */}
-                  <div className={`py-8 flex items-center justify-between transition-all duration-500 ${isActive ? 'pl-4 lg:pl-8' : 'hover:pl-4'}`}>
-                    <div className="flex items-center gap-6">
-                      <span className={`text-sm font-bold transition-colors duration-300 ${isActive ? 'text-teal-forest' : 'text-slate-300'}`}>
-                        {service.id}
-                      </span>
-                      <h3 className={`text-2xl md:text-4xl font-light tracking-tight transition-colors duration-300 ${isActive ? 'text-teal-forest' : 'text-slate-800'}`}>
+                  <div className="flex items-center gap-5">
+                    <span className={`text-[11px] font-mono tracking-wider w-6 transition-colors duration-300 ${isActive ? "text-teal-forest font-bold" : "text-slate-300 group-hover:text-slate-500"
+                      }`}>
+                      {service.id}
+                    </span>
+                    <div className="flex items-center gap-4">
+                      <MenuIcon
+                        size={18}
+                        strokeWidth={1.5}
+                        className={`transition-colors duration-300 ${isActive ? "text-teal-forest" : "text-slate-300 group-hover:text-slate-500"}`}
+                      />
+                      <h3 className={`text-lg md:text-xl font-light tracking-tight transition-all duration-300 ${isActive ? "text-teal-forest font-normal translate-x-2" : "text-slate-600 group-hover:text-slate-900"
+                        }`}>
                         {service.title}
                       </h3>
                     </div>
-                    <ArrowRight
-                      className={`transition-all duration-500 ${isActive ? 'text-teal-forest opacity-100 translate-x-0' : 'text-slate-300 opacity-0 -translate-x-4'}`}
+                  </div>
+
+                  <ChevronRight
+                    size={16}
+                    strokeWidth={2}
+                    className={`transition-all duration-300 ${isActive ? "text-teal-forest opacity-100 translate-x-0" : "text-slate-300 opacity-0 -translate-x-3 group-hover:opacity-50"
+                      }`}
+                  />
+
+                  {/* High-End Layout Indicator Ribbon */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeRibbon"
+                      className="absolute left-0 top-0 bottom-0 w-[2px] bg-teal-forest"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Premium Interactive Exhibition Stage */}
+          <div className="hidden lg:block lg:col-span-7 relative min-h-[800px]">
+            <div className="sticky top-28 w-full flex flex-col">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+                  className="w-full flex flex-col"
+                >
+                  {/* Calibrated 16:10 Presentation Aspect Frame Container */}
+                  <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden relative shadow-sm mb-8 bg-slate-50 border border-slate-100">
+                    <img
+                      src={currentService.image}
+                      alt={currentService.title}
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
 
-                  {/* Expandable Content (Framer Motion) */}
-                  <AnimatePresence>
+                  {/* Sync Meta-Information Layer */}
+                  <div className="px-2">
+                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-teal-forest/80 mb-2 block">
+                      {currentService.tagline}
+                    </span>
+                    <h4 className="text-2xl font-light text-slate-900 mb-4 tracking-tight leading-tight">
+                      {currentService.hero}
+                    </h4>
+
+                    <p className="text-slate-500 font-light leading-relaxed mb-6 text-[15px]">
+                      {currentService.description}
+                    </p>
+
+                    {/* Detailed Point Grid */}
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 mb-8">
+                      {currentService.points.map((point, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-slate-600 font-light text-[14px] leading-snug">
+                          <CheckCircle2 size={15} strokeWidth={2} className="text-teal-forest shrink-0 mt-0.5" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Editorial Accent Blockquote */}
+                    <div className="p-4 bg-slate-50 border-l-2 border-teal-forest mb-8 rounded-r-lg">
+                      <p className="text-teal-forest font-serif italic text-base">
+                        "{currentService.closing}"
+                      </p>
+                    </div>
+
+                    {/* Explicit Dynamic Call to Action */}
+                    <div>
+                      <Link
+                        href={currentService.actionLink}
+                        className="inline-flex items-center gap-2 px-7 py-4 bg-teal-forest text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-0.5 shadow-sm"
+                      >
+                        {currentService.actionText}
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Mobile Fallback Track: Fully Isolated Tap Accordion System */}
+          <div className="lg:hidden w-full flex flex-col border-t border-slate-100">
+            {SERVICES.map((service, index) => {
+              const isActive = activeIndex === index;
+              const MobileIcon = service.icon;
+
+              return (
+                <div key={service.id} className="border-b border-slate-100">
+                  <button
+                    onClick={() => setActiveIndex(isActive ? -1 : index)}
+                    className="w-full py-5 text-left flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className={`text-xs font-mono ${isActive ? "text-teal-forest font-bold" : "text-slate-400"}`}>
+                        {service.id}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <MobileIcon size={18} className={isActive ? "text-teal-forest" : "text-slate-400"} />
+                        <h3 className={`text-base font-light ${isActive ? "text-teal-forest font-normal" : "text-slate-800"}`}>
+                          {service.title}
+                        </h3>
+                      </div>
+                    </div>
+                    <ChevronRight
+                      size={16}
+                      className={`transition-transform duration-300 ${isActive ? "rotate-90 text-teal-forest" : "text-slate-400"}`}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
                     {isActive && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className={`pb-10 ${isActive ? 'pl-4 lg:pl-8' : ''}`}>
-                          <h4 className="text-lg font-medium text-slate-900 mb-4">
-                            {service.subtitle}
-                          </h4>
-                          <p className="text-slate-500 font-light leading-relaxed mb-6">
-                            {service.desc}
-                          </p>
-
-                          <ul className="space-y-3 mb-6">
+                        <div className="pb-6 pt-1 flex flex-col gap-5">
+                          <div className="w-full h-48 rounded-xl overflow-hidden relative">
+                            <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+                          </div>
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-teal-forest/80 -mb-2">
+                            {service.tagline}
+                          </span>
+                          <h4 className="text-lg font-medium text-slate-900">{service.hero}</h4>
+                          <p className="text-slate-500 font-light text-sm leading-relaxed">{service.description}</p>
+                          <ul className="space-y-2.5">
                             {service.points.map((point, idx) => (
-                              <li key={idx} className="flex items-start gap-3 text-slate-600 font-light text-sm md:text-base">
-                                <CheckCircle2 size={18} className="text-teal-forest shrink-0 mt-0.5" />
+                              <li key={idx} className="flex items-start gap-3 text-slate-600 font-light text-sm">
+                                <CheckCircle2 size={16} className="text-teal-forest shrink-0 mt-0.5" />
                                 <span>{point}</span>
                               </li>
                             ))}
                           </ul>
-
-                          <p className="text-teal-forest font-medium italic border-l-2 border-vanilla-latte pl-4 py-1">
+                          <p className="text-teal-forest font-serif italic text-sm border-l-2 border-teal-forest pl-3 py-0.5">
                             {service.closing}
                           </p>
+                          <Link
+                            href={service.actionLink}
+                            className="w-full text-center px-6 py-4 bg-teal-forest text-white text-[11px] uppercase tracking-[0.2em] font-bold shadow-sm block"
+                          >
+                            {service.actionText}
+                          </Link>
                         </div>
                       </motion.div>
                     )}
@@ -203,46 +410,24 @@ export default function Services() {
             })}
           </div>
 
-          {/* Right: Sticky Image Viewport (Hidden on Mobile for cleaner UX) */}
-          <div className="hidden lg:block w-full lg:w-1/2 relative">
-            <div className="sticky top-32 w-full h-[700px] rounded-[2rem] overflow-hidden bg-slate-100 shadow-2xl">
-              <div className="absolute inset-0 bg-teal-forest/10 z-10 mix-blend-multiply" /> {/* Subtle color grade overlay */}
-
-              {SERVICES_DATA.map((service, index) => (
-                <div
-                  key={service.id}
-                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${activeIndex === index ? "opacity-100 z-0" : "opacity-0 -z-10"
-                    }`}
-                >
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className={`w-full h-full object-cover transition-transform duration-[10s] ease-out ${activeIndex === index ? "scale-105" : "scale-100"
-                      }`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
 
-        {/* Closing Trust Section & CTA */}
-        <div className="mt-8 lg:mt-32 pt-8 lg:pt-20 lg:border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-10">
-          <p className="text-xl md:text-2xl text-slate-600 font-light max-w-3xl leading-relaxed">
-            At <span className="font-medium text-teal-forest"><span className="font-bold">PROP</span>Wisdom</span>, we don't just facilitate transactions we build long-term relationships by delivering clarity, trust, and results at every step of your real estate journey.
+        {/* ── Bottom Branding & Global Footer CTA ── */}
+        <div className="mt-24 lg:mt-32 pt-12 border-t border-slate-100 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
+          <p className="text-lg md:text-xl text-slate-500 font-light max-w-3xl leading-relaxed">
+            At <span className="font-normal text-slate-900"><span className="font-semibold text-teal-forest">PROP</span>Wisdom</span>, we don't just facilitate transactions — we build long-term partnerships by delivering clarity, transparency, and results at every step of your journey.
           </p>
 
-          <div className="shrink-0 flex flex-col items-center gap-4">
+          <div className="shrink-0 flex flex-col gap-3 w-full lg:w-auto">
             <Link
-              href="/services"
-              className="px-10 py-5 bg-teal-forest text-vanilla-latte rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-1 shadow-lg shadow-teal-forest/20 flex items-center gap-3"
+              href="/properties"
+              className="px-9 py-4.5 bg-teal-forest text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-0.5 shadow-sm flex items-center justify-center gap-3"
             >
-              View All Services
-              <ArrowRight size={16} />
+              Browse All Listings
+              <ArrowRight size={14} />
             </Link>
-            <span className="text-[11px] uppercase tracking-widest text-slate-400 font-light">
-              Explore Our Full Expertise
+            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-light text-center lg:text-left">
+              Explore Our Full Portfolio
             </span>
           </div>
         </div>

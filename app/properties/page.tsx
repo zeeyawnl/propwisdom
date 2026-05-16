@@ -43,7 +43,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const allProperties = result.data;
 
   // Determine if any search filter is active
-  const hasActiveSearch = !!(params.location || params.area || params.bedrooms);
+  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType);
 
   // When search is active, show all results in a single section
   // When no search, split by listing type

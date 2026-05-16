@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Search, MapPin, Maximize2, Home, X, Loader2 } from "lucide-react";
+import { Search, MapPin, Maximize2, Home, X, Loader2, Tag } from "lucide-react";
 
 const BHK_OPTIONS = [
   { label: "Any BHK", value: "" },
@@ -23,16 +23,18 @@ export default function PropertySearchBar() {
   const [location, setLocation] = useState(searchParams.get("location") ?? "");
   const [area, setArea] = useState(searchParams.get("area") ?? "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") ?? "");
+  const [listingType, setListingType] = useState(searchParams.get("listingType") ?? "");
 
-  const hasFilters = location || area || bedrooms;
+  const hasFilters = location || area || bedrooms || listingType;
 
   const buildQuery = useCallback(
-    (overrides: { location?: string; area?: string; bedrooms?: string }) => {
+    (overrides: { location?: string; area?: string; bedrooms?: string; listingType?: string }) => {
       const params = new URLSearchParams(searchParams.toString());
       const merged = {
         location: overrides.location ?? location,
         area: overrides.area ?? area,
         bedrooms: overrides.bedrooms ?? bedrooms,
+        listingType: overrides.listingType ?? listingType,
       };
 
       // Reset to page 1 on every search
@@ -47,9 +49,12 @@ export default function PropertySearchBar() {
       if (merged.bedrooms) params.set("bedrooms", merged.bedrooms);
       else params.delete("bedrooms");
 
+      if (merged.listingType) params.set("listingType", merged.listingType);
+      else params.delete("listingType");
+
       return params.toString();
     },
-    [searchParams, location, area, bedrooms]
+    [searchParams, location, area, bedrooms, listingType]
   );
 
   const handleSearch = () => {
@@ -62,11 +67,13 @@ export default function PropertySearchBar() {
     setLocation("");
     setArea("");
     setBedrooms("");
+    setListingType("");
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("location");
       params.delete("area");
       params.delete("bedrooms");
+      params.delete("listingType");
       params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`);
     });
@@ -172,6 +179,31 @@ export default function PropertySearchBar() {
             </div>
           </div>
 
+          {/* Listing Type Selector */}
+          <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
+            <Tag
+              size={18}
+              className="text-teal-forest shrink-0 group-focus-within:scale-110 transition-transform"
+            />
+            <div className="flex-1">
+              <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
+                Type
+              </p>
+              <select
+                id="search-listing-type"
+                value={listingType}
+                onChange={(e) => setListingType(e.target.value)}
+                className="w-full bg-transparent text-sm font-medium text-slate-800 outline-none cursor-pointer appearance-none pr-4"
+              >
+                <option value="">All Types</option>
+                <option value="resale">Resale</option>
+                <option value="new_project">New Project</option>
+                <option value="rent">Rent</option>
+                <option value="mandate">Mandate</option>
+              </select>
+            </div>
+          </div>
+
           {/* Action Buttons */}
           <div className="flex items-center gap-2 px-4 py-3 md:py-0 shrink-0">
             {hasFilters && (
@@ -238,6 +270,19 @@ export default function PropertySearchBar() {
                 startTransition(() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.delete("bedrooms");
+                  router.push(`${pathname}?${params.toString()}`);
+                });
+              }}
+            />
+          )}
+          {listingType && (
+            <FilterChip
+              label={`🏷️ ${listingType.replace('_', ' ')}`}
+              onRemove={() => {
+                setListingType("");
+                startTransition(() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("listingType");
                   router.push(`${pathname}?${params.toString()}`);
                 });
               }}
