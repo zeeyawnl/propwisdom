@@ -183,7 +183,7 @@ const SERVICES = [
 
 export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const currentService = SERVICES[activeIndex];
+  const currentService = SERVICES[activeIndex === -1 ? 0 : activeIndex];
 
   return (
     <section id="services" className="py-24 md:py-32 bg-white relative font-sans text-slate-900 overflow-hidden">
