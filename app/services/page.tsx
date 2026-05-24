@@ -95,8 +95,25 @@ const SERVICES = [
   },
   {
     id: "05",
+    icon: MapPin,
+    title: "Rent your property",
+    tagline: "Find the right tenant",
+    hero: "Hassle-free renting for your property",
+    description: "We help you find reliable tenants and manage the leasing process from start to finish.",
+    points: [
+      "Extensive tenant background checks",
+      "Drafting and registration of lease agreements",
+      "Ongoing property management support"
+    ],
+    closing: "Ensuring a steady and secure rental income.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
+  },
+  {
+    id: "06",
     icon: Handshake,
-    title: "Selling Properties",
+    title: "Sell your property",
     tagline: "Maximize your value",
     hero: "Maximize the value of your real estate assets",
     description: "Our expert team ensures a smooth and profitable selling experience for your property.",
@@ -111,7 +128,7 @@ const SERVICES = [
     actionText: "Contact Us"
   },
   {
-    id: "06",
+    id: "07",
     icon: KeyRound,
     title: "Rental & Pre-lease",
     tagline: "Made simple",
@@ -126,23 +143,6 @@ const SERVICES = [
     image: "/assets/images/rental.jpg",
     actionLink: "/properties?listingType=rent",
     actionText: "View Rental Properties"
-  },
-  {
-    id: "07",
-    icon: MapPin,
-    title: "Home & Property",
-    tagline: "Comprehensive solutions",
-    hero: "Holistic real estate services",
-    description: "From finding the perfect home to managing your property portfolio, we offer holistic services.",
-    points: [
-      "Extensive portfolio of diverse properties",
-      "Personalized consultation and guidance",
-      "Seamless buying and selling processes"
-    ],
-    closing: "Your trusted partner in every real estate endeavor.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-    actionLink: "/properties",
-    actionText: "View All Properties"
   },
   {
     id: "08",
@@ -181,7 +181,7 @@ const SERVICES = [
   {
     id: "10",
     icon: RefreshCcw,
-    title: "Resell",
+    title: "View Resale Property",
     tagline: "Secondary market",
     hero: "Navigating the secondary market with ease",
     description: "Discover prime resale opportunities or successfully list your property on the secondary market.",

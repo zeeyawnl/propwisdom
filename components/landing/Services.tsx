@@ -79,8 +79,25 @@ const SERVICES = [
   },
   {
     id: "05",
+    icon: MapPin,
+    title: "Rent your property",
+    tagline: "Find the right tenant",
+    hero: "Hassle-free renting for your property",
+    description: "We help you find reliable tenants and manage the leasing process from start to finish.",
+    points: [
+      "Extensive tenant background checks",
+      "Drafting and registration of lease agreements",
+      "Ongoing property management support"
+    ],
+    closing: "Ensuring a steady and secure rental income.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
+  },
+  {
+    id: "06",
     icon: Handshake,
-    title: "Selling Properties",
+    title: "Sell your property",
     tagline: "Maximize your value",
     hero: "Maximize the value of your real estate assets",
     description: "Our expert team ensures a smooth and profitable selling experience for your property.",
@@ -95,7 +112,7 @@ const SERVICES = [
     actionText: "Contact Us"
   },
   {
-    id: "06",
+    id: "07",
     icon: KeyRound,
     title: "Rental & Pre-lease",
     tagline: "Made simple",
@@ -110,23 +127,6 @@ const SERVICES = [
     image: "/assets/images/rental.jpg",
     actionLink: "/properties?listingType=rent",
     actionText: "View Rental Properties"
-  },
-  {
-    id: "07",
-    icon: MapPin,
-    title: "Home & Property",
-    tagline: "Comprehensive solutions",
-    hero: "Holistic real estate services",
-    description: "From finding the perfect home to managing your property portfolio, we offer holistic services.",
-    points: [
-      "Extensive portfolio of diverse properties",
-      "Personalized consultation and guidance",
-      "Seamless buying and selling processes"
-    ],
-    closing: "Your trusted partner in every real estate endeavor.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-    actionLink: "/properties",
-    actionText: "View All Properties"
   },
   {
     id: "08",
@@ -165,7 +165,7 @@ const SERVICES = [
   {
     id: "10",
     icon: RefreshCcw,
-    title: "Resell",
+    title: "View Resale Property",
     tagline: "Secondary market",
     hero: "Navigating the secondary market with ease",
     description: "Discover prime resale opportunities or successfully list your property on the secondary market.",
@@ -282,8 +282,8 @@ export default function Services() {
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
                   className="w-full flex flex-col"
                 >
-                  {/* Calibrated 16:10 Presentation Aspect Frame Container */}
-                  <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden relative shadow-sm mb-8 bg-slate-50 border border-slate-100">
+                  {/* Reduced Height Presentation Aspect Frame Container */}
+                  <div className="w-full h-[260px] lg:h-[300px] rounded-2xl overflow-hidden relative shadow-sm mb-6 bg-slate-50 border border-slate-100">
                     <img
                       src={currentService.image}
                       alt={currentService.title}
@@ -379,11 +379,11 @@ export default function Services() {
                           <div className="w-full h-48 rounded-xl overflow-hidden relative">
                             <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                           </div>
-                          <span className="text-[10px] uppercase tracking-widest font-bold text-teal-forest/80 -mb-2">
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-teal-forest/80 -mb-2 hidden md:block">
                             {service.tagline}
                           </span>
                           <h4 className="text-lg font-medium text-slate-900">{service.hero}</h4>
-                          <p className="text-slate-500 font-light text-sm leading-relaxed">{service.description}</p>
+                          <p className="text-slate-500 font-light text-sm leading-relaxed hidden md:block">{service.description}</p>
                           <ul className="space-y-2.5">
                             {service.points.map((point, idx) => (
                               <li key={idx} className="flex items-start gap-3 text-slate-600 font-light text-sm">
@@ -392,7 +392,7 @@ export default function Services() {
                               </li>
                             ))}
                           </ul>
-                          <p className="text-teal-forest font-serif italic text-sm border-l-2 border-teal-forest pl-3 py-0.5">
+                          <p className="text-teal-forest font-serif italic text-sm border-l-2 border-teal-forest pl-3 py-0.5 hidden md:block">
                             {service.closing}
                           </p>
                           <Link
