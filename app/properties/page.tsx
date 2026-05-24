@@ -13,6 +13,7 @@ interface PageProps {
     area?: string;
     bedrooms?: string;
     listingType?: string;
+    type?: string;
     sort?: string;
     page?: string;
     min?: string;
@@ -46,6 +47,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     area,
     bedrooms,
     listingType: params.listingType as "rent" | "resale" | "new_project" | "mandate" | "commercial" | "plot" | undefined,
+    type: params.type as "residential" | "villa" | "plot" | "commercial" | undefined,
     min,
     max,
   });
@@ -53,7 +55,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const allProperties = result.data;
 
   // Determine if any search filter is active
-  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType || params.min || params.max);
+  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType || params.type || params.min || params.max);
 
   // ── When search is active: single unified results block
   // ── When no search: split into 6 dedicated sections in display order

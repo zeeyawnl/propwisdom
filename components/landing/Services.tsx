@@ -12,7 +12,7 @@ const SERVICES = [
   {
     id: "01",
     icon: Landmark,
-    title: "Mandate Property Services",
+    title: "Mandate Properties",
     tagline: "Tailored to your vision",
     hero: "End-to-end property development",
     description: "Exclusive mandate listings and properties entrusted to us for direct, focused representation.",
@@ -29,7 +29,7 @@ const SERVICES = [
   {
     id: "02",
     icon: Home,
-    title: "Residential Projects",
+    title: "Residential Properties",
     tagline: "Your dream home awaits",
     hero: "Find the perfect residential space",
     description: "Discover a wide range of premium residential properties, carefully curated to match your lifestyle.",
@@ -40,13 +40,13 @@ const SERVICES = [
     ],
     closing: "Finding the perfect home for you and your family.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
-    actionLink: "/properties?listingType=new_project",
+    actionLink: "/properties?type=residential",
     actionText: "View Residential Properties"
   },
   {
     id: "03",
     icon: Building2,
-    title: "Commercial Projects",
+    title: "Commercial Properties",
     tagline: "Strategic spaces",
     hero: "Strategic spaces for business growth",
     description: "Find the ideal commercial space to elevate your business operations and visibility.",
