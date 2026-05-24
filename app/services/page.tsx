@@ -194,23 +194,6 @@ const SERVICES = [
     image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop",
     actionLink: "/properties?listingType=resale",
     actionText: "View Resale Properties"
-  },
-  {
-    id: "11",
-    icon: Building2,
-    title: "Residential / Commercial",
-    tagline: "We handle it all",
-    hero: "From homes to business spaces",
-    description: "We assist in buying and selling across all major real estate categories, ensuring authenticity and value.",
-    points: [
-      "Comprehensive portfolio of diverse properties",
-      "Expert market analysis for every segment",
-      "Tailored strategies for different property types"
-    ],
-    closing: "Delivering excellence across the entire real estate spectrum.",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop",
-    actionLink: "/properties",
-    actionText: "View All Properties"
   }
 ];
 

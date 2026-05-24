@@ -77,10 +77,10 @@ export default function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }}
-                className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group"
+                className="text-[14px] uppercase tracking-widest font-bold text-teal-forest drop-shadow-sm hover:text-teal-forest/80 transition-colors relative group"
               >
                 {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1.5 left-0 w-0 h-[2px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </nav>
