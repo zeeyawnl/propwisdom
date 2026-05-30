@@ -1,0 +1,61 @@
+export const PROPERTY_PAGES = {
+  NEW_RESIDENTIAL: {
+    title: "New Residential Projects",
+    filters: {
+      listingType: "SALE",
+      propertySegment: "RESIDENTIAL",
+      projectStatus: "NEW",
+    },
+  },
+  NEW_COMMERCIAL: {
+    title: "New Commercial Projects",
+    filters: {
+      listingType: "SALE",
+      propertySegment: "COMMERCIAL",
+      projectStatus: "NEW",
+    },
+  },
+  UPCOMING: {
+    title: "Upcoming Projects",
+    filters: {
+      listingType: "SALE",
+      projectStatus: "UPCOMING",
+    },
+  },
+  RESALE_RESIDENTIAL: {
+    title: "Resale Residential Projects",
+    filters: {
+      listingType: "SALE",
+      propertySegment: "RESIDENTIAL",
+      projectStatus: "RESALE",
+    },
+  },
+  RESALE_COMMERCIAL: {
+    title: "Resale Commercial Projects",
+    filters: {
+      listingType: "SALE",
+      propertySegment: "COMMERCIAL",
+      projectStatus: "RESALE",
+    },
+  },
+  RENTAL_RESIDENTIAL: {
+    title: "Rental Residential Projects",
+    filters: {
+      listingType: "RENTAL",
+      propertySegment: "RESIDENTIAL",
+    },
+  },
+  RENTAL_COMMERCIAL: {
+    title: "Rental Commercial Projects",
+    filters: {
+      listingType: "RENTAL",
+      propertySegment: "COMMERCIAL",
+    },
+  },
+  MANDATE: {
+    title: "Mandate Projects",
+    filters: {
+      listingType: "MANDATE",
+    },
+  },
+};

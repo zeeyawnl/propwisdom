@@ -48,6 +48,9 @@ export async function POST(request: NextRequest) {
 
     const newProperty = await createProperty({
       ...validatedData.data,
+      listingType: validatedData.data.listingType,
+      propertySegment: validatedData.data.propertySegment ?? "RESIDENTIAL",
+      projectStatus: validatedData.data.projectStatus ?? undefined,
       id: uuidv4(),
       userId: user.id,
     });

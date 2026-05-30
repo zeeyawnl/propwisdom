@@ -22,7 +22,9 @@ export const CreatePropertySchema = z.object({
 
   type: z.enum(["residential", "villa", "plot", "commercial"]),
 
-  listingType: z.enum(["rent", "resale", "new_project", "mandate", "commercial", "plot"]),
+  listingType: z.enum(["SALE", "RENTAL", "MANDATE"]),
+  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).optional(),
 
   bedrooms: z.number().int().min(0).optional().default(0),
 
@@ -37,6 +39,24 @@ export const CreatePropertySchema = z.object({
     .default("available"),
 
   images: z.array(z.string().url("Each image must be a valid URL")).optional().default([]),
+})
+.refine((data) => {
+  if (data.listingType === "MANDATE") {
+    return true;
+  }
+
+  return !!data.propertySegment;
+}, {
+  message: "Property segment required",
+})
+.refine((data) => {
+  if (data.listingType !== "SALE") {
+    return true;
+  }
+
+  return !!data.projectStatus;
+}, {
+  message: "Project status required",
 });
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -52,7 +72,9 @@ export const UpdatePropertySchema = z.object({
   priceLabel: z.string().nullable().optional(),
   location: z.string().min(2).optional(),
   type: z.enum(["residential", "villa", "plot", "commercial"]).optional(),
-  listingType: z.enum(["rent", "resale", "new_project", "mandate", "commercial", "plot"]).optional(),
+  listingType: z.enum(["SALE", "RENTAL", "MANDATE"]).optional(),
+  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).nullable().optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().int().min(0).optional(),
   area: z.string().nullable().optional(),
@@ -73,7 +95,9 @@ export const PropertyQuerySchema = z.object({
   area: z.coerce.number().positive().optional(),
   // BHK / bedrooms exact match
   bedrooms: z.coerce.number().int().min(0).optional(),
-  listingType: z.enum(["rent", "resale", "new_project", "mandate", "commercial", "plot"]).optional(),
+  listingType: z.enum(["SALE", "RENTAL", "MANDATE", "rent", "resale", "new_project", "mandate", "commercial", "plot"]).optional(),
+  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).optional(),
 
   min: z.coerce.number().positive().optional(),
   max: z.coerce.number().positive().optional(),

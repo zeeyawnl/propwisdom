@@ -42,19 +42,63 @@ function getAreaRange(area: number): { areaMin: number; areaMax: number } {
   };
 }
 
+function mapLegacyFilters(filters: PropertyQuery) {
+  const mapped = { ...filters };
+  
+  if (filters.listingType) {
+    const lt = filters.listingType.toLowerCase();
+    if (lt === "rent") {
+      mapped.listingType = "RENTAL" as any;
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "resale") {
+      mapped.listingType = "SALE" as any;
+      mapped.projectStatus = "RESALE";
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "new_project") {
+      mapped.listingType = "SALE" as any;
+      mapped.projectStatus = "NEW";
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "mandate") {
+      mapped.listingType = "MANDATE" as any;
+    } else if (lt === "commercial") {
+      mapped.propertySegment = "COMMERCIAL";
+      mapped.listingType = undefined;
+    } else if (lt === "plot") {
+      mapped.propertySegment = "RESIDENTIAL";
+      mapped.type = "plot";
+      mapped.listingType = undefined;
+    } else {
+      mapped.listingType = filters.listingType.toUpperCase() as any;
+    }
+  }
+  
+  if (filters.propertySegment) {
+    mapped.propertySegment = filters.propertySegment.toUpperCase() as any;
+  }
+  
+  if (filters.projectStatus) {
+    mapped.projectStatus = filters.projectStatus.toUpperCase() as any;
+  }
+  
+  return mapped;
+}
+
 export async function getProperties(filters: PropertyQuery) {
+  const mappedFilters = mapLegacyFilters(filters);
   const {
     type,
     location,
     area,
     bedrooms,
     listingType,
+    propertySegment,
+    projectStatus,
     min,
     max,
     sort,
     page,
     limit,
-  } = filters;
+  } = mappedFilters;
 
   const conditions = [
     type && eq(properties.type, type),
@@ -73,7 +117,9 @@ export async function getProperties(filters: PropertyQuery) {
       : []),
     // Exact bedrooms/BHK match
     bedrooms !== undefined && eq(properties.bedrooms, bedrooms),
-    listingType && eq(properties.listingType, listingType),
+    listingType && eq(properties.listingType, listingType as any),
+    propertySegment && eq(properties.propertySegment, propertySegment as any),
+    projectStatus && eq(properties.projectStatus, projectStatus as any),
     min && gte(properties.price, min),
     max && lte(properties.price, max),
   ].filter(Boolean) as any[];
@@ -110,7 +156,13 @@ export async function getProperties(filters: PropertyQuery) {
 }
 
 export async function createProperty(data: CreatePropertyInput & { id: string; userId: string }) {
-  const [result] = await db.insert(properties).values(data as any).returning();
+  const payload = {
+    ...data,
+    listingType: data.listingType,
+    propertySegment: data.propertySegment ?? "RESIDENTIAL",
+    projectStatus: data.projectStatus ?? null,
+  };
+  const [result] = await db.insert(properties).values(payload as any).returning();
   return result;
 }
 
@@ -121,9 +173,16 @@ export async function getPropertyById(id: string) {
 }
 
 export async function updateProperty(id: string, data: Partial<CreatePropertyInput>) {
+  const payload = {
+    ...data,
+    ...(data.listingType !== undefined && { listingType: data.listingType }),
+    ...(data.propertySegment !== undefined && { propertySegment: data.propertySegment }),
+    ...(data.projectStatus !== undefined && { projectStatus: data.projectStatus }),
+  };
+
   const [result] = await db
     .update(properties)
-    .set(data as any)
+    .set(payload as any)
     .where(eq(properties.id, id))
     .returning();
   return result;

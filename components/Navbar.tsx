@@ -25,9 +25,18 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Properties", href: "/properties" },
+    { name: "All Properties", href: "/properties" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
+  ];
+
+  const projectLinks = [
+    { name: "New Residential", href: "/projects/new-residential" },
+    { name: "New Commercial", href: "/projects/new-commercial" },
+    { name: "Upcoming", href: "/projects/upcoming" },
+    { name: "Resale", href: "/projects/resale-residential" },
+    { name: "Rentals", href: "/projects/rental-residential" },
+    { name: "Mandate", href: "/projects/mandate" },
   ];
 
   return (
@@ -66,23 +75,41 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation - Minimalist */}
-          <nav className="hidden md:flex items-center gap-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  if (link.href === "/" && pathname === "/") {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }
-                }}
-                className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group"
-              >
-                {link.name}
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="/" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
+              Home
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
+            </Link>
+
+            {/* Projects Dropdown */}
+            <div className="relative group py-2">
+              <span className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 cursor-pointer hover:text-teal-forest transition-colors relative">
+                Projects
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
-              </Link>
-            ))}
+              </span>
+              <div className="absolute top-full left-[-20px] mt-0 w-56 bg-white shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-100 flex flex-col py-3 z-50">
+                {projectLinks.map(link => (
+                  <Link key={link.name} href={link.href} className="px-5 py-2.5 text-sm hover:bg-slate-50 text-slate-600 hover:text-teal-forest font-medium transition-colors">
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link href="/properties" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
+              All Properties
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
+            </Link>
+            
+            <Link href="/about" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
+              About
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
+            </Link>
+
+            <Link href="/services" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
+              Services
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
+            </Link>
           </nav>
 
           {/* Premium CTA */}
@@ -114,7 +141,8 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-0 left-0 w-full h-screen bg-white z-[-1] flex flex-col justify-center px-10"
           >
-            <div className="space-y-8">
+            <div className="space-y-6 overflow-y-auto max-h-[70vh] pb-10">
+              <div className="text-sm font-bold tracking-widest text-slate-400 uppercase mb-4 border-b pb-2">Main Menu</div>
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.name}
@@ -131,7 +159,26 @@ export default function Navbar() {
                       }
                       setIsOpen(false);
                     }}
-                    className="text-4xl font-bold text-teal-forest flex items-center justify-between group"
+                    className="text-2xl font-bold text-teal-forest flex items-center justify-between group"
+                  >
+                    {link.name}
+                    <ChevronRight className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                </motion.div>
+              ))}
+
+              <div className="text-sm font-bold tracking-widest text-slate-400 uppercase mt-8 mb-4 border-b pb-2">Projects</div>
+              {projectLinks.map((link, i) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (i + navLinks.length) * 0.05 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="text-xl font-bold text-teal-forest/80 flex items-center justify-between group py-1"
                   >
                     {link.name}
                     <ChevronRight className="opacity-0 group-hover:opacity-100 transition-opacity" />

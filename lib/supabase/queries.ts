@@ -27,9 +27,51 @@ function getAreaRange(area: number): { areaMin: number; areaMax: number } {
   };
 }
 
+function mapLegacyFilters(filters: PropertyQuery) {
+  const mapped = { ...filters };
+  
+  if (filters.listingType) {
+    const lt = filters.listingType.toLowerCase();
+    if (lt === "rent") {
+      mapped.listingType = "RENTAL" as any;
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "resale") {
+      mapped.listingType = "SALE" as any;
+      mapped.projectStatus = "RESALE";
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "new_project") {
+      mapped.listingType = "SALE" as any;
+      mapped.projectStatus = "NEW";
+      mapped.propertySegment = "RESIDENTIAL";
+    } else if (lt === "mandate") {
+      mapped.listingType = "MANDATE" as any;
+    } else if (lt === "commercial") {
+      mapped.propertySegment = "COMMERCIAL";
+      mapped.listingType = undefined;
+    } else if (lt === "plot") {
+      mapped.propertySegment = "RESIDENTIAL";
+      mapped.type = "plot";
+      mapped.listingType = undefined;
+    } else {
+      mapped.listingType = filters.listingType.toUpperCase() as any;
+    }
+  }
+  
+  if (filters.propertySegment) {
+    mapped.propertySegment = filters.propertySegment.toUpperCase() as any;
+  }
+  
+  if (filters.projectStatus) {
+    mapped.projectStatus = filters.projectStatus.toUpperCase() as any;
+  }
+  
+  return mapped;
+}
+
 export async function getPropertiesSupabase(filters: PropertyQuery) {
   const supabase = getSupabaseClient();
-  const { type, location, area, bedrooms, listingType, min, max, sort, page, limit } = filters;
+  const mappedFilters = mapLegacyFilters(filters);
+  const { type, location, area, bedrooms, listingType, propertySegment, projectStatus, min, max, sort, page, limit } = mappedFilters;
 
   let query = supabase.from("properties").select("*", { count: "exact" });
 
@@ -47,6 +89,8 @@ export async function getPropertiesSupabase(filters: PropertyQuery) {
   // Exact BHK / bedrooms match
   if (bedrooms !== undefined) query = query.eq("bedrooms", bedrooms);
   if (listingType) query = query.eq("listing_type", listingType);
+  if (propertySegment) query = query.eq("property_segment", propertySegment);
+  if (projectStatus) query = query.eq("project_status", projectStatus);
   if (min) query = query.gte("price", min);
   if (max) query = query.lte("price", max);
 

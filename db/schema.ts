@@ -13,7 +13,15 @@ export const properties = pgTable("properties", {
   priceLabel: text("price_label"),
   location: text("location").notNull(),
   type: text("type").notNull(),
-  listingType: text("listing_type").notNull(),
+  listingType: text("listing_type", {
+    enum: ["SALE", "RENTAL", "MANDATE"],
+  }).notNull(),
+  propertySegment: text("property_segment", {
+    enum: ["RESIDENTIAL", "COMMERCIAL"],
+  }).notNull(),
+  projectStatus: text("project_status", {
+    enum: ["NEW", "RESALE", "UPCOMING"],
+  }),
   bedrooms: integer("bedrooms").default(0),
   bathrooms: integer("bathrooms").default(0),
   area: text("area"),

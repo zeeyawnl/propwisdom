@@ -3,6 +3,20 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/admin/ImageUploader";
+import { PROPERTY_CATEGORY_MAPPING } from "@/config/property-category-mapping";
+
+function getCategoryFromFields(listingType?: string, propertySegment?: string, projectStatus?: string | null) {
+  for (const [key, val] of Object.entries(PROPERTY_CATEGORY_MAPPING)) {
+    if (
+      val.listingType === listingType?.toUpperCase() &&
+      val.propertySegment === propertySegment?.toUpperCase() &&
+      (val.projectStatus === (projectStatus?.toUpperCase() || null) || (!val.projectStatus && !projectStatus))
+    ) {
+      return key as keyof typeof PROPERTY_CATEGORY_MAPPING;
+    }
+  }
+  return "NEW_RESIDENTIAL";
+}
 
 type PropertyFormProps = {
   initial?: {
@@ -13,6 +27,8 @@ type PropertyFormProps = {
     location?: string;
     type?: string;
     listingType?: string;
+    propertySegment?: string;
+    projectStatus?: string | null;
     images?: string[];
     bedrooms?: number | null;
     bathrooms?: number | null;
@@ -27,7 +43,7 @@ type FormData = {
   priceLabel: string;
   location: string;
   type: string;
-  listingType: string;
+  projectCategory: keyof typeof PROPERTY_CATEGORY_MAPPING;
   bedrooms: string;
   bathrooms: string;
   area: string;
@@ -36,14 +52,6 @@ type FormData = {
 };
 
 const TYPES = ["residential", "villa", "plot", "commercial"];
-const LISTING_TYPES = [
-  { value: "resale",      label: "Residential Properties" },
-  { value: "rent",        label: "Rental" },
-  { value: "mandate",     label: "Mandate Project" },
-  { value: "commercial",  label: "Commercial" },
-  { value: "new_project", label: "New Project" },
-  { value: "plot",        label: "Plot" },
-];
 
 export default function PropertyForm({ initial, id }: PropertyFormProps) {
   const router = useRouter();
@@ -55,7 +63,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     priceLabel: initial?.priceLabel ?? "",
     location: initial?.location ?? "",
     type: initial?.type ?? "residential",
-    listingType: initial?.listingType ?? "rent",
+    projectCategory: getCategoryFromFields(initial?.listingType, initial?.propertySegment, initial?.projectStatus),
     bedrooms: initial?.bedrooms != null ? String(initial.bedrooms) : "",
     bathrooms: initial?.bathrooms != null ? String(initial.bathrooms) : "",
     area: initial?.area ?? "",
@@ -75,7 +83,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         priceLabel: initial.priceLabel ?? "",
         location: initial.location ?? "",
         type: initial.type ?? "residential",
-        listingType: initial.listingType ?? "rent",
+        projectCategory: getCategoryFromFields(initial.listingType, initial.propertySegment, initial.projectStatus),
         bedrooms: initial.bedrooms != null ? String(initial.bedrooms) : "",
         bathrooms: initial.bathrooms != null ? String(initial.bathrooms) : "",
         area: initial.area ?? "",
@@ -100,6 +108,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       if (form.price <= 0) throw new Error("Price must be greater than 0");
       if (form.images.length === 0) throw new Error("At least 1 image is required");
 
+      const selectedCategory = PROPERTY_CATEGORY_MAPPING[form.projectCategory];
+
       const payload = {
         ...form,
         price: Number(form.price),
@@ -107,6 +117,9 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         bedrooms: form.bedrooms !== "" ? Number(form.bedrooms) : null,
         bathrooms: form.bathrooms !== "" ? Number(form.bathrooms) : null,
         area: form.area || null,
+        listingType: selectedCategory.listingType,
+        propertySegment: selectedCategory.propertySegment || undefined,
+        projectStatus: selectedCategory.projectStatus || undefined,
       };
 
       const res = await fetch(
@@ -202,7 +215,21 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Category</label>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Project Category</label>
+            <select
+              value={form.projectCategory}
+              onChange={(e) => updateField("projectCategory", e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
+            >
+              {Object.entries(PROPERTY_CATEGORY_MAPPING).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-slate-950 mb-1">Property Sub-Type</label>
             <select
               value={form.type}
               onChange={(e) => updateField("type", e.target.value)}
@@ -210,18 +237,6 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
             >
               {TYPES.map((t) => (
                 <option key={t} value={t} className="capitalize">{t}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Project Type</label>
-            <select
-              value={form.listingType}
-              onChange={(e) => updateField("listingType", e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
-            >
-              {LISTING_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>
           </div>

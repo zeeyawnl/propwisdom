@@ -13,6 +13,8 @@ type Property = {
   location: string;
   type: string;
   listingType: string;
+  propertySegment: string;
+  projectStatus: string | null;
   bedrooms: number | null;
   bathrooms: number | null;
   area: string | null;
@@ -52,7 +54,7 @@ export default function PropertyCard({ property, index }: { property: Property; 
         {/* Status Badges */}
         <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
           <span className="bg-white/95 backdrop-blur-md text-teal-forest text-[9px] uppercase tracking-[0.2em] font-bold px-4 py-2 rounded-full shadow-sm">
-            {property.listingType.replace("_", " ")}
+            {property.projectStatus ? `${property.projectStatus} ` : ""}{property.listingType}
           </span>
           {property.featured && (
             <span className="bg-teal-forest/95 backdrop-blur-md text-vanilla-latte text-[9px] uppercase tracking-[0.2em] font-bold px-4 py-2 rounded-full shadow-sm w-fit">

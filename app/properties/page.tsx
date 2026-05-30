@@ -46,8 +46,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     location: params.location || undefined,
     area,
     bedrooms,
-    listingType: params.listingType as "rent" | "resale" | "new_project" | "mandate" | "commercial" | "plot" | undefined,
-    type: params.type as "residential" | "villa" | "plot" | "commercial" | undefined,
+    listingType: params.listingType as any,
+    type: params.type as any,
     min,
     max,
   });
@@ -60,35 +60,35 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   // ── When search is active: single unified results block
   // ── When no search: split into 6 dedicated sections in display order
 
-  // 1. Residential Properties (listingType = "resale")
+  // 1. Residential Properties (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "RESALE")
   const residential = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "resale");
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "RESALE");
 
-  // 2. Rental
+  // 2. Rental (listingType = "RENTAL")
   const rentals = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "rent");
+    : allProperties.filter((p) => p.listingType === "RENTAL");
 
-  // 3. Mandate Projects
+  // 3. Mandate Projects (listingType = "MANDATE")
   const mandate = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "mandate");
+    : allProperties.filter((p) => p.listingType === "MANDATE");
 
-  // 4. Commercial Properties
+  // 4. Commercial Properties (propertySegment = "COMMERCIAL")
   const commercial = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "commercial");
+    : allProperties.filter((p) => p.propertySegment === "COMMERCIAL");
 
-  // 5. New Projects
+  // 5. New Projects (listingType = "SALE", projectStatus = "NEW")
   const newProjects = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "new_project");
+    : allProperties.filter((p) => p.listingType === "SALE" && p.projectStatus === "NEW");
 
-  // 6. Plots
+  // 6. Plots (type = "plot")
   const plots = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType.toLowerCase() === "plot");
+    : allProperties.filter((p) => p.type === "plot");
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] pt-32 pb-24">
