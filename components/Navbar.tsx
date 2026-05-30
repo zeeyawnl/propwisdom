@@ -82,25 +82,13 @@ export default function Navbar() {
             </Link>
 
             {/* Projects Dropdown */}
-            <div className="relative group py-2">
-              <span className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 cursor-pointer hover:text-teal-forest transition-colors relative">
-                Projects
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
-              </span>
-              <div className="absolute top-full left-[-20px] mt-0 w-56 bg-white shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-100 flex flex-col py-3 z-50">
-                {projectLinks.map(link => (
-                  <Link key={link.name} href={link.href} className="px-5 py-2.5 text-sm hover:bg-slate-50 text-slate-600 hover:text-teal-forest font-medium transition-colors">
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
+
 
             <Link href="/properties" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
-              All Properties
+              Properties
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
             </Link>
-            
+
             <Link href="/about" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
               About
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />

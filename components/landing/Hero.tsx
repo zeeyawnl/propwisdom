@@ -39,7 +39,7 @@ export default function Hero() {
         >
           <div className="max-w-4xl">
             {/* Static Top Line */}
-            <h1 className=" pt-14  md:pt-28  text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
+            <h1 className="pt-14 md:pt-28 text-5xl md:text-7xl lg:text-[100px] font-extralight text-white leading-none tracking-tighter">
               Step into a space <br />
               that feels like
             </h1>
@@ -54,7 +54,7 @@ export default function Hero() {
                   exit={{ y: -70, opacity: 0, filter: "blur(10px)" }}
                   transition={{
                     duration: 0.8,
-                    ease: [0.76, 0, 0.24, 1] // Custom "Ostate" cubic-bezier
+                    ease: [0.76, 0, 0.24, 1], // Custom "Ostate" cubic-bezier
                   }}
                   className="text-5xl md:text-7xl lg:text-[100px] font-serif italic text-vanilla-latte block"
                 >
@@ -75,28 +75,28 @@ export default function Hero() {
             </motion.p>
           </div>
 
+          {/* Updated Glassmorphic Projects Button */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
             className="mt-10 md:pb-10 flex justify-center md:justify-end"
           >
-            <Link href="/properties" className="group inline-flex items-center gap-4 text-white text-[11px] uppercase tracking-[0.5em] font-medium transition-all">
-              <span className="border-b border-white/20 pb-1 font-medium text-xl group-hover:border-vanilla-latte group-hover:text-vanilla-latte transition-all">
-                View Properties
+            <Link
+              href="/projects"
+              className="group flex items-center gap-4 px-6 py-3 sm:px-8 sm:py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:bg-white/20 transition-all duration-500 ease-out"
+            >
+              <span className="text-white text-sm sm:text-base uppercase tracking-[0.3em] font-medium group-hover:text-vanilla-latte transition-colors duration-500">
+                Projects
               </span>
-              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-vanilla-latte group-hover:text-teal-forest transition-all duration-500 shrink-0">
-                <ArrowUpRight size={18} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/20 bg-white/5 flex items-center justify-center group-hover:bg-vanilla-latte group-hover:text-teal-forest group-hover:scale-110 transition-all duration-500 shrink-0">
+                <ArrowUpRight size={20} className="transition-transform duration-500 group-hover:rotate-45" />
               </div>
             </Link>
           </motion.div>
 
         </motion.div>
       </div>
-
-
-
-
     </section>
   );
 }

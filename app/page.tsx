@@ -1,5 +1,6 @@
 import { getProperties } from "@/lib/db/properties";
-import { Hero, FeaturedProperties, About, Services, Contact, Testimonials } from "@/components/landing";
+import { getCategoryCounts } from "@/lib/property-query-builder";
+import { Hero, FeaturedProperties, About, Services, Contact, Testimonials, ProjectCategories } from "@/components/landing";
 
 export const dynamic = "force-dynamic";
 
@@ -15,15 +16,19 @@ export default async function HomePage() {
   const featured = result.data.filter((p) => p.featured).slice(0, 4);
   const displayProperties = featured.length > 0 ? featured : result.data.slice(0, 4);
 
+  // Fetch counts dynamically for each category card
+  const counts = await getCategoryCounts();
+
   return (
     <div className="flex flex-col">
       <Hero />
       <About />
       <FeaturedProperties properties={displayProperties} />
-
+      <ProjectCategories counts={counts} />
       <Services />
       <Testimonials />
       <Contact />
     </div>
   );
 }
+
