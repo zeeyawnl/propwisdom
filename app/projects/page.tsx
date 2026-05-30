@@ -1,5 +1,6 @@
 import { getCategoryCounts } from "@/lib/property-query-builder";
 import { ProjectCategories } from "@/components/landing";
+import { PropertyCTASection } from "@/components/property/PropertyCTASection";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -21,17 +22,19 @@ export default async function ProjectsPage() {
             Exclusive Segments
           </span>
           <h1 className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-tight">
-            Explore Pune&apos;s <br />
-            <span className="font-serif italic text-teal-forest">Project Portfolios.</span>
+            Explore PROPWisdom&apos;s <br />
+            <span className="font-serif italic text-teal-forest">Property Portfolio</span>
           </h1>
-          <p className="text-slate-500 font-light mt-6 text-base md:text-lg max-w-2xl leading-relaxed">
-            Select an exclusive segment to view properties tailored to your investment and lifestyle goals, verified for authenticity and value by PropWisdom.
-          </p>
+
         </div>
       </div>
 
       {/* Render ProjectCategories without its default section header */}
       <ProjectCategories counts={counts} showHeader={false} />
+
+      {/* Property Owner & Rental Services CTA cards */}
+      <PropertyCTASection />
     </main>
   );
 }
+

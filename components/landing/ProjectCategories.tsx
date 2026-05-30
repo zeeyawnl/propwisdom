@@ -109,7 +109,10 @@ const itemVariants: Variants = {
 
 export default function ProjectCategories({ counts, showHeader = true }: ProjectCategoriesProps) {
   return (
-    <section id="project-categories" className="py-24 md:py-32 bg-[#FAFAFA] relative">
+    <section
+      id="project-categories"
+      className={`${showHeader ? "py-24 md:py-32" : "pt-2 pb-24 md:pb-32"} bg-[#FAFAFA] relative`}
+    >
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         {/* Section Header */}
         {showHeader && (
