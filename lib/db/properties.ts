@@ -13,6 +13,7 @@ import {
 } from "drizzle-orm";
 
 import type { PropertyQuery, CreatePropertyInput } from "@/lib/validations/property";
+import { PROPERTY_CATEGORIES } from "@/config/property-categories";
 
 // ✅ SORT MAP (clean + scalable)
 const SORT_MAP = {
@@ -44,8 +45,14 @@ function getAreaRange(area: number): { areaMin: number; areaMax: number } {
 
 function mapLegacyFilters(filters: PropertyQuery) {
   const mapped = { ...filters };
-  
-  if (filters.listingType) {
+
+  if (filters.category && PROPERTY_CATEGORIES[filters.category as keyof typeof PROPERTY_CATEGORIES]) {
+    const config = PROPERTY_CATEGORIES[filters.category as keyof typeof PROPERTY_CATEGORIES];
+    if (config.listingType) mapped.listingType = config.listingType as any;
+    if (config.propertySegment) mapped.propertySegment = config.propertySegment as any;
+    if (config.projectStatus) mapped.projectStatus = config.projectStatus as any;
+    if ("type" in config && config.type) mapped.type = config.type as any;
+  } else if (filters.listingType) {
     const lt = filters.listingType.toLowerCase();
     if (lt === "rent") {
       mapped.listingType = "RENTAL" as any;
@@ -71,15 +78,15 @@ function mapLegacyFilters(filters: PropertyQuery) {
       mapped.listingType = filters.listingType.toUpperCase() as any;
     }
   }
-  
+
   if (filters.propertySegment) {
     mapped.propertySegment = filters.propertySegment.toUpperCase() as any;
   }
-  
+
   if (filters.projectStatus) {
     mapped.projectStatus = filters.projectStatus.toUpperCase() as any;
   }
-  
+
   return mapped;
 }
 

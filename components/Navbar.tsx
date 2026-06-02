@@ -31,12 +31,13 @@ export default function Navbar() {
   ];
 
   const projectLinks = [
-    { name: "New Residential", href: "/projects/new-residential" },
-    { name: "New Commercial", href: "/projects/new-commercial" },
-    { name: "Upcoming", href: "/projects/upcoming" },
-    { name: "Resale", href: "/projects/resale-residential" },
-    { name: "Rentals", href: "/projects/rental-residential" },
-    { name: "Mandate", href: "/projects/mandate" },
+    { name: "New Residential", href: "/properties?category=NEW_RESIDENTIAL_PROJECTS" },
+    { name: "New Commercial", href: "/properties?category=NEW_COMMERCIAL_PROJECTS" },
+    { name: "Upcoming", href: "/properties?category=UPCOMING_PROJECTS" },
+    { name: "Resale", href: "/properties?category=RESALE_RESIDENTIAL_PROJECTS" },
+    { name: "Rentals", href: "/properties?category=RENTAL_RESIDENTIAL_PROJECTS" },
+    { name: "Mandate", href: "/properties?category=MANDATE_PROJECTS" },
+    { name: "Land & Plots", href: "/properties?category=LAND_PLOTS" },
   ];
 
   return (

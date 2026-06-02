@@ -12,81 +12,88 @@ import {
   Landmark,
   ShieldCheck,
   ArrowRight,
+  Map,
 } from "lucide-react";
 
 interface ProjectCategoriesProps {
   counts: {
-    NEW_RESIDENTIAL: number;
-    NEW_COMMERCIAL: number;
-    UPCOMING: number;
-    RESALE_RESIDENTIAL: number;
-    RESALE_COMMERCIAL: number;
-    RENTAL_RESIDENTIAL: number;
-    RENTAL_COMMERCIAL: number;
-    MANDATE: number;
+    MANDATE_PROJECTS: number;
+    NEW_RESIDENTIAL_PROJECTS: number;
+    NEW_COMMERCIAL_PROJECTS: number;
+    UPCOMING_PROJECTS: number;
+    RESALE_RESIDENTIAL_PROJECTS: number;
+    RESALE_COMMERCIAL_PROJECTS: number;
+    RENTAL_RESIDENTIAL_PROJECTS: number;
+    RENTAL_COMMERCIAL_PROJECTS: number;
+    LAND_PLOTS: number;
   };
   showHeader?: boolean;
 }
 
 const CATEGORIES = [
   {
-    key: "MANDATE" as const,
+    key: "MANDATE_PROJECTS" as const,
     title: "Mandate Projects",
     description: "Exclusive properties directly representing developers & owners.",
-    href: "/projects/mandate",
+    href: "/properties?category=MANDATE_PROJECTS",
     icon: ShieldCheck,
   },
-
   {
-    key: "NEW_RESIDENTIAL" as const,
+    key: "NEW_RESIDENTIAL_PROJECTS" as const,
     title: "New Residential Projects",
     description: "Explore newly launched residential developments.",
-    href: "/projects/new-residential",
+    href: "/properties?category=NEW_RESIDENTIAL_PROJECTS",
     icon: Home,
   },
   {
-    key: "NEW_COMMERCIAL" as const,
+    key: "NEW_COMMERCIAL_PROJECTS" as const,
     title: "New Commercial Projects",
     description: "Premium offices, retail spaces and commercial launches.",
-    href: "/projects/new-commercial",
+    href: "/properties?category=NEW_COMMERCIAL_PROJECTS",
     icon: Building2,
   },
   {
-    key: "UPCOMING" as const,
+    key: "UPCOMING_PROJECTS" as const,
     title: "Upcoming Projects",
     description: "Be the first to invest in pre-launch and under-construction ventures.",
-    href: "/projects/upcoming",
+    href: "/properties?category=UPCOMING_PROJECTS",
     icon: TrendingUp,
   },
   {
-    key: "RESALE_RESIDENTIAL" as const,
+    key: "RESALE_RESIDENTIAL_PROJECTS" as const,
     title: "Resale Residential Properties",
     description: "Vetted secondary market residential listings across top micro-markets.",
-    href: "/projects/resale-residential",
+    href: "/properties?category=RESALE_RESIDENTIAL_PROJECTS",
     icon: KeyRound,
   },
   {
-    key: "RESALE_COMMERCIAL" as const,
+    key: "RESALE_COMMERCIAL_PROJECTS" as const,
     title: "Resale Commercial Properties",
     description: "Established commercial units and offices ready for occupation.",
-    href: "/projects/resale-commercial",
+    href: "/properties?category=RESALE_COMMERCIAL_PROJECTS",
     icon: BadgeIndianRupee,
   },
   {
-    key: "RENTAL_RESIDENTIAL" as const,
+    key: "RENTAL_RESIDENTIAL_PROJECTS" as const,
     title: "Rental Residential Properties",
     description: "Premium homes, flats and apartments available for rent.",
-    href: "/projects/rental-residential",
+    href: "/properties?category=RENTAL_RESIDENTIAL_PROJECTS",
     icon: Handshake,
   },
   {
-    key: "RENTAL_COMMERCIAL" as const,
+    key: "RENTAL_COMMERCIAL_PROJECTS" as const,
     title: "Rental Commercial Properties",
     description: "Offices, retail spaces, and commercial rentals.",
-    href: "/projects/rental-commercial",
+    href: "/properties?category=RENTAL_COMMERCIAL_PROJECTS",
     icon: Landmark,
   },
-
+  {
+    key: "LAND_PLOTS" as const,
+    title: "Land & Plots",
+    description: "Premium investment plots, residential land, and commercial zones.",
+    href: "/properties?category=LAND_PLOTS",
+    icon: Map,
+  },
 ];
 
 const containerVariants: Variants = {

@@ -1,11 +1,12 @@
 import { db } from "@/lib/db";
 import { properties } from "@/db/schema";
-import { and, eq, count } from "drizzle-orm";
+import { and, eq, ne, count, sql } from "drizzle-orm";
 
 export async function getFilteredProperties(filters: {
   listingType?: string;
   propertySegment?: string;
   projectStatus?: string | null;
+  type?: string;
 }) {
   const conditions = [];
 
@@ -21,6 +22,10 @@ export async function getFilteredProperties(filters: {
     conditions.push(eq(properties.projectStatus, filters.projectStatus as any));
   }
 
+  if (filters.type) {
+    conditions.push(eq(properties.type, filters.type as any));
+  }
+
   return db.select().from(properties).where(and(...conditions));
 }
 
@@ -34,13 +39,15 @@ export async function getCategoryCounts() {
     rentalRes,
     rentalComm,
     mandate,
+    landPlots,
   ] = await Promise.all([
-    // 1. New Residential Projects
+    // 1. New Residential Projects (exclude plots)
     db.select({ count: count() }).from(properties).where(
       and(
         eq(properties.listingType, "SALE"),
         eq(properties.propertySegment, "RESIDENTIAL"),
-        eq(properties.projectStatus, "NEW")
+        eq(properties.projectStatus, "NEW"),
+        sql`COALESCE(${properties.type}, '') != 'plot'`
       )
     ),
     // 2. New Commercial Projects
@@ -58,12 +65,13 @@ export async function getCategoryCounts() {
         eq(properties.projectStatus, "UPCOMING")
       )
     ),
-    // 4. Resale Residential Projects
+    // 4. Resale Residential Projects (exclude plots)
     db.select({ count: count() }).from(properties).where(
       and(
         eq(properties.listingType, "SALE"),
         eq(properties.propertySegment, "RESIDENTIAL"),
-        eq(properties.projectStatus, "RESALE")
+        eq(properties.projectStatus, "RESALE"),
+        sql`COALESCE(${properties.type}, '') != 'plot'`
       )
     ),
     // 5. Resale Commercial Projects
@@ -92,17 +100,21 @@ export async function getCategoryCounts() {
     db.select({ count: count() }).from(properties).where(
       eq(properties.listingType, "MANDATE")
     ),
+    // 9. Land & Plots
+    db.select({ count: count() }).from(properties).where(
+      eq(properties.type, "plot")
+    ),
   ]);
 
   return {
-    NEW_RESIDENTIAL: newRes[0]?.count ?? 0,
-    NEW_COMMERCIAL: newComm[0]?.count ?? 0,
-    UPCOMING: upcoming[0]?.count ?? 0,
-    RESALE_RESIDENTIAL: resaleRes[0]?.count ?? 0,
-    RESALE_COMMERCIAL: resaleComm[0]?.count ?? 0,
-    RENTAL_RESIDENTIAL: rentalRes[0]?.count ?? 0,
-    RENTAL_COMMERCIAL: rentalComm[0]?.count ?? 0,
-    MANDATE: mandate[0]?.count ?? 0,
+    MANDATE_PROJECTS: mandate[0]?.count ?? 0,
+    NEW_RESIDENTIAL_PROJECTS: newRes[0]?.count ?? 0,
+    NEW_COMMERCIAL_PROJECTS: newComm[0]?.count ?? 0,
+    UPCOMING_PROJECTS: upcoming[0]?.count ?? 0,
+    RESALE_RESIDENTIAL_PROJECTS: resaleRes[0]?.count ?? 0,
+    RESALE_COMMERCIAL_PROJECTS: resaleComm[0]?.count ?? 0,
+    RENTAL_RESIDENTIAL_PROJECTS: rentalRes[0]?.count ?? 0,
+    RENTAL_COMMERCIAL_PROJECTS: rentalComm[0]?.count ?? 0,
+    LAND_PLOTS: landPlots[0]?.count ?? 0,
   };
 }
-

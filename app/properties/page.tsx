@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getProperties } from "@/lib/db/properties";
 import PropertySection from "@/components/listings/PropertySection";
 import PropertySearchBar from "@/components/listings/PropertySearchBar";
+import { PROPERTY_CATEGORIES } from "@/config/property-categories";
 
 // Make the route dynamic so it always fetches fresh data
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ interface PageProps {
     location?: string;
     area?: string;
     bedrooms?: string;
-    listingType?: string;
+    category?: string;
     type?: string;
     sort?: string;
     page?: string;
@@ -46,7 +47,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     location: params.location || undefined,
     area,
     bedrooms,
-    listingType: params.listingType as any,
+    category: params.category || undefined,
     type: params.type as any,
     min,
     max,
@@ -55,38 +56,53 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const allProperties = result.data;
 
   // Determine if any search filter is active
-  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.listingType || params.type || params.min || params.max);
+  const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.category || params.type || params.min || params.max);
 
   // ── When search is active: single unified results block
-  // ── When no search: split into 6 dedicated sections in display order
+  // ── When no search: split into 9 dedicated sections in display order
 
-  // 1. Residential Properties (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "RESALE")
-  const residential = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "RESALE");
-
-  // 2. Rental (listingType = "RENTAL")
-  const rentals = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "RENTAL");
-
-  // 3. Mandate Projects (listingType = "MANDATE")
-  const mandate = hasActiveSearch
+  // 1. Mandate Projects (listingType = "MANDATE")
+  const mandateProjects = hasActiveSearch
     ? []
     : allProperties.filter((p) => p.listingType === "MANDATE");
 
-  // 4. Commercial Properties (propertySegment = "COMMERCIAL")
-  const commercial = hasActiveSearch
+  // 2. New Residential Projects (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "NEW", type != "plot")
+  const newResidentialProjects = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.propertySegment === "COMMERCIAL");
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "NEW" && p.type !== "plot");
 
-  // 5. New Projects (listingType = "SALE", projectStatus = "NEW")
-  const newProjects = hasActiveSearch
+  // 3. New Commercial Projects (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "NEW")
+  const newCommercialProjects = hasActiveSearch
     ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.projectStatus === "NEW");
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "NEW");
 
-  // 6. Plots (type = "plot")
-  const plots = hasActiveSearch
+  // 4. Upcoming Projects (listingType = "SALE", projectStatus = "UPCOMING")
+  const upcomingProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "SALE" && p.projectStatus === "UPCOMING");
+
+  // 5. Resale Residential Projects (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "RESALE", type != "plot")
+  const resaleResidentialProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "RESALE" && p.type !== "plot");
+
+  // 6. Resale Commercial Projects (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "RESALE")
+  const resaleCommercialProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "RESALE");
+
+  // 7. Rental Residential Projects (listingType = "RENTAL", propertySegment = "RESIDENTIAL")
+  const rentalResidentialProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "RENTAL" && p.propertySegment === "RESIDENTIAL");
+
+  // 8. Rental Commercial Projects (listingType = "RENTAL", propertySegment = "COMMERCIAL")
+  const rentalCommercialProjects = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "RENTAL" && p.propertySegment === "COMMERCIAL");
+
+  // 9. Land & Plots (type = "plot")
+  const landPlots = hasActiveSearch
     ? []
     : allProperties.filter((p) => p.type === "plot");
 
@@ -136,57 +152,93 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
           <PropertySection
             id="search-results"
             title={
-              <>
-                Search{" "}
-                <span className="font-serif italic text-teal-forest">Results.</span>
-              </>
+              params.category && PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES] ? (
+                (() => {
+                  const label = PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES].label;
+                  const parts = label.split(" ");
+                  const lastWord = parts.pop();
+                  const remaining = parts.join(" ");
+                  return (
+                    <>
+                      {remaining}{" "}
+                      <span className="font-serif italic text-teal-forest">{lastWord}.</span>
+                    </>
+                  );
+                })()
+              ) : (
+                <>
+                  Search{" "}
+                  <span className="font-serif italic text-teal-forest">Results.</span>
+                </>
+              )
             }
             subtitle={`${allProperties.length} propert${allProperties.length === 1 ? "y" : "ies"} found`}
             properties={allProperties}
           />
         ) : (
-          // ── Regular view: 6 dedicated sections in display order ──
+          // ── Regular view: 9 dedicated sections in display order ──
           <>
-            {/* 1. RESIDENTIAL PROPERTIES (resale) */}
+            {/* 1. Mandate Projects */}
             <PropertySection
-              id="residential"
-              title={<>Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
-              properties={residential}
-            />
-
-            {/* 2. RENTAL */}
-            <PropertySection
-              id="rental"
-              title={<>Curated <span className="font-serif italic text-teal-forest">Rental Spaces.</span></>}
-              properties={rentals}
-            />
-
-            {/* 3. MANDATE PROJECTS */}
-            <PropertySection
-              id="mandate"
+              id="mandate-projects"
               title={<>Mandate <span className="font-serif italic text-teal-forest">Projects.</span></>}
-              properties={mandate}
+              properties={mandateProjects}
             />
 
-            {/* 4. COMMERCIAL PROPERTIES */}
+            {/* 2. New Residential Projects */}
             <PropertySection
-              id="commercial"
-              title={<>Commercial <span className="font-serif italic text-teal-forest">Properties.</span></>}
-              properties={commercial}
+              id="new-residential-projects"
+              title={<>New Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={newResidentialProjects}
             />
 
-            {/* 5. NEW PROJECTS */}
+            {/* 3. New Commercial Projects */}
             <PropertySection
-              id="new-projects"
-              title={<>New <span className="font-serif italic text-teal-forest">Projects.</span></>}
-              properties={newProjects}
+              id="new-commercial-projects"
+              title={<>New Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={newCommercialProjects}
             />
 
-            {/* 6. PLOTS */}
+            {/* 4. Upcoming Projects */}
             <PropertySection
-              id="plots"
+              id="upcoming-projects"
+              title={<>Upcoming <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={upcomingProjects}
+            />
+
+            {/* 5. Resale Residential Projects */}
+            <PropertySection
+              id="resale-residential-projects"
+              title={<>Resale Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={resaleResidentialProjects}
+            />
+
+            {/* 6. Resale Commercial Projects */}
+            <PropertySection
+              id="resale-commercial-projects"
+              title={<>Resale Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={resaleCommercialProjects}
+            />
+
+            {/* 7. Rental Residential Projects */}
+            <PropertySection
+              id="rental-residential-projects"
+              title={<>Rental Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={rentalResidentialProjects}
+            />
+
+            {/* 8. Rental Commercial Projects */}
+            <PropertySection
+              id="rental-commercial-projects"
+              title={<>Rental Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              properties={rentalCommercialProjects}
+            />
+
+            {/* 9. Land & Plots */}
+            <PropertySection
+              id="land-plots"
               title={<>Land & <span className="font-serif italic text-teal-forest">Plots.</span></>}
-              properties={plots}
+              properties={landPlots}
             />
           </>
         )}

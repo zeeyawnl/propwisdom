@@ -1,18 +1,5 @@
-import { PROPERTY_CATEGORIES } from "@/config/property-categories";
-import { getFilteredProperties } from "@/lib/property-query-builder";
-import PropertyListingPage from "@/components/listings/PropertyListingPage";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function Page() {
-  const properties = await getFilteredProperties(
-    PROPERTY_CATEGORIES.UPCOMING_PROJECTS
-  );
-
-  return (
-    <PropertyListingPage
-      properties={properties}
-      title="Upcoming Launch Projects"
-    />
-  );
+export default function Page() {
+  redirect("/properties?category=UPCOMING_PROJECTS");
 }

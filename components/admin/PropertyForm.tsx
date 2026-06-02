@@ -3,19 +3,35 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/admin/ImageUploader";
-import { PROPERTY_CATEGORY_MAPPING } from "@/config/property-category-mapping";
+import { PROPERTY_CATEGORIES } from "@/config/property-categories";
 
-function getCategoryFromFields(listingType?: string, propertySegment?: string, projectStatus?: string | null) {
-  for (const [key, val] of Object.entries(PROPERTY_CATEGORY_MAPPING)) {
-    if (
-      val.listingType === listingType?.toUpperCase() &&
-      val.propertySegment === propertySegment?.toUpperCase() &&
-      (val.projectStatus === (projectStatus?.toUpperCase() || null) || (!val.projectStatus && !projectStatus))
-    ) {
-      return key as keyof typeof PROPERTY_CATEGORY_MAPPING;
+function getCategoryFromFields(
+  listingType?: string,
+  propertySegment?: string,
+  projectStatus?: string | null,
+  type?: string
+) {
+  // Check for Land & Plots first since it's type-based
+  if (type === "plot") {
+    return "LAND_PLOTS";
+  }
+
+  for (const [key, val] of Object.entries(PROPERTY_CATEGORIES)) {
+    // Skip LAND_PLOTS in general loop to avoid mismatch
+    if (key === "LAND_PLOTS") continue;
+
+    // Check if the property attributes match the category configuration
+    const matchListing = !val.listingType || val.listingType === listingType?.toUpperCase();
+    const matchSegment = !val.propertySegment || val.propertySegment === propertySegment?.toUpperCase();
+    const matchStatus = val.projectStatus === undefined || 
+                        val.projectStatus === (projectStatus?.toUpperCase() || null) || 
+                        (!val.projectStatus && !projectStatus);
+
+    if (matchListing && matchSegment && matchStatus) {
+      return key as keyof typeof PROPERTY_CATEGORIES;
     }
   }
-  return "NEW_RESIDENTIAL";
+  return "NEW_RESIDENTIAL_PROJECTS";
 }
 
 type PropertyFormProps = {
@@ -43,7 +59,7 @@ type FormData = {
   priceLabel: string;
   location: string;
   type: string;
-  projectCategory: keyof typeof PROPERTY_CATEGORY_MAPPING;
+  projectCategory: keyof typeof PROPERTY_CATEGORIES;
   bedrooms: string;
   bathrooms: string;
   area: string;
@@ -63,7 +79,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
     priceLabel: initial?.priceLabel ?? "",
     location: initial?.location ?? "",
     type: initial?.type ?? "residential",
-    projectCategory: getCategoryFromFields(initial?.listingType, initial?.propertySegment, initial?.projectStatus),
+    projectCategory: getCategoryFromFields(initial?.listingType, initial?.propertySegment, initial?.projectStatus, initial?.type),
     bedrooms: initial?.bedrooms != null ? String(initial.bedrooms) : "",
     bathrooms: initial?.bathrooms != null ? String(initial.bathrooms) : "",
     area: initial?.area ?? "",
@@ -83,7 +99,7 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
         priceLabel: initial.priceLabel ?? "",
         location: initial.location ?? "",
         type: initial.type ?? "residential",
-        projectCategory: getCategoryFromFields(initial.listingType, initial.propertySegment, initial.projectStatus),
+        projectCategory: getCategoryFromFields(initial.listingType, initial.propertySegment, initial.projectStatus, initial.type),
         bedrooms: initial.bedrooms != null ? String(initial.bedrooms) : "",
         bathrooms: initial.bathrooms != null ? String(initial.bathrooms) : "",
         area: initial.area ?? "",
@@ -108,18 +124,19 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       if (form.price <= 0) throw new Error("Price must be greater than 0");
       if (form.images.length === 0) throw new Error("At least 1 image is required");
 
-      const selectedCategory = PROPERTY_CATEGORY_MAPPING[form.projectCategory];
+      const selectedCategory = PROPERTY_CATEGORIES[form.projectCategory];
 
       const payload = {
         ...form,
         price: Number(form.price),
         priceLabel: form.priceLabel || null,
-        bedrooms: form.bedrooms !== "" ? Number(form.bedrooms) : null,
-        bathrooms: form.bathrooms !== "" ? Number(form.bathrooms) : null,
+        // Reset BHK / Bathrooms to null if they are hidden in Step 2:
+        bedrooms: (form.type !== "plot" && form.type !== "commercial" && form.bedrooms !== "") ? Number(form.bedrooms) : null,
+        bathrooms: (form.type !== "plot" && form.bathrooms !== "") ? Number(form.bathrooms) : null,
         area: form.area || null,
         listingType: selectedCategory.listingType,
-        propertySegment: selectedCategory.propertySegment || undefined,
-        projectStatus: selectedCategory.projectStatus || undefined,
+        propertySegment: selectedCategory.propertySegment || (form.type === "commercial" ? "COMMERCIAL" : "RESIDENTIAL"),
+        projectStatus: selectedCategory.projectStatus || null,
       };
 
       const res = await fetch(
@@ -212,16 +229,41 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
             required
           />
         </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-bold text-slate-950 mb-1">Project Category</label>
             <select
               value={form.projectCategory}
-              onChange={(e) => updateField("projectCategory", e.target.value)}
+              onChange={(e) => {
+                const newCat = e.target.value as keyof typeof PROPERTY_CATEGORIES;
+                let newType = form.type;
+                if (newCat === "LAND_PLOTS") {
+                  newType = "plot";
+                } else if (
+                  newCat === "NEW_COMMERCIAL_PROJECTS" ||
+                  newCat === "RESALE_COMMERCIAL_PROJECTS" ||
+                  newCat === "RENTAL_COMMERCIAL_PROJECTS"
+                ) {
+                  newType = "commercial";
+                } else if (
+                  newCat === "NEW_RESIDENTIAL_PROJECTS" ||
+                  newCat === "RESALE_RESIDENTIAL_PROJECTS" ||
+                  newCat === "RENTAL_RESIDENTIAL_PROJECTS" ||
+                  newCat === "UPCOMING_PROJECTS"
+                ) {
+                  if (form.type === "commercial" || form.type === "plot") {
+                    newType = "residential";
+                  }
+                }
+                setForm((prev) => ({
+                  ...prev,
+                  projectCategory: newCat,
+                  type: newType,
+                }));
+              }}
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
             >
-              {Object.entries(PROPERTY_CATEGORY_MAPPING).map(([key, value]) => (
+              {Object.entries(PROPERTY_CATEGORIES).map(([key, value]) => (
                 <option key={key} value={key}>
                   {value.label}
                 </option>
@@ -230,47 +272,74 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-950 mb-1">Property Sub-Type</label>
-            <select
-              value={form.type}
-              onChange={(e) => updateField("type", e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
-            >
-              {TYPES.map((t) => (
-                <option key={t} value={t} className="capitalize">{t}</option>
-              ))}
-            </select>
+            {form.projectCategory === "LAND_PLOTS" ? (
+              <div className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold capitalize">
+                Plot (Enforced)
+              </div>
+            ) : form.projectCategory === "NEW_COMMERCIAL_PROJECTS" ||
+              form.projectCategory === "RESALE_COMMERCIAL_PROJECTS" ||
+              form.projectCategory === "RENTAL_COMMERCIAL_PROJECTS" ? (
+              <div className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold capitalize">
+                Commercial (Enforced)
+              </div>
+            ) : (
+              <select
+                value={form.type}
+                onChange={(e) => updateField("type", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none appearance-none text-slate-950 font-bold"
+              >
+                {form.projectCategory === "MANDATE_PROJECTS" ? (
+                  TYPES.map((t) => (
+                    <option key={t} value={t} className="capitalize">
+                      {t}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="residential">Residential</option>
+                    <option value="villa">Villa</option>
+                  </>
+                )}
+              </select>
+            )}
           </div>
         </div>
 
-        {/* BHK, Bathrooms & Carpet Area */}
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">BHK <span className="font-normal text-slate-400">(optional)</span></label>
-            <input
-              type="number"
-              min={0}
-              placeholder="e.g. 2"
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
-              value={form.bedrooms}
-              onChange={(e) => updateField("bedrooms", e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Bathrooms <span className="font-normal text-slate-400">(optional)</span></label>
-            <input
-              type="number"
-              min={0}
-              placeholder="e.g. 2"
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
-              value={form.bathrooms}
-              onChange={(e) => updateField("bathrooms", e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-950 mb-1">Carpet Area <span className="font-normal text-slate-400">(optional)</span></label>
+        {/* BHK, Bathrooms & Carpet Area (Step 2 - Dynamic Fields) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {form.type !== "plot" && form.type !== "commercial" && (
+            <div>
+              <label className="block text-sm font-bold text-slate-950 mb-1">BHK <span className="font-normal text-slate-400">(optional)</span></label>
+              <input
+                type="number"
+                min={0}
+                placeholder="e.g. 2"
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+                value={form.bedrooms}
+                onChange={(e) => updateField("bedrooms", e.target.value)}
+              />
+            </div>
+          )}
+          {form.type !== "plot" && (
+            <div>
+              <label className="block text-sm font-bold text-slate-950 mb-1">Bathrooms <span className="font-normal text-slate-400">(optional)</span></label>
+              <input
+                type="number"
+                min={0}
+                placeholder="e.g. 2"
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
+                value={form.bathrooms}
+                onChange={(e) => updateField("bathrooms", e.target.value)}
+              />
+            </div>
+          )}
+          <div className={form.type === "plot" ? "md:col-span-3" : ""}>
+            <label className="block text-sm font-bold text-slate-950 mb-1">
+              {form.type === "plot" ? "Plot Area" : form.type === "commercial" ? "Carpet/Super Area" : "Carpet Area"} <span className="font-normal text-slate-400">(optional)</span>
+            </label>
             <input
               type="text"
-              placeholder="sq ft"
+              placeholder={form.type === "plot" ? "e.g. 1200 sq ft or 2 Guntha" : "sq ft"}
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none placeholder-slate-500 text-slate-950 font-medium"
               value={form.area}
               onChange={(e) => updateField("area", e.target.value)}

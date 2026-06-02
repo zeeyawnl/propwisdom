@@ -3,6 +3,7 @@
 import { useState, useTransition, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Search, MapPin, Maximize2, Home, X, Loader2, Tag } from "lucide-react";
+import { PROPERTY_CATEGORIES } from "@/config/property-categories";
 
 const BHK_OPTIONS = [
   { label: "Any BHK", value: "" },
@@ -21,20 +22,20 @@ export default function PropertySearchBar() {
 
   // Initialise from current URL params so state survives navigation
   const [location, setLocation] = useState(searchParams.get("location") ?? "");
-  const [listingType, setListingType] = useState(searchParams.get("listingType") ?? "");
+  const [category, setCategory] = useState(searchParams.get("category") ?? "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") ?? "");
   const [area, setArea] = useState(searchParams.get("area") ?? "");
   const [min, setMin] = useState(searchParams.get("min") ?? "");
   const [max, setMax] = useState(searchParams.get("max") ?? "");
 
-  const hasFilters = location || area || bedrooms || listingType || min || max;
+  const hasFilters = location || area || bedrooms || category || min || max;
 
   const buildQuery = useCallback(
-    (overrides: { location?: string; area?: string; bedrooms?: string; listingType?: string; min?: string; max?: string }) => {
+    (overrides: { location?: string; area?: string; bedrooms?: string; category?: string; min?: string; max?: string }) => {
       const params = new URLSearchParams(searchParams.toString());
       const merged = {
         location: overrides.location ?? location,
-        listingType: overrides.listingType ?? listingType,
+        category: overrides.category ?? category,
         bedrooms: overrides.bedrooms ?? bedrooms,
         area: overrides.area ?? area,
         min: overrides.min ?? min,
@@ -47,8 +48,8 @@ export default function PropertySearchBar() {
       if (merged.location) params.set("location", merged.location);
       else params.delete("location");
 
-      if (merged.listingType) params.set("listingType", merged.listingType);
-      else params.delete("listingType");
+      if (merged.category) params.set("category", merged.category);
+      else params.delete("category");
 
       if (merged.bedrooms) params.set("bedrooms", merged.bedrooms);
       else params.delete("bedrooms");
@@ -64,7 +65,7 @@ export default function PropertySearchBar() {
 
       return params.toString();
     },
-    [searchParams, location, listingType, bedrooms, area, min, max]
+    [searchParams, location, category, bedrooms, area, min, max]
   );
 
   const handleSearch = () => {
@@ -75,7 +76,7 @@ export default function PropertySearchBar() {
 
   const handleClear = () => {
     setLocation("");
-    setListingType("");
+    setCategory("");
     setBedrooms("");
     setArea("");
     setMin("");
@@ -83,7 +84,7 @@ export default function PropertySearchBar() {
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("location");
-      params.delete("listingType");
+      params.delete("category");
       params.delete("bedrooms");
       params.delete("area");
       params.delete("min");
@@ -135,7 +136,7 @@ export default function PropertySearchBar() {
             )}
           </div>
 
-          {/* Project Type Selector */}
+          {/* Category Selector */}
           <div className="flex-1 min-w-[150px] flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-slate-100 group focus-within:bg-slate-50/60 transition-colors">
             <Tag
               size={18}
@@ -143,21 +144,20 @@ export default function PropertySearchBar() {
             />
             <div className="flex-1">
               <p className="text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-0.5">
-                Project Type
+                Category
               </p>
               <select
-                id="search-listing-type"
-                value={listingType}
-                onChange={(e) => setListingType(e.target.value)}
+                id="search-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="w-full bg-transparent text-sm font-medium text-slate-800 outline-none cursor-pointer appearance-none pr-4"
               >
-                <option value="">All Types</option>
-                <option value="resale">Residential Properties</option>
-                <option value="rent">Rental</option>
-                <option value="mandate">Mandate</option>
-                <option value="commercial">Commercial</option>
-                <option value="new_project">New Project</option>
-                <option value="plot">Plot</option>
+                <option value="">All Categories</option>
+                {Object.entries(PROPERTY_CATEGORIES).map(([key, val]) => (
+                  <option key={key} value={key}>
+                    {val.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -339,14 +339,14 @@ export default function PropertySearchBar() {
               }}
             />
           )}
-          {listingType && (
+          {category && PROPERTY_CATEGORIES[category as keyof typeof PROPERTY_CATEGORIES] && (
             <FilterChip
-              label={`🏷️ ${listingType.replace('_', ' ')}`}
+              label={`🏷️ ${PROPERTY_CATEGORIES[category as keyof typeof PROPERTY_CATEGORIES].label}`}
               onRemove={() => {
-                setListingType("");
+                setCategory("");
                 startTransition(() => {
                   const params = new URLSearchParams(searchParams.toString());
-                  params.delete("listingType");
+                  params.delete("category");
                   router.push(`${pathname}?${params.toString()}`);
                 });
               }}
