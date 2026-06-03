@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     };
 
     const googleScriptUrl = process.env.GOOGLE_SCRIPT_URL;
+    console.log("GOOGLE_SCRIPT_URL:", googleScriptUrl);
 
     if (!googleScriptUrl) {
       console.error("GOOGLE_SCRIPT_URL is not set in environment variables.");
@@ -33,7 +34,11 @@ export async function POST(req: Request) {
       body: JSON.stringify(payload),
     });
 
+    console.log("Google Status:", response.status);
+    console.log("Google Status Text:", response.statusText);
+
     const result = await response.text();
+    console.log("Google Response:", result);
 
     return NextResponse.json({
       success: true,
