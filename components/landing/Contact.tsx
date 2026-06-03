@@ -49,27 +49,23 @@ export default function Contact() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    const googleSheetUrl = process.env.NEXT_PUBLIC_GOOGLE_SHEET_URL;
-    if (!googleSheetUrl) {
-      console.error("Google Sheet URL is not defined");
-      setIsSubmitting(false);
-      setSubmitStatus("error");
-      return;
-    }
-
     try {
-      // Send as urlencoded query params or body to work smoothly with Google App Script Web App
-      await fetch(googleSheetUrl, {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        mode: "no-cors", // Crucial: avoid CORS errors with Google Apps Script
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: new URLSearchParams(formData).toString(),
+        body: JSON.stringify(formData),
       });
 
-      setSubmitStatus("success");
-      setFormData({ name: "", phone: "", email: "", message: "" });
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus("success");
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        setSubmitStatus("error");
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       setSubmitStatus("error");
