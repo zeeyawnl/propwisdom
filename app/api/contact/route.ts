@@ -32,6 +32,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+      redirect: "follow",
     });
 
     console.log("Google Status:", response.status);
