@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { properties } from "@/db/schema";
-import { and, eq, ne, count, sql } from "drizzle-orm";
+import { and, eq, count, sql } from "drizzle-orm";
 
 export async function getFilteredProperties(filters: {
   listingType?: string;
@@ -39,6 +39,7 @@ export async function getCategoryCounts() {
     rentalRes,
     rentalComm,
     mandate,
+    preLease,
     landPlots,
   ] = await Promise.all([
     // 1. New Residential Projects (exclude plots)
@@ -100,7 +101,15 @@ export async function getCategoryCounts() {
     db.select({ count: count() }).from(properties).where(
       eq(properties.listingType, "MANDATE")
     ),
-    // 9. Land & Plots
+    // 9. Pre-lease Properties
+    db.select({ count: count() }).from(properties).where(
+      and(
+        eq(properties.listingType, "SALE"),
+        eq(properties.propertySegment, "COMMERCIAL"),
+        eq(properties.projectStatus, "PRE_LEASED")
+      )
+    ),
+    // 10. Land & Plots
     db.select({ count: count() }).from(properties).where(
       eq(properties.type, "plot")
     ),
@@ -115,6 +124,7 @@ export async function getCategoryCounts() {
     RESALE_COMMERCIAL_PROJECTS: resaleComm[0]?.count ?? 0,
     RENTAL_RESIDENTIAL_PROJECTS: rentalRes[0]?.count ?? 0,
     RENTAL_COMMERCIAL_PROJECTS: rentalComm[0]?.count ?? 0,
+    PRE_LEASE_PROPERTIES: preLease[0]?.count ?? 0,
     LAND_PLOTS: landPlots[0]?.count ?? 0,
   };
 }

@@ -59,7 +59,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.category || params.type || params.min || params.max);
 
   // ── When search is active: single unified results block
-  // ── When no search: split into 9 dedicated sections in display order
+  // ── When no search: split into 10 dedicated sections in display order
 
   // 1. Mandate Projects (listingType = "MANDATE")
   const mandateProjects = hasActiveSearch
@@ -101,7 +101,12 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     ? []
     : allProperties.filter((p) => p.listingType === "RENTAL" && p.propertySegment === "COMMERCIAL");
 
-  // 9. Land & Plots (type = "plot")
+  // 9. Pre-lease Properties (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "PRE_LEASED")
+  const preLeaseProperties = hasActiveSearch
+    ? []
+    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "PRE_LEASED");
+
+  // 10. Land & Plots (type = "plot")
   const landPlots = hasActiveSearch
     ? []
     : allProperties.filter((p) => p.type === "plot");
@@ -176,7 +181,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             properties={allProperties}
           />
         ) : (
-          // ── Regular view: 9 dedicated sections in display order ──
+          // ── Regular view: 10 dedicated sections in display order ──
           <>
             {/* 1. Mandate Projects */}
             <PropertySection
@@ -234,7 +239,14 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               properties={rentalCommercialProjects}
             />
 
-            {/* 9. Land & Plots */}
+            {/* 9. Pre-lease Properties */}
+            <PropertySection
+              id="pre-lease-properties"
+              title={<>Pre-lease <span className="font-serif italic text-teal-forest">Properties.</span></>}
+              properties={preLeaseProperties}
+            />
+
+            {/* 10. Land & Plots */}
             <PropertySection
               id="land-plots"
               title={<>Land & <span className="font-serif italic text-teal-forest">Plots.</span></>}

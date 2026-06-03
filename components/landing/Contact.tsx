@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, MessageCircle, Send } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, Send, Loader2 } from "lucide-react";
 
 // Lucide removed brand icons, so we provide our own standard SVG components
 const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
@@ -34,6 +35,49 @@ const Linkedin = ({ size = 24, className = "" }: { size?: number, className?: st
 );
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    const googleSheetUrl = process.env.NEXT_PUBLIC_GOOGLE_SHEET_URL;
+    if (!googleSheetUrl) {
+      console.error("Google Sheet URL is not defined");
+      setIsSubmitting(false);
+      setSubmitStatus("error");
+      return;
+    }
+
+    try {
+      // Send as urlencoded query params or body to work smoothly with Google App Script Web App
+      await fetch(googleSheetUrl, {
+        method: "POST",
+        mode: "no-cors", // Crucial: avoid CORS errors with Google Apps Script
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      setSubmitStatus("success");
+      setFormData({ name: "", phone: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 md:py-32 bg-white relative overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
@@ -55,7 +99,7 @@ export default function Contact() {
               </h2>
             </div>
 
-            <form className="space-y-10">
+            <form onSubmit={handleSubmit} className="space-y-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* Minimalist Input Field */}
                 <div className="relative group">
@@ -63,8 +107,11 @@ export default function Contact() {
                     type="text"
                     id="name"
                     required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                     placeholder="Full Name"
+                    disabled={isSubmitting}
                   />
                   <label
                     htmlFor="name"
@@ -79,8 +126,11 @@ export default function Contact() {
                     type="tel"
                     id="phone"
                     required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                     placeholder="Phone Number"
+                    disabled={isSubmitting}
                   />
                   <label
                     htmlFor="phone"
@@ -96,8 +146,11 @@ export default function Contact() {
                   type="email"
                   id="email"
                   required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                   placeholder="Email Address"
+                  disabled={isSubmitting}
                 />
                 <label
                   htmlFor="email"
@@ -112,24 +165,57 @@ export default function Contact() {
                   id="message"
                   rows={4}
                   required
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent resize-none"
                   placeholder="Tell us about your requirements..."
+                  disabled={isSubmitting}
                 />
                 <label
                   htmlFor="message"
                   className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
                 >
-                  Your Message
+                  Your Requirements
                 </label>
               </div>
+
+              {submitStatus === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-teal-50 border border-teal-200 text-teal-800 text-sm font-light rounded-2xl"
+                >
+                  Thank you! Your requirements have been submitted successfully. Our team will get back to you shortly.
+                </motion.div>
+              )}
+
+              {submitStatus === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-red-50 border border-red-200 text-red-800 text-sm font-light rounded-2xl"
+                >
+                  Something went wrong. Please try again or contact us directly.
+                </motion.div>
+              )}
 
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="group flex items-center gap-4 px-8 py-4 bg-teal-forest text-vanilla-latte uppercase text-[11px] tracking-[0.3em] font-bold hover:bg-teal-forest/90 transition-all rounded-full"
+                  disabled={isSubmitting}
+                  className="group flex items-center gap-4 px-8 py-4 bg-teal-forest text-vanilla-latte uppercase text-[11px] tracking-[0.3em] font-bold hover:bg-teal-forest/90 transition-all rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit Inquiry
-                  <Send size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  {isSubmitting ? (
+                    <>
+                      Submitting
+                      <Loader2 size={14} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Submit
+                      <Send size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  )}
                 </button>
               </div>
             </form>

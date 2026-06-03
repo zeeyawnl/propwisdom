@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   ArrowRight,
   Map,
+  Paintbrush,
 } from "lucide-react";
 
 interface ProjectCategoriesProps {
@@ -25,6 +26,7 @@ interface ProjectCategoriesProps {
     RESALE_COMMERCIAL_PROJECTS: number;
     RENTAL_RESIDENTIAL_PROJECTS: number;
     RENTAL_COMMERCIAL_PROJECTS: number;
+    PRE_LEASE_PROPERTIES: number;
     LAND_PLOTS: number;
   };
   showHeader?: boolean;
@@ -88,11 +90,34 @@ const CATEGORIES = [
     icon: Landmark,
   },
   {
+    key: "PRE_LEASE_PROPERTIES" as const,
+    title: "Pre-lease Properties",
+    description: "Pre-leased commercial offices and shops offering instant rental yields.",
+    href: "/properties?category=PRE_LEASE_PROPERTIES",
+    icon: Landmark,
+  },
+  {
     key: "LAND_PLOTS" as const,
     title: "Land & Plots",
     description: "Premium investment plots, residential land, and commercial zones.",
     href: "/properties?category=LAND_PLOTS",
     icon: Map,
+  },
+  {
+    key: "HOME_LOANS" as const,
+    title: "Home Loans",
+    description: "Customized loan advice and banking partners for competitive rates.",
+    href: "/#contact",
+    icon: BadgeIndianRupee,
+    isService: true,
+  },
+  {
+    key: "INTERIOR_DESIGN" as const,
+    title: "Interior Design",
+    description: "Premium end-to-end space planning, decor, and styling solutions.",
+    href: "/#contact",
+    icon: Paintbrush,
+    isService: true,
   },
 ];
 
@@ -113,7 +138,6 @@ const itemVariants: Variants = {
   },
 };
 
-
 export default function ProjectCategories({ counts, showHeader = true }: ProjectCategoriesProps) {
   return (
     <section
@@ -130,7 +154,6 @@ export default function ProjectCategories({ counts, showHeader = true }: Project
             <h2 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight leading-tight">
               Browse Property <span className="font-serif italic text-teal-forest">Categories</span>
             </h2>
-
           </div>
         )}
 
@@ -144,7 +167,7 @@ export default function ProjectCategories({ counts, showHeader = true }: Project
         >
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
-            const countValue = counts[cat.key] || 0;
+            const countValue = cat.isService ? 0 : (counts[cat.key as keyof typeof counts] || 0);
 
             return (
               <motion.div key={cat.key} variants={itemVariants}>
@@ -170,10 +193,12 @@ export default function ProjectCategories({ counts, showHeader = true }: Project
                   {/* Bottom Stats & Action */}
                   <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100/80 group-hover:border-white/10 transition-colors duration-500">
                     <span className="text-slate-600 font-medium text-xs tracking-wider group-hover:text-vanilla-latte transition-colors duration-500">
-                      {countValue} Propert{countValue === 1 ? "y" : "ies"}
+                      {cat.isService
+                        ? "Expert Services"
+                        : `${countValue} Propert${countValue === 1 ? "y" : "ies"}`}
                     </span>
                     <span className="flex items-center gap-1.5 text-teal-forest text-xs font-bold uppercase tracking-widest group-hover:text-vanilla-latte transition-colors duration-500">
-                      View Projects
+                      {cat.isService ? "Contact Us" : "View Projects"}
                       <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-500" />
                     </span>
                   </div>

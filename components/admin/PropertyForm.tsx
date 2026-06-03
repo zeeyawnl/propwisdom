@@ -242,7 +242,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
                 } else if (
                   newCat === "NEW_COMMERCIAL_PROJECTS" ||
                   newCat === "RESALE_COMMERCIAL_PROJECTS" ||
-                  newCat === "RENTAL_COMMERCIAL_PROJECTS"
+                  newCat === "RENTAL_COMMERCIAL_PROJECTS" ||
+                  newCat === "PRE_LEASE_PROPERTIES"
                 ) {
                   newType = "commercial";
                 } else if (
@@ -278,7 +279,8 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
               </div>
             ) : form.projectCategory === "NEW_COMMERCIAL_PROJECTS" ||
               form.projectCategory === "RESALE_COMMERCIAL_PROJECTS" ||
-              form.projectCategory === "RENTAL_COMMERCIAL_PROJECTS" ? (
+              form.projectCategory === "RENTAL_COMMERCIAL_PROJECTS" ||
+              form.projectCategory === "PRE_LEASE_PROPERTIES" ? (
               <div className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold capitalize">
                 Commercial (Enforced)
               </div>

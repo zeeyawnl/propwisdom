@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, ChevronRight, Landmark, Home, Building2, TrendingUp, Handshake, KeyRound, MapPin, BadgeIndianRupee, Paintbrush, RefreshCcw } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronRight, Landmark, Home, Building2, TrendingUp, Handshake, KeyRound, BadgeIndianRupee, Paintbrush, RefreshCcw, Map, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 /* ------------------------------------------------------------------ */
@@ -11,173 +11,207 @@ import Link from "next/link";
 const SERVICES = [
   {
     id: "01",
-    icon: Landmark,
-    title: "Mandate Properties",
-    tagline: "Tailored to your vision",
-    hero: "End-to-end property development",
-    description: "Exclusive mandate listings and properties entrusted to us for direct, focused representation.",
+    icon: ShieldCheck,
+    title: "Mandate Projects",
+    tagline: "Exclusive representation",
+    hero: "Strategic landlord & developer representation",
+    description: "Exclusive listings directly representing owners and developers, ensuring premium exposure and verified transaction handling.",
     points: [
-      "Custom-built homes and purpose-driven commercial properties",
-      "End-to-end management from planning to handover",
-      "Expert guidance at every stage of development"
+      "Direct developer mandate properties",
+      "Vetted documentation and structural checks",
+      "Exclusive pricing and structural options"
     ],
-    closing: "We bring your vision to life with expert guidance at every stage.",
+    closing: "Focused representation that builds trust and delivers outcomes.",
     image: "/assets/images/seventhpoint.jpg",
-    actionLink: "/properties?listingType=mandate",
-    actionText: "View Mandate Properties"
+    actionLink: "/properties?category=MANDATE_PROJECTS",
+    actionText: "View Mandate Projects"
   },
   {
     id: "02",
     icon: Home,
-    title: "Residential Properties",
-    tagline: "Your dream home awaits",
-    hero: "Find the perfect residential space",
-    description: "Discover a wide range of premium residential properties, carefully curated to match your lifestyle.",
+    title: "New Residential Projects",
+    tagline: "Modern living spaces",
+    hero: "Pune's finest new home collections",
+    description: "Explore newly launched flats, apartments, and villas built with state-of-the-art designs and modern amenities.",
     points: [
-      "Flats, apartments, villas, and independent houses",
-      "Verified properties with clear titles",
-      "Prime locations across Pune"
+      "Newly constructed properties in key locations",
+      "Vast options of floorplans and BHK formats",
+      "Ready to move and under construction configurations"
     ],
-    closing: "Finding the perfect home for you and your family.",
+    closing: "Elevating your everyday living experience in Pune.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
-    actionLink: "/properties?type=residential",
-    actionText: "View Residential Properties"
+    actionLink: "/properties?category=NEW_RESIDENTIAL_PROJECTS",
+    actionText: "View New Residential Projects"
   },
   {
     id: "03",
     icon: Building2,
-    title: "Commercial Properties",
-    tagline: "Strategic spaces",
-    hero: "Strategic spaces for business growth",
-    description: "Find the ideal commercial space to elevate your business operations and visibility.",
+    title: "New Commercial Projects",
+    tagline: "Next-gen business hubs",
+    hero: "Foundations for commercial success",
+    description: "Invest in premium newly launched office spaces, corporate hubs, and retail outlets designed for maximum visibility.",
     points: [
-      "Premium office spaces and corporate hubs",
-      "Retail shops in high-footfall areas",
-      "Flexible layouts for diverse business needs"
+      "Grade-A corporate buildings and IT parks",
+      "High-footfall commercial spaces and shops",
+      "Flexible floor plates and infrastructure"
     ],
-    closing: "Empowering your business with the right real estate.",
+    closing: "Positioning your enterprise where business thrives.",
     image: "/assets/images/commercial.avif",
-    actionLink: "/properties?type=commercial",
-    actionText: "View Commercial Properties"
+    actionLink: "/properties?category=NEW_COMMERCIAL_PROJECTS",
+    actionText: "View New Commercial Projects"
   },
   {
     id: "04",
     icon: TrendingUp,
     title: "Upcoming Projects",
-    tagline: "Tomorrow's landmarks",
-    hero: "Be the first to invest",
-    description: "Get exclusive early access to the most promising pre-launch and under-construction projects.",
+    tagline: "Visionary opportunities",
+    hero: "Be the first to secure prime allocations",
+    description: "Get exclusive early access to pre-launch opportunities and high-growth projects before they hit the open market.",
     points: [
-      "Early bird pricing and preferential allocations",
-      "Vetted developers with proven track records",
-      "High appreciation potential"
+      "Early bird pricing and flexible payment plans",
+      "Vetted developments with high appreciation potential",
+      "Prime locations across Pune's expansion corridors"
     ],
-    closing: "Securing your future with visionary investments.",
+    closing: "Investing today in tomorrow's landmarks.",
     image: "/assets/images/investmentplanning.jpg",
-    actionLink: "/properties?listingType=new_project",
+    actionLink: "/properties?category=UPCOMING_PROJECTS",
     actionText: "View Upcoming Projects"
   },
   {
     id: "05",
-    icon: MapPin,
-    title: "Rent your property",
-    tagline: "Find the right tenant",
-    hero: "Hassle-free renting for your property",
-    description: "We help you find reliable tenants and manage the leasing process from start to finish.",
+    icon: KeyRound,
+    title: "Resale Residential Properties",
+    tagline: "Ready to move homes",
+    hero: "Hand-picked secondary market options",
+    description: "Find established residential properties available for resale, fully vetted for clear titles and immediate occupancy.",
     points: [
-      "Extensive tenant background checks",
-      "Drafting and registration of lease agreements",
-      "Ongoing property management support"
+      "Ready-to-move-in apartments and family villas",
+      "Established neighborhoods with complete infrastructure",
+      "Fair market valuation and pricing assessments"
     ],
-    closing: "Ensuring a steady and secure rental income.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-    actionLink: "/#contact",
-    actionText: "Contact Us"
+    closing: "Making resale acquisitions clear, transparent, and prompt.",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop",
+    actionLink: "/properties?category=RESALE_RESIDENTIAL_PROJECTS",
+    actionText: "View Resale Residential"
   },
   {
     id: "06",
-    icon: Handshake,
-    title: "Sell your property",
-    tagline: "Maximize your value",
-    hero: "Maximize the value of your real estate assets",
-    description: "Our expert team ensures a smooth and profitable selling experience for your property.",
+    icon: BadgeIndianRupee,
+    title: "Resale Commercial Properties",
+    tagline: "Immediate operations",
+    hero: "Established locations for immediate yields",
+    description: "Vetted retail and office spaces available for resale, allowing immediate business operations or rental returns.",
     points: [
-      "Accurate market valuation and pricing strategy",
-      "Targeted marketing to qualified buyers",
-      "End-to-end transaction management"
+      "Fully fitted commercial office settings",
+      "Premium street-facing retail units ready to use",
+      "Verified commercial real estate listings"
     ],
-    closing: "Achieving the best possible return on your investment.",
+    closing: "Accelerate business presence with established facilities.",
     image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2011&auto=format&fit=crop",
-    actionLink: "/#contact",
-    actionText: "Contact Us"
+    actionLink: "/properties?category=RESALE_COMMERCIAL_PROJECTS",
+    actionText: "View Resale Commercial"
   },
   {
     id: "07",
-    icon: KeyRound,
-    title: "Rental & Pre-lease",
-    tagline: "Made simple",
-    hero: "Finding the right space",
-    description: "Whether you're looking to rent a home or lease a commercial space, we streamline the process.",
+    icon: Handshake,
+    title: "Rental Residential Properties",
+    tagline: "Hassle-free tenancy",
+    hero: "Curated homes for rent",
+    description: "Find your next home from a premium database of verified rental properties across top micro-markets.",
     points: [
-      "Curated rental options based on your needs",
-      "Verified landlords and properties",
-      "Assistance with negotiations and agreements"
+      "Flats, penthouses, and gated community villas",
+      "Thoroughly verified lease terms and documentation",
+      "Smooth onboarding and property walkthroughs"
     ],
-    closing: "Ensuring a smooth and hassle-free rental experience.",
+    closing: "Creating rental journeys built on convenience and care.",
     image: "/assets/images/rental.jpg",
-    actionLink: "/properties?listingType=rent",
-    actionText: "View Rental Properties"
+    actionLink: "/properties?category=RENTAL_RESIDENTIAL_PROJECTS",
+    actionText: "View Rental Residential"
   },
   {
     id: "08",
-    icon: BadgeIndianRupee,
-    title: "Loan & Plots",
-    tagline: "Financing and investments",
-    hero: "Financing and foundational investments",
-    description: "Secure competitive financing and invest in high-potential land opportunities with our expert assistance.",
+    icon: Landmark,
+    title: "Rental Commercial Properties",
+    tagline: "Strategic workspaces",
+    hero: "Elevate your business operations",
+    description: "Establish your business presence in premium commercial spaces, retail units, and offices available for lease.",
     points: [
-      "Hassle-free loan processing with top banks",
-      "Residential and NA plots in growth corridors",
-      "Complete documentation and legal support"
+      "Grade-A office locations in central business zones",
+      "Showrooms and shops with high local footfall",
+      "Flexible terms matching company scale requirements"
     ],
-    closing: "Building your dreams from the ground up.",
-    image: "/assets/images/landinvestment.jpg",
-    actionLink: "/#contact",
-    actionText: "Contact Us"
+    closing: "Leasing options designed to accommodate corporate growth.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+    actionLink: "/properties?category=RENTAL_COMMERCIAL_PROJECTS",
+    actionText: "View Rental Commercial"
   },
   {
     id: "09",
-    icon: Paintbrush,
-    title: "Interior Design",
-    tagline: "Transforming spaces",
-    hero: "Stunning environments",
-    description: "Elevate your property's aesthetics and functionality with our bespoke interior design solutions.",
+    icon: RefreshCcw,
+    title: "Pre-lease Properties",
+    tagline: "Instant yields",
+    hero: "Invest in steady cash flow assets",
+    description: "Invest in commercial spaces already leased to verified corporate clients, offering steady monthly income and long-term capital appreciation.",
     points: [
-      "Customized design concepts tailored to your style",
-      "Space optimization and functional layouts",
-      "High-quality materials and flawless execution"
+      "Assured immediate rental income stream",
+      "Vetted blue-chip tenants with long lease locks",
+      "Premium assets in corporate parks"
     ],
-    closing: "Crafting beautiful spaces that inspire and delight.",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
+    closing: "Securing your investment portfolio with instant yields.",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop",
+    actionLink: "/properties?category=PRE_LEASE_PROPERTIES",
+    actionText: "View Pre-lease Properties"
+  },
+  {
+    id: "10",
+    icon: Map,
+    title: "Land & Plots",
+    tagline: "Foundational assets",
+    hero: "Invest in plots with growth potential",
+    description: "Acquire NA plots, agricultural land, and residential zones in rapidly growing sectors around Pune for customized development.",
+    points: [
+      "Residential and commercial plots in key growth zones",
+      "Clear title land checked by legal experts",
+      "Excellent long-term capital appreciation assets"
+    ],
+    closing: "Building wealth from the ground up.",
+    image: "/assets/images/landinvestment.jpg",
+    actionLink: "/properties?category=LAND_PLOTS",
+    actionText: "View Land & Plots"
+  },
+  {
+    id: "11",
+    icon: Landmark,
+    title: "Home Loans",
+    tagline: "Financing made easy",
+    hero: "Unlocking your property dreams",
+    description: "Get bespoke home loan guidance and match with top banking partners for low interest rates and hassle-free processing.",
+    points: [
+      "Assistance with leading banking institutions",
+      "Guidance on documentation and eligibility criteria",
+      "Lowest interest rates and quick approvals"
+    ],
+    closing: "Simplifying loans so you can focus on building home.",
+    image: "/assets/images/investmentplanning.jpg",
     actionLink: "/#contact",
     actionText: "Contact Us"
   },
   {
-    id: "10",
-    icon: RefreshCcw,
-    title: "View Resale Property",
-    tagline: "Secondary market",
-    hero: "Navigating the secondary market with ease",
-    description: "Discover prime resale opportunities or successfully list your property on the secondary market.",
+    id: "12",
+    icon: Paintbrush,
+    title: "Interior Design",
+    tagline: "Bespoke spaces",
+    hero: "Transforming residential and office areas",
+    description: "Elevate your property's value, functionality, and visual appeal with our end-to-end custom interior design partners.",
     points: [
-      "Thoroughly vetted resale properties",
-      "Fair market pricing assessments",
-      "Transparent negotiation and closing"
+      "Modern design themes and customized floorplans",
+      "Flawless project management from start to finish",
+      "Premium material selection and expert crafting"
     ],
-    closing: "Connecting buyers and sellers with confidence.",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop",
-    actionLink: "/properties?listingType=resale",
-    actionText: "View Resale Properties"
+    closing: "Crafting premium spaces that speak to your soul.",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
+    actionLink: "/#contact",
+    actionText: "Contact Us"
   }
 ];
 

@@ -47,6 +47,12 @@ export const PROPERTY_CATEGORIES = {
     propertySegment: "COMMERCIAL",
     projectStatus: null,
   },
+  PRE_LEASE_PROPERTIES: {
+    label: "Pre-lease Properties",
+    listingType: "SALE",
+    propertySegment: "COMMERCIAL",
+    projectStatus: "PRE_LEASED",
+  },
   LAND_PLOTS: {
     label: "Land & Plots",
     listingType: "SALE",

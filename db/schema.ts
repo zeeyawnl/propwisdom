@@ -20,7 +20,7 @@ export const properties = pgTable("properties", {
     enum: ["RESIDENTIAL", "COMMERCIAL"],
   }).notNull(),
   projectStatus: text("project_status", {
-    enum: ["NEW", "RESALE", "UPCOMING"],
+    enum: ["NEW", "RESALE", "UPCOMING", "PRE_LEASED"],
   }),
   bedrooms: integer("bedrooms").default(0),
   bathrooms: integer("bathrooms").default(0),

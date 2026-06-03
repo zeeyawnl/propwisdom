@@ -24,7 +24,7 @@ export const CreatePropertySchema = z.object({
 
   listingType: z.enum(["SALE", "RENTAL", "MANDATE"]),
   propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
-  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).optional(),
 
   bedrooms: z.number().int().min(0).optional().default(0),
 
@@ -74,7 +74,7 @@ export const UpdatePropertySchema = z.object({
   type: z.enum(["residential", "villa", "plot", "commercial"]).optional(),
   listingType: z.enum(["SALE", "RENTAL", "MANDATE"]).optional(),
   propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
-  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).nullable().optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).nullable().optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().int().min(0).optional(),
   area: z.string().nullable().optional(),
@@ -98,7 +98,7 @@ export const PropertyQuerySchema = z.object({
   bedrooms: z.coerce.number().int().min(0).optional(),
   listingType: z.enum(["SALE", "RENTAL", "MANDATE", "rent", "resale", "new_project", "mandate", "commercial", "plot"]).optional(),
   propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
-  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING"]).optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).optional(),
 
   min: z.coerce.number().positive().optional(),
   max: z.coerce.number().positive().optional(),
