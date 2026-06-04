@@ -149,7 +149,15 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
       );
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Something went wrong");
+      if (!res.ok) {
+        if (data?.details?.fieldErrors) {
+          const detailsStr = Object.entries(data.details.fieldErrors)
+            .map(([field, msgs]) => `${field}: ${(msgs as string[]).join(", ")}`)
+            .join(" | ");
+          throw new Error(`Validation failed - ${detailsStr}`);
+        }
+        throw new Error(data?.error || "Something went wrong");
+      }
 
       router.push("/admin/properties");
       router.refresh();
