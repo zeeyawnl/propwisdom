@@ -10,27 +10,28 @@ export const CreatePropertySchema = z.object({
   description: z
     .string()
     .max(2000, "Description must be under 2000 characters")
+    .nullable()
     .optional(),
 
   price: z
     .number()
     .positive("Price must be a positive number"),
 
-  priceLabel: z.string().optional(),
+  priceLabel: z.string().nullable().optional(),
 
   location: z.string().min(2, "Location required"),
 
   type: z.enum(["residential", "villa", "plot", "commercial"]),
 
   listingType: z.enum(["SALE", "RENTAL", "MANDATE"]),
-  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
-  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).optional(),
+  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).nullable().optional(),
+  projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).nullable().optional(),
 
-  bedrooms: z.number().int().min(0).optional().default(0),
+  bedrooms: z.number().int().min(0).nullable().optional(),
 
-  bathrooms: z.number().int().min(0).optional().default(0),
+  bathrooms: z.number().int().min(0).nullable().optional(),
 
-  area: z.string().optional(),
+  area: z.string().nullable().optional(),
 
   featured: z.boolean().optional().default(false),
 
@@ -38,7 +39,7 @@ export const CreatePropertySchema = z.object({
     .enum(["available", "sold"])
     .default("available"),
 
-  images: z.array(z.string().url("Each image must be a valid URL")).optional().default([]),
+  images: z.array(z.string().url("Each image must be a valid URL")).nullable().optional().default([]),
 })
 .refine((data) => {
   if (data.listingType === "MANDATE") {
@@ -50,7 +51,7 @@ export const CreatePropertySchema = z.object({
   message: "Property segment required",
 })
 .refine((data) => {
-  if (data.listingType !== "SALE") {
+  if (data.listingType !== "SALE" || data.type === "plot") {
     return true;
   }
 
@@ -67,20 +68,20 @@ export const CreatePropertySchema = z.object({
 // ──────────────────────────────────────────────────────────────────────────────
 export const UpdatePropertySchema = z.object({
   title: z.string().min(3).max(120).optional(),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(2000).nullable().optional(),
   price: z.number().positive().optional(),
   priceLabel: z.string().nullable().optional(),
   location: z.string().min(2).optional(),
   type: z.enum(["residential", "villa", "plot", "commercial"]).optional(),
   listingType: z.enum(["SALE", "RENTAL", "MANDATE"]).optional(),
-  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).optional(),
+  propertySegment: z.enum(["RESIDENTIAL", "COMMERCIAL"]).nullable().optional(),
   projectStatus: z.enum(["NEW", "RESALE", "UPCOMING", "PRE_LEASED"]).nullable().optional(),
-  bedrooms: z.number().int().min(0).optional(),
-  bathrooms: z.number().int().min(0).optional(),
+  bedrooms: z.number().int().min(0).nullable().optional(),
+  bathrooms: z.number().int().min(0).nullable().optional(),
   area: z.string().nullable().optional(),
   featured: z.boolean().optional(),
   status: z.enum(["available", "sold"]).optional(),
-  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
+  images: z.array(z.string().url("Each image must be a valid URL")).nullable().optional(),
 });
 
 // Query params schema for GET

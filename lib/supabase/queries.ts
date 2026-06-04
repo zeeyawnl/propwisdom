@@ -75,6 +75,29 @@ function mapLegacyFilters(filters: PropertyQuery) {
   return mapped;
 }
 
+function mapDbPropertyToProperty(dbProp: any) {
+  return {
+    id: dbProp.id,
+    title: dbProp.title,
+    price: dbProp.price,
+    priceLabel: dbProp.price_label !== undefined ? dbProp.price_label : dbProp.priceLabel,
+    location: dbProp.location,
+    type: dbProp.type,
+    listingType: dbProp.listing_type !== undefined ? dbProp.listing_type : dbProp.listingType,
+    propertySegment: dbProp.property_segment !== undefined ? dbProp.property_segment : dbProp.propertySegment,
+    projectStatus: dbProp.project_status !== undefined ? dbProp.project_status : dbProp.projectStatus,
+    bedrooms: dbProp.bedrooms,
+    bathrooms: dbProp.bathrooms,
+    area: dbProp.area,
+    description: dbProp.description,
+    images: dbProp.images,
+    featured: dbProp.featured,
+    status: dbProp.status,
+    userId: dbProp.user_id !== undefined ? dbProp.user_id : dbProp.userId,
+    createdAt: dbProp.created_at !== undefined ? dbProp.created_at : dbProp.createdAt,
+  };
+}
+
 export async function getPropertiesSupabase(filters: PropertyQuery) {
   const supabase = getSupabaseClient();
   const mappedFilters = mapLegacyFilters(filters);
@@ -117,7 +140,7 @@ export async function getPropertiesSupabase(filters: PropertyQuery) {
   const total = count ?? 0;
 
   return {
-    data: data ?? [],
+    data: (data ?? []).map(mapDbPropertyToProperty),
     pagination: {
       page,
       limit,
@@ -135,6 +158,6 @@ export async function getPropertyByIdSupabase(id: string) {
     .eq("id", id)
     .single();
 
-  if (error) return null;
-  return data;
+  if (error || !data) return null;
+  return mapDbPropertyToProperty(data);
 }
