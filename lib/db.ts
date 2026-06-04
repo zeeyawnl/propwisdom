@@ -10,5 +10,5 @@ const connectionString = process.env.DATABASE_URL;
 
 // For edge environments (like Vercel) or when using some Postgres providers (like Supabase Transaction pooler)
 // we often need to set prepare: false
-const client = postgres(connectionString, { prepare: false });
+const client = postgres(connectionString, { prepare: false, ssl: "require" });
 export const db = drizzle(client, { schema });
