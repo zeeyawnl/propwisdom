@@ -23,9 +23,9 @@ function getCategoryFromFields(
     // Check if the property attributes match the category configuration
     const matchListing = !val.listingType || val.listingType === listingType?.toUpperCase();
     const matchSegment = !val.propertySegment || val.propertySegment === propertySegment?.toUpperCase();
-    const matchStatus = val.projectStatus === undefined || 
-                        val.projectStatus === (projectStatus?.toUpperCase() || null) || 
-                        (!val.projectStatus && !projectStatus);
+    const matchStatus = val.projectStatus === undefined ||
+      val.projectStatus === (projectStatus?.toUpperCase() || null) ||
+      (!val.projectStatus && !projectStatus);
 
     if (matchListing && matchSegment && matchStatus) {
       return key as keyof typeof PROPERTY_CATEGORIES;
@@ -373,9 +373,9 @@ export default function PropertyForm({ initial, id }: PropertyFormProps) {
           <label className="block text-sm font-bold text-slate-950 mb-2">
             Property Images
           </label>
-          <ImageUploader 
-            value={form.images || []} 
-            onChange={(imgs) => updateField("images", imgs)} 
+          <ImageUploader
+            value={form.images || []}
+            onChange={(imgs) => updateField("images", imgs)}
           />
         </div>
       </div>

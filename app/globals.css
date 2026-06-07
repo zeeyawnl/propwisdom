@@ -25,6 +25,16 @@ html, body {
   overflow-x: hidden;
 }
 
+/* Hide scrollbar for all browsers and elements */
+* {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none !important;  /* Chrome, Safari and Opera */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
