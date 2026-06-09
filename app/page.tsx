@@ -12,9 +12,9 @@ export default async function HomePage() {
     limit: 12,
   });
 
-  // Prefer featured properties; fallback to the newest 4
-  const featured = result.data.filter((p) => p.featured).slice(0, 4);
-  const displayProperties = featured.length > 0 ? featured : result.data.slice(0, 4);
+  // Prefer featured properties; fallback to the newest 6
+  const featured = result.data.filter((p) => p.featured);
+  const displayProperties = featured.length > 0 ? featured : result.data.slice(0, 6);
 
   // Fetch counts dynamically for each category card
   const counts = await getCategoryCounts();
