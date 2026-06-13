@@ -42,7 +42,7 @@ const CATEGORIES = [
   },
   {
     key: "NEW_RESIDENTIAL_PROJECTS" as const,
-    title: "New Residential Projects",
+    title: "New Residential Properties",
     description: "Explore newly launched residential developments.",
     href: "/properties?category=NEW_RESIDENTIAL_PROJECTS",
     icon: Home,
@@ -70,7 +70,7 @@ const CATEGORIES = [
   },
   {
     key: "RESALE_COMMERCIAL_PROJECTS" as const,
-    title: "Resale Commercial Properties",
+    title: "Resale Commercial Projects",
     description: "Established commercial units and offices ready for occupation.",
     href: "/properties?category=RESALE_COMMERCIAL_PROJECTS",
     icon: BadgeIndianRupee,

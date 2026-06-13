@@ -29,7 +29,7 @@ const SERVICES = [
   {
     id: "02",
     icon: Home,
-    title: "New Residential Projects",
+    title: "New Residential Properties",
     tagline: "Modern living spaces",
     hero: "Pune's finest new home collections",
     description: "Explore newly launched flats, apartments, and villas built with state-of-the-art designs and modern amenities.",
@@ -41,7 +41,7 @@ const SERVICES = [
     closing: "Elevating your everyday living experience in Pune.",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
     actionLink: "/properties?category=NEW_RESIDENTIAL_PROJECTS",
-    actionText: "View New Residential Projects"
+    actionText: "View New Residential Properties"
   },
   {
     id: "03",

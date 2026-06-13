@@ -190,10 +190,10 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               properties={mandateProjects}
             />
 
-            {/* 2. New Residential Projects */}
+            {/* 2. New Residential Properties */}
             <PropertySection
-              id="new-residential-projects"
-              title={<>New Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              id="new-residential-properties"
+              title={<>New Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={newResidentialProjects}
             />
 
@@ -211,10 +211,10 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               properties={upcomingProjects}
             />
 
-            {/* 5. Resale Residential Projects */}
+            {/* 5. Resale Residential Properties */}
             <PropertySection
-              id="resale-residential-projects"
-              title={<>Resale Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              id="resale-residential-properties"
+              title={<>Resale Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={resaleResidentialProjects}
             />
 
@@ -225,17 +225,17 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               properties={resaleCommercialProjects}
             />
 
-            {/* 7. Rental Residential Projects */}
+            {/* 7. Rental Residential Properties */}
             <PropertySection
-              id="rental-residential-projects"
-              title={<>Rental Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              id="rental-residential-properties"
+              title={<>Rental Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={rentalResidentialProjects}
             />
 
-            {/* 8. Rental Commercial Projects */}
+            {/* 8. Rental Commercial Properties */}
             <PropertySection
-              id="rental-commercial-projects"
-              title={<>Rental Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
+              id="rental-commercial-properties"
+              title={<>Rental Commercial <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={rentalCommercialProjects}
             />
 

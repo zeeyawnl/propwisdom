@@ -1,6 +1,6 @@
 export const PROPERTY_PAGES = {
   NEW_RESIDENTIAL: {
-    title: "New Residential Projects",
+    title: "New Residential Properties",
     filters: {
       listingType: "SALE",
       propertySegment: "RESIDENTIAL",
@@ -23,7 +23,7 @@ export const PROPERTY_PAGES = {
     },
   },
   RESALE_RESIDENTIAL: {
-    title: "Resale Residential Projects",
+    title: "Resale Residential Properties",
     filters: {
       listingType: "SALE",
       propertySegment: "RESIDENTIAL",
@@ -39,14 +39,14 @@ export const PROPERTY_PAGES = {
     },
   },
   RENTAL_RESIDENTIAL: {
-    title: "Rental Residential Projects",
+    title: "Rental Residential Properties",
     filters: {
       listingType: "RENTAL",
       propertySegment: "RESIDENTIAL",
     },
   },
   RENTAL_COMMERCIAL: {
-    title: "Rental Commercial Projects",
+    title: "Rental Commercial Properties",
     filters: {
       listingType: "RENTAL",
       propertySegment: "COMMERCIAL",

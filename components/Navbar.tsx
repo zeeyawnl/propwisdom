@@ -26,7 +26,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "All Properties", href: "/properties" },
-    { name: "About", href: "/about" },
+    { name: "About Us", href: "/about" },
     { name: "Services", href: "/services" },
     { name: "Careers", href: "/careers" },
   ];
@@ -92,7 +92,7 @@ export default function Navbar() {
             </Link>
 
             <Link href="/about" className="text-[13px] uppercase tracking-widest font-medium text-teal-forest/190 hover:text-teal-forest transition-colors relative group">
-              About
+              About Us
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-forest transition-all duration-300 group-hover:w-full" />
             </Link>
 

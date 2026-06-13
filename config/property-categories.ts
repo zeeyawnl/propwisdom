@@ -6,7 +6,7 @@ export const PROPERTY_CATEGORIES = {
     projectStatus: null,
   },
   NEW_RESIDENTIAL_PROJECTS: {
-    label: "New Residential Projects",
+    label: "New Residential Properties",
     listingType: "SALE",
     propertySegment: "RESIDENTIAL",
     projectStatus: "NEW",
@@ -24,7 +24,7 @@ export const PROPERTY_CATEGORIES = {
     projectStatus: "UPCOMING",
   },
   RESALE_RESIDENTIAL_PROJECTS: {
-    label: "Resale Residential Projects",
+    label: "Resale Residential Properties",
     listingType: "SALE",
     propertySegment: "RESIDENTIAL",
     projectStatus: "RESALE",
@@ -36,13 +36,13 @@ export const PROPERTY_CATEGORIES = {
     projectStatus: "RESALE",
   },
   RENTAL_RESIDENTIAL_PROJECTS: {
-    label: "Rental Residential Projects",
+    label: "Rental Residential Properties",
     listingType: "RENTAL",
     propertySegment: "RESIDENTIAL",
     projectStatus: null,
   },
   RENTAL_COMMERCIAL_PROJECTS: {
-    label: "Rental Commercial Projects",
+    label: "Rental Commercial Properties",
     listingType: "RENTAL",
     propertySegment: "COMMERCIAL",
     projectStatus: null,
