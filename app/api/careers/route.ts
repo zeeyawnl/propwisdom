@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     uploadFormData.append("signature", signature);
 
     const uploadResponse = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
       {
         method: "POST",
         body: uploadFormData,
@@ -102,6 +102,7 @@ Cover Letter/Note: ${coverLetter || "None provided"}
 
     // Map payload elements for Google Apps Script Web App
     const payload = {
+      formType: "careers",
       name: fullName,
       fullName: fullName,
       phone: phone,
