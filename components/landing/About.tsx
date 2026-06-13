@@ -51,7 +51,7 @@ export default function About() {
             </p>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-forest/10 rounded-full">
               <ShieldCheck size={16} className="text-teal-forest" />
-              <span className="text-teal-forest text-[11px] uppercase tracking-widest font-bold">RERA: A52100013636</span>
+              <span className="text-teal-forest text-[11px] uppercase tracking-widest font-bold">RERA: A031262503558</span>
             </div>
           </div>
         </div>

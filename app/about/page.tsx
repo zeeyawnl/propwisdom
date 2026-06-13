@@ -293,7 +293,7 @@ export default function AboutContent() {
                         RERA Registration Number
                       </p>
                       <p className="text-vanilla-latte text-2xl md:text-3xl font-bold tracking-wide">
-                        A52100013636
+                        A031262503558
                       </p>
                     </div>
                     <a

@@ -318,7 +318,7 @@ export default function ServicesPage() {
             {
               icon: ShieldCheck,
               label: "MahaRERA Registered",
-              sub: "A52100013636",
+              sub: "A031262503558",
             },
           ].map((item, i) => (
             <motion.div
@@ -579,7 +579,7 @@ export default function ServicesPage() {
             { num: "10+", label: "Years Expertise", desc: "A decade of deep market knowledge in Pune's ever-evolving real estate landscape." },
             { num: "100%", label: "Verified Listings", desc: "Every property is checked for legal clearance, title validity, and fair pricing." },
             { num: "50+", label: "Builder Partners", desc: "Direct relationships with top developers for the best primary sale deals." },
-            { num: "RERA", label: "Registered Agent", desc: "MahaRERA Reg. No. A52100013636. Verify at maharera.mahaonline.gov.in" },
+            { num: "RERA", label: "Registered Agent", desc: "MahaRERA Reg. No. A031262503558. Verify at maharera.mahaonline.gov.in" },
           ].map((stat, i) => (
             <motion.div key={i} variants={fadeUp} className="border-t border-slate-200 pt-6">
               <span className="text-5xl md:text-6xl font-serif text-slate-400 block mb-4 transition-colors hover:text-teal-forest cursor-default">
