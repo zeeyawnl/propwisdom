@@ -42,7 +42,7 @@ const CATEGORIES = [
   },
   {
     key: "NEW_RESIDENTIAL_PROJECTS" as const,
-    title: "New Residential Properties",
+    title: "New Residential Projects",
     description: "Explore newly launched residential developments.",
     href: "/properties?category=NEW_RESIDENTIAL_PROJECTS",
     icon: Home,

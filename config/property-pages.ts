@@ -1,6 +1,6 @@
 export const PROPERTY_PAGES = {
   NEW_RESIDENTIAL: {
-    title: "New Residential Properties",
+    title: "New Residential Projects",
     filters: {
       listingType: "SALE",
       propertySegment: "RESIDENTIAL",

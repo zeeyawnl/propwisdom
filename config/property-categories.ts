@@ -6,7 +6,7 @@ export const PROPERTY_CATEGORIES = {
     projectStatus: null,
   },
   NEW_RESIDENTIAL_PROJECTS: {
-    label: "New Residential Properties",
+    label: "New Residential Projects",
     listingType: "SALE",
     propertySegment: "RESIDENTIAL",
     projectStatus: "NEW",
