@@ -108,6 +108,7 @@ export default function Contact() {
                     className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                     placeholder="Full Name"
                     disabled={isSubmitting}
+                    suppressHydrationWarning
                   />
                   <label
                     htmlFor="name"
@@ -127,6 +128,7 @@ export default function Contact() {
                     className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                     placeholder="Phone Number"
                     disabled={isSubmitting}
+                    suppressHydrationWarning
                   />
                   <label
                     htmlFor="phone"
@@ -147,6 +149,7 @@ export default function Contact() {
                   className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
                   placeholder="Email Address"
                   disabled={isSubmitting}
+                  suppressHydrationWarning
                 />
                 <label
                   htmlFor="email"
@@ -199,6 +202,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  suppressHydrationWarning
                   className="group flex items-center gap-4 px-8 py-4 bg-teal-forest text-vanilla-latte uppercase text-[11px] tracking-[0.3em] font-bold hover:bg-teal-forest/90 transition-all rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (

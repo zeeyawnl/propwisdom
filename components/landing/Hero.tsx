@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -21,13 +22,23 @@ export default function Hero() {
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/30 z-10" />
-        <motion.img
+        {/* motion.div wrapper preserves Ken Burns scale; Next/Image handles preload + WebP */}
+        <motion.div
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 10, ease: "linear" }}
-          src="/assets/images/bg-hero.png"
-          className="w-full h-full object-cover"
-        />
+          className="absolute inset-0"
+        >
+          <Image
+            src="/assets/images/bg-hero.webp"
+            alt="Propwisdom hero background"
+            fill
+            priority
+            quality={85}
+            className="object-cover"
+            sizes="100vw"
+          />
+        </motion.div>
       </div>
 
       <div className="relative z-20 w-full max-w-7xl mx-auto px-8 lg:px-20">

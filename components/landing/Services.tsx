@@ -247,6 +247,7 @@ export default function Services() {
                 <button
                   key={service.id}
                   onClick={() => setActiveIndex(index)}
+                  suppressHydrationWarning
                   className="w-full py-5 px-4 lg:px-6 border-b border-slate-100 text-left flex items-center justify-between group transition-all duration-300 relative outline-none"
                 >
                   <div className="flex items-center gap-5">
@@ -364,6 +365,7 @@ export default function Services() {
                 <div key={service.id} className="border-b border-slate-100">
                   <button
                     onClick={() => setActiveIndex(isActive ? -1 : index)}
+                    suppressHydrationWarning
                     className="w-full py-5 text-left flex items-center justify-between"
                   >
                     <div className="flex items-center gap-4">

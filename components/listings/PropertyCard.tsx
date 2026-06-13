@@ -64,7 +64,7 @@ export default function PropertyCard({ property, index }: { property: Property; 
         </div>
 
         {/* Favorite/Save Button (Classic Real Estate UI) */}
-        <button className="absolute top-6 right-6 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-teal-forest transition-colors shadow-sm">
+        <button suppressHydrationWarning className="absolute top-6 right-6 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-teal-forest transition-colors shadow-sm">
           <Heart size={18} strokeWidth={2} />
         </button>
       </div>
