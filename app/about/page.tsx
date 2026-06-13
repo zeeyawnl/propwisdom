@@ -40,57 +40,23 @@ export default function AboutContent() {
     <main className="min-h-screen bg-[#FAFAFA] pt-32 pb-0 overflow-hidden">
       {/* 1. Hero Section */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 mb-24 md:mb-32">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="text-center max-w-4xl mx-auto"
+
+        <motion.span
+          variants={fadeUp}
+          className="text-teal-forest text-[11px] uppercase tracking-[0.5em] font-bold mb-6 block"
         >
-          <motion.span
-            variants={fadeUp}
-            className="text-teal-forest text-[11px] uppercase tracking-[0.5em] font-bold mb-6 block"
-          >
-            Our Story
-          </motion.span>
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-[1.1] mb-8"
-          >
-            Your Trusted Partner in{" "}
-            <br className="hidden md:block" />
-            <span className="font-serif italic text-teal-forest">
-              Pune Real Estate.
-            </span>
-          </motion.h1>
-          <motion.p
-            variants={fadeUp}
-            className="text-slate-500 font-light leading-relaxed text-lg md:text-xl max-w-2xl mx-auto mb-10"
-          >
-            At PropWisdom, we don&apos;t just help you find property; we help
-            you build wealth, secure your future, and make every real estate
-            decision with confidence. Our MahaRERA registered team brings
-            10+ years of market expertise to every transaction.
-          </motion.p>
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link
-              href="/#contact"
-              className="px-10 py-5 bg-teal-forest text-vanilla-latte rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-teal-forest/90 transition-all hover:-translate-y-1 shadow-lg shadow-teal-forest/20 flex items-center gap-3"
-            >
-              Start Your Journey
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              href="/services"
-              className="px-10 py-5 bg-transparent border border-slate-300 text-slate-700 rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:border-teal-forest hover:text-teal-forest transition-all flex items-center gap-3"
-            >
-              View Our Services
-              <ArrowRight size={16} />
-            </Link>
-          </motion.div>
-        </motion.div>
+          Our Story
+        </motion.span>
+        <motion.h1
+          variants={fadeUp}
+          className="text-5xl md:text-7xl font-light text-slate-900 tracking-tight leading-[1.1] mb-8"
+        >
+          Your Trusted Partner in{" "}
+          <br className="hidden md:block" />
+          <span className="font-serif italic text-teal-forest">
+            Pune Real Estate.
+          </span>
+        </motion.h1>
       </section>
 
       {/* 2. Editorial Image Gallery */}
@@ -134,7 +100,7 @@ export default function AboutContent() {
             >
               <div className="absolute -bottom-10 -right-10 w-40 h-40 border border-vanilla-latte/20 rounded-full blur-xl" />
               <h3 className="text-3xl font-serif italic text-vanilla-latte mb-4">
-                10+ Years
+                14+ Years
               </h3>
               <p className="text-white/80 font-light leading-relaxed">
                 Of deep market expertise, building a foundation of trust and
