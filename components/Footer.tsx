@@ -153,6 +153,7 @@ export default function Footer() {
               <li><Link href="/properties" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Collection <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
               <li><Link href="/about" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">About Us <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
               <li><Link href="/services" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Expertise <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+              <li><Link href="/careers" className="text-vanilla-latte/80 hover:text-white font-light transition-colors flex items-center gap-2 group">Careers <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
             </ul>
           </div>
 

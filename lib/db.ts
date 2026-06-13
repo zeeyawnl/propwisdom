@@ -6,9 +6,19 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set");
 }
 
-const connectionString = process.env.DATABASE_URL;
+const globalForDb = globalThis as {
+  postgresClient?: ReturnType<typeof postgres>;
+};
 
-// For edge environments (like Vercel) or when using some Postgres providers (like Supabase Transaction pooler)
-// we often need to set prepare: false
-const client = postgres(connectionString, { prepare: false, ssl: "require" });
+const client =
+  globalForDb.postgresClient ??
+  postgres(process.env.DATABASE_URL!, {
+    prepare: false,
+    ssl: "require",
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForDb.postgresClient = client;
+}
+
 export const db = drizzle(client, { schema });
