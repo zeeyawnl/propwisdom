@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Property Categories | PropWisdom",
-  description: "Browse Pune real estate by property types. Explore new residential properties, resale commercial listings, mandate properties, rentals, and upcoming developments.",
+  description: "Browse Pune real estate by property types. Explore new residential projects, resale commercial listings, mandate properties, rentals, and upcoming developments.",
 };
 
 export default async function ProjectsPage() {

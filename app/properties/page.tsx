@@ -190,10 +190,10 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               properties={mandateProjects}
             />
 
-            {/* 2. New Residential Properties */}
+            {/* 2. New Residential Projects */}
             <PropertySection
-              id="new-residential-properties"
-              title={<>New Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
+              id="new-residential-projects"
+              title={<>New Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={newResidentialProjects}
             />
 
