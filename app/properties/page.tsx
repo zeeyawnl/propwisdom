@@ -40,76 +40,87 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const maxRaw = params.max ? parseFloat(params.max) : undefined;
   const max = maxRaw !== undefined && !isNaN(maxRaw) && maxRaw > 0 ? maxRaw : undefined;
 
-  const result = await getProperties({
-    sort: (params.sort as "price_asc" | "price_desc" | "latest") ?? "latest",
-    page: params.page ? Math.max(1, parseInt(params.page, 10)) : 1,
-    limit: 50,
-    location: params.location || undefined,
-    area,
-    bedrooms,
-    category: params.category || undefined,
-    type: params.type as any,
-    min,
-    max,
-  });
-
-  const allProperties = result.data;
-
-  // Determine if any search filter is active
   const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.category || params.type || params.min || params.max);
+  const sort = (params.sort as "price_asc" | "price_desc" | "latest") ?? "latest";
 
-  // ── When search is active: single unified results block
-  // ── When no search: split into 10 dedicated sections in display order
+  let allProperties: any[] = [];
+  let mandateProjects: any[] = [];
+  let newResidentialProjects: any[] = [];
+  let newCommercialProjects: any[] = [];
+  let upcomingProjects: any[] = [];
+  let resaleResidentialProjects: any[] = [];
+  let resaleCommercialProjects: any[] = [];
+  let rentalResidentialProjects: any[] = [];
+  let rentalCommercialProjects: any[] = [];
+  let preLeaseProperties: any[] = [];
+  let landPlots: any[] = [];
 
-  // 1. Mandate Projects (listingType = "MANDATE")
-  const mandateProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "MANDATE");
+  if (hasActiveSearch) {
+    const result = await getProperties({
+      sort,
+      page: params.page ? Math.max(1, parseInt(params.page, 10)) : 1,
+      limit: 50,
+      location: params.location || undefined,
+      area,
+      bedrooms,
+      category: params.category || undefined,
+      type: params.type as any,
+      min,
+      max,
+    });
+    allProperties = result.data;
+  } else {
+    // When no search, fetch all categories in parallel from the database
+    // with a high limit (100) per category to ensure all active listings show up.
+    const [
+      mandateRes,
+      newResRes,
+      newCommRes,
+      upcomingRes,
+      resaleResRes,
+      resaleCommRes,
+      rentalResRes,
+      rentalCommRes,
+      preLeaseRes,
+      landPlotsRes,
+    ] = await Promise.all([
+      getProperties({ page: 1, limit: 100, sort, listingType: "MANDATE" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", propertySegment: "RESIDENTIAL", projectStatus: "NEW" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", propertySegment: "COMMERCIAL", projectStatus: "NEW" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", projectStatus: "UPCOMING" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", propertySegment: "RESIDENTIAL", projectStatus: "RESALE" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", propertySegment: "COMMERCIAL", projectStatus: "RESALE" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "RENTAL", propertySegment: "RESIDENTIAL" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "RENTAL", propertySegment: "COMMERCIAL" }),
+      getProperties({ page: 1, limit: 100, sort, listingType: "SALE", propertySegment: "COMMERCIAL", projectStatus: "PRE_LEASED" }),
+      getProperties({ page: 1, limit: 100, sort, type: "plot" }),
+    ]);
 
-  // 2. New Residential Projects (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "NEW", type != "plot")
-  const newResidentialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "NEW" && p.type !== "plot");
+    mandateProjects = mandateRes.data;
+    newResidentialProjects = newResRes.data.filter((p) => p.type !== "plot");
+    newCommercialProjects = newCommRes.data;
+    upcomingProjects = upcomingRes.data;
+    resaleResidentialProjects = resaleResRes.data.filter((p) => p.type !== "plot");
+    resaleCommercialProjects = resaleCommRes.data;
+    rentalResidentialProjects = rentalResRes.data;
+    rentalCommercialProjects = rentalCommRes.data;
+    preLeaseProperties = preLeaseRes.data;
+    landPlots = landPlotsRes.data;
 
-  // 3. New Commercial Projects (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "NEW")
-  const newCommercialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "NEW");
-
-  // 4. Upcoming Projects (listingType = "SALE", projectStatus = "UPCOMING")
-  const upcomingProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.projectStatus === "UPCOMING");
-
-  // 5. Resale Residential Projects (listingType = "SALE", propertySegment = "RESIDENTIAL", projectStatus = "RESALE", type != "plot")
-  const resaleResidentialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "RESIDENTIAL" && p.projectStatus === "RESALE" && p.type !== "plot");
-
-  // 6. Resale Commercial Projects (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "RESALE")
-  const resaleCommercialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "RESALE");
-
-  // 7. Rental Residential Projects (listingType = "RENTAL", propertySegment = "RESIDENTIAL")
-  const rentalResidentialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "RENTAL" && p.propertySegment === "RESIDENTIAL");
-
-  // 8. Rental Commercial Projects (listingType = "RENTAL", propertySegment = "COMMERCIAL")
-  const rentalCommercialProjects = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "RENTAL" && p.propertySegment === "COMMERCIAL");
-
-  // 9. Pre-lease Properties (listingType = "SALE", propertySegment = "COMMERCIAL", projectStatus = "PRE_LEASED")
-  const preLeaseProperties = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.listingType === "SALE" && p.propertySegment === "COMMERCIAL" && p.projectStatus === "PRE_LEASED");
-
-  // 10. Land & Plots (type = "plot")
-  const landPlots = hasActiveSearch
-    ? []
-    : allProperties.filter((p) => p.type === "plot");
+    // Combine all arrays to see if there are any properties overall
+    allProperties = [
+      ...mandateProjects,
+      ...newResidentialProjects,
+      ...newCommercialProjects,
+      ...upcomingProjects,
+      ...resaleResidentialProjects,
+      ...resaleCommercialProjects,
+      ...rentalResidentialProjects,
+      ...rentalCommercialProjects,
+      ...preLeaseProperties,
+      ...landPlots,
+    ];
+  }
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] pt-32 pb-24">
