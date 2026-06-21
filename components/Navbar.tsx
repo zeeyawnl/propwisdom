@@ -9,14 +9,43 @@ import { Menu, X, ChevronRight } from "lucide-react";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
 
-  // Handle scroll effect for glassmorphism
+  // Handle scroll effect for glassmorphism and show/hide navbar on scroll direction
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Update glassmorphism state
+      setScrolled(currentScrollY > 20);
+
+      // If mobile menu is open, keep navbar visible
+      if (isOpen) {
+        setIsVisible(true);
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      // Hide or show navbar based on scroll direction
+      if (currentScrollY < 10) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling down -> Hide navbar
+        setIsVisible(false);
+      } else {
+        // Scrolling up -> Show navbar
+        setIsVisible(true);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isOpen]);
 
   // Hide Navbar completely on admin routes
   if (pathname?.startsWith("/admin")) {
@@ -43,8 +72,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed w-full top-0 z-[100] transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md py-3 shadow-sm" : "bg-transparent py-5"
-        }`}
+      className={`fixed w-full top-0 z-[100] transition-all duration-300 ease-in-out ${
+        scrolled ? "bg-white/90 backdrop-blur-md py-3 shadow-sm" : "bg-transparent py-5"
+      } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex justify-between items-center">
