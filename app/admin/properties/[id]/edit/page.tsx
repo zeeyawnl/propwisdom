@@ -43,6 +43,10 @@ export default async function EditPropertyPage({ params }: Props) {
           bedrooms: property.bedrooms ?? null,
           bathrooms: property.bathrooms ?? null,
           area: property.area ?? "",
+          variantBedrooms: property.variantBedrooms ?? null,
+          variantArea: property.variantArea ?? "",
+          variantBedrooms2: property.variantBedrooms2 ?? null,
+          variantArea2: property.variantArea2 ?? "",
         }}
       />
     </div>

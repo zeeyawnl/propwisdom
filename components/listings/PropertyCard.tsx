@@ -18,6 +18,10 @@ type Property = {
   bedrooms: number | null;
   bathrooms: number | null;
   area: string | null;
+  variantBedrooms: number | null;
+  variantArea: string | null;
+  variantBedrooms2: number | null;
+  variantArea2: string | null;
   description: string | null;
   images: string[] | null;
   featured: boolean;
@@ -45,7 +49,7 @@ export default function PropertyCard({ property, index }: { property: Property; 
         <img
           src={coverImage}
           alt={property.title}
-          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+          className="w-full h-full object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-105"
         />
 
         {/* Subtle top gradient to ensure badge readability */}
@@ -89,24 +93,70 @@ export default function PropertyCard({ property, index }: { property: Property; 
         </div>
 
         {/* Amenities (Moved above divider for better structure) */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Bedrooms">
-            <Bed size={14} className="text-teal-forest" strokeWidth={2} />
-            <span>
-              {property.bedrooms && property.bedrooms > 0
-                ? `${property.bedrooms} BHK`
-                : "-- BHK"}
-            </span>
+        <div className="flex flex-col gap-2 mb-4">
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Bedrooms">
+              <Bed size={14} className="text-teal-forest" strokeWidth={2} />
+              <span>
+                {property.bedrooms && property.bedrooms > 0
+                  ? `${property.bedrooms} BHK`
+                  : "-- BHK"}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Carpet Area">
+              <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
+              <span>
+                {property.area
+                  ? `${property.area.replace(/sq\.?ft|sq\s*ft/gi, "").trim()} Carpet Area`
+                  : "-- Carpet Area"}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Square Footage">
-            <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
-            <span>
-              {property.area
-                ? `${property.area} sq.ft`
-                : "-- sq.ft"}
-            </span>
-          </div>
+          {(property.variantBedrooms || property.variantArea) && (
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Variant 1 Bedrooms">
+                <Bed size={14} className="text-teal-forest" strokeWidth={2} />
+                <span>
+                  {property.variantBedrooms && property.variantBedrooms > 0
+                    ? `${property.variantBedrooms} BHK`
+                    : "-- BHK"}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Variant 1 Carpet Area">
+                <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
+                <span>
+                  {property.variantArea
+                    ? `${property.variantArea.replace(/sq\.?ft|sq\s*ft/gi, "").trim()} Carpet Area`
+                    : "-- Carpet Area"}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {(property.variantBedrooms2 || property.variantArea2) && (
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Variant 2 Bedrooms">
+                <Bed size={14} className="text-teal-forest" strokeWidth={2} />
+                <span>
+                  {property.variantBedrooms2 && property.variantBedrooms2 > 0
+                    ? `${property.variantBedrooms2} BHK`
+                    : "-- BHK"}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold tracking-wide border border-slate-100" title="Variant 2 Carpet Area">
+                <Maximize size={14} className="text-teal-forest" strokeWidth={2} />
+                <span>
+                  {property.variantArea2
+                    ? `${property.variantArea2.replace(/sq\.?ft|sq\s*ft/gi, "").trim()} Carpet Area`
+                    : "-- Carpet Area"}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Elegant Divider */}

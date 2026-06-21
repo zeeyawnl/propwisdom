@@ -33,6 +33,14 @@ export const CreatePropertySchema = z.object({
 
   area: z.string().nullable().optional(),
 
+  variantBedrooms: z.number().int().min(0).nullable().optional(),
+
+  variantArea: z.string().nullable().optional(),
+
+  variantBedrooms2: z.number().int().min(0).nullable().optional(),
+
+  variantArea2: z.string().nullable().optional(),
+
   featured: z.boolean().optional().default(false),
 
   status: z
@@ -79,6 +87,10 @@ export const UpdatePropertySchema = z.object({
   bedrooms: z.number().int().min(0).nullable().optional(),
   bathrooms: z.number().int().min(0).nullable().optional(),
   area: z.string().nullable().optional(),
+  variantBedrooms: z.number().int().min(0).nullable().optional(),
+  variantArea: z.string().nullable().optional(),
+  variantBedrooms2: z.number().int().min(0).nullable().optional(),
+  variantArea2: z.string().nullable().optional(),
   featured: z.boolean().optional(),
   status: z.enum(["available", "sold"]).optional(),
   images: z.array(z.string().url("Each image must be a valid URL")).nullable().optional(),
