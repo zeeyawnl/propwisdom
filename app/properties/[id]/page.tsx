@@ -4,12 +4,86 @@ import Link from "next/link";
 import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Heart, Share2, Phone, MessageCircle } from "lucide-react";
 import ImageCarousel from "@/components/listings/ImageCarousel";
 import ShareButton from "@/components/listings/ShareButton";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const property = await getPropertyById(id);
+
+  if (!property) {
+    return {
+      title: "Property Not Found | PropWisdom",
+    };
+  }
+
+  const priceText = property.priceLabel || `₹${property.price.toLocaleString("en-IN")}`;
+  const bhkText = property.bedrooms ? `${property.bedrooms} BHK ` : "";
+  const title = `${property.title} - ${bhkText}in ${property.location} | Starting ${priceText} | PropWisdom`;
+
+  // Standardized description that matches user's request details using carpet area if available.
+  const areaText = property.area ? ` Carpet Area ${property.area.replace(/sq\.?ft|sq\s*ft/gi, "").trim()} sqft.` : "";
+  const bedroomsText = property.bedrooms ? ` a ${property.bedrooms} BHK` : "";
+  const segmentText = property.propertySegment ? ` ${property.propertySegment.toLowerCase()}` : " property";
+
+  // Truncate fallback property description if there is one, to avoid extremely long OG descriptions.
+  const rawDescription = property.description || "";
+  const cleanDescription = rawDescription.replace(/\s+/g, " ").trim();
+  const descriptionFallback = cleanDescription.length > 0 
+    ? (cleanDescription.length > 150 ? `${cleanDescription.slice(0, 150)}...` : cleanDescription)
+    : `${property.title} is${bedroomsText}${segmentText} in ${property.location}.${areaText} Available through PropWisdom.`;
+
+  const coverImage = property.images && property.images.length > 0
+    ? property.images[0]
+    : "/assets/images/legaladvisory.jpg";
+
+  const keywords = [
+    property.title,
+    property.location,
+    "Property in Pune",
+    "PropWisdom",
+  ];
+  if (property.bedrooms) {
+    keywords.push(`${property.bedrooms} BHK`);
+    keywords.push(`${property.bedrooms} BHK in ${property.location}`);
+  }
+  if (property.type) {
+    keywords.push(`${property.type} in ${property.location}`);
+  }
+
+  return {
+    title,
+    description: descriptionFallback,
+    keywords,
+    alternates: {
+      canonical: `https://propwisdom.in/properties/${property.id}`,
+    },
+    openGraph: {
+      title: `${property.title} | PropWisdom`,
+      description: descriptionFallback,
+      images: [
+        {
+          url: coverImage,
+          width: 1200,
+          height: 630,
+          alt: property.title,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${property.title} | PropWisdom`,
+      description: descriptionFallback,
+      images: [coverImage],
+    },
+  };
+}
 
 export default async function PropertyDetailPage({ params }: Props) {
   const { id } = await params;
@@ -23,8 +97,30 @@ export default async function PropertyDetailPage({ params }: Props) {
     ? property.images
     : ["/assets/images/legaladvisory.jpg"];
 
+  // JSON-LD Schema Markup
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": property.propertySegment === "COMMERCIAL" ? "Place" : "Residence",
+    "name": property.title,
+    "description": property.description?.slice(0, 160) || `${property.title} in ${property.location}`,
+    "image": allImages[0],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": property.location,
+      "addressRegion": "Maharashtra",
+      "addressCountry": "IN"
+    },
+    ...(property.bedrooms ? { "numberOfBedrooms": property.bedrooms } : {}),
+    ...(property.bathrooms ? { "numberOfBathrooms": property.bathrooms } : {}),
+  };
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] pt-24 md:pt-32 pb-24">
+      {/* Structured JSON-LD Schema for Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* 1. Minimalist Top Navigation */}
       <div className="bg-[#FAFAFA] pt-6 lg:pt-10 pb-8 relative z-20">
