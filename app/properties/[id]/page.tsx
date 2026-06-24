@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const priceText = property.priceLabel || `₹${property.price.toLocaleString("en-IN")}`;
   const bhkText = property.bedrooms ? `${property.bedrooms} BHK ` : "";
-  const title = `${property.title} - ${bhkText}in ${property.location} | Starting ${priceText} | PropWisdom`;
+  const title = `${property.title} - ${bhkText}in ${property.location} | Starting ${priceText} | PROPWisdom`;
 
   // Standardized description that matches user's request details using carpet area if available.
   const areaText = property.area ? ` Carpet Area ${property.area.replace(/sq\.?ft|sq\s*ft/gi, "").trim()} sqft.` : "";
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cleanDescription = rawDescription.replace(/\s+/g, " ").trim();
   const descriptionFallback = cleanDescription.length > 0 
     ? (cleanDescription.length > 150 ? `${cleanDescription.slice(0, 150)}...` : cleanDescription)
-    : `${property.title} is${bedroomsText}${segmentText} in ${property.location}.${areaText} Available through PropWisdom.`;
+    : `${property.title} is${bedroomsText}${segmentText} in ${property.location}.${areaText} Available through PROPWisdom.`;
 
   const coverImage = property.images && property.images.length > 0
     ? property.images[0]
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     property.title,
     property.location,
     "Property in Pune",
-    "PropWisdom",
+    "PROPWisdom",
   ];
   if (property.bedrooms) {
     keywords.push(`${property.bedrooms} BHK`);
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://propwisdom.in/properties/${property.id}`,
     },
     openGraph: {
-      title: `${property.title} | PropWisdom`,
+      title: `${property.title} | PROPWisdom`,
       description: descriptionFallback,
       images: [
         {
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${property.title} | PropWisdom`,
+      title: `${property.title} | PROPWisdom`,
       description: descriptionFallback,
       images: [coverImage],
     },

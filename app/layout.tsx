@@ -15,9 +15,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PropWisdom | Find Your Dream Property",
+  title: "PROPWisdom",
   description:
     "Verified listings, trusted deals, and expert guidance. Browse premium properties for buying, selling, and renting.",
+  openGraph: {
+    title: "PROPWisdom",
+    description: "Premium residential and commercial properties in Pune",
+    url: "https://propwisdom.in",
+    siteName: "PROPWisdom",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "PROPWisdom - Premium Properties in Pune",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PROPWisdom",
+    description: "Premium residential and commercial properties in Pune",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({

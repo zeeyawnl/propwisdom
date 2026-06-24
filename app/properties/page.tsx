@@ -9,9 +9,9 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Premium Property Collection in Pune | PropWisdom",
+  title: "Premium Property Collection in Pune | PROPWisdom",
   description: "Browse verified premium properties in Pune. Discover the finest residential, commercial, resale, rental, pre-leased properties and land plots.",
-  keywords: ["Properties in Pune", "Real Estate Pune", "Premium residential properties", "Commercial properties Pune", "PropWisdom"],
+  keywords: ["Properties in Pune", "Real Estate Pune", "Premium residential properties", "Commercial properties Pune", "PROPWisdom"],
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────

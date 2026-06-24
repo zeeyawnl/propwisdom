@@ -22,8 +22,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${config.title} | PropWisdom`,
-    description: `Discover the best ${config.title.toLowerCase()} carefully curated by PropWisdom.`,
+    title: `${config.title} | PROPWisdom`,
+    description: `Discover the best ${config.title.toLowerCase()} carefully curated by PROPWisdom.`,
   };
 }
 
