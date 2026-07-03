@@ -43,18 +43,40 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
+
+  // Client-side validation — mirrors server rules
+  function validate() {
+    const errs: { name?: string; phone?: string; email?: string } = {};
+    if (formData.name.trim().length < 2)
+      errs.name = "Please enter your full name (at least 2 characters).";
+    if (!/^\d{10}$/.test(formData.phone.replace(/\s+/g, "")))
+      errs.phone = "Please enter a valid 10-digit phone number.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()))
+      errs.email = "Please enter a valid email address.";
+    return errs;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setSubmitStatus("idle");
+    setStatusMessage("");
+
+    // Run client-side validation first
+    const errs = validate();
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+    setFieldErrors({});
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -62,13 +84,21 @@ export default function Contact() {
 
       if (data.success) {
         setSubmitStatus("success");
+        setStatusMessage(
+          data.message ??
+          "Thank you! Your requirements have been submitted successfully. Our team will get back to you shortly."
+        );
         setFormData({ name: "", phone: "", email: "", message: "" });
       } else {
         setSubmitStatus("error");
+        setStatusMessage(
+          data.error ??
+          "Something went wrong. Please try again or contact us directly."
+        );
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch {
       setSubmitStatus("error");
+      setStatusMessage("Unable to submit enquiry. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -104,8 +134,13 @@ export default function Contact() {
                     id="name"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                      if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
+                    className={`w-full bg-transparent border-b py-3 text-slate-900 font-light focus:outline-none transition-colors peer placeholder-transparent ${
+                      fieldErrors.name ? "border-red-400 focus:border-red-500" : "border-slate-300 focus:border-teal-forest"
+                    }`}
                     placeholder="Full Name"
                     disabled={isSubmitting}
                     suppressHydrationWarning
@@ -116,6 +151,9 @@ export default function Contact() {
                   >
                     Full Name
                   </label>
+                  {fieldErrors.name && (
+                    <p className="mt-1 text-xs text-red-500 font-light">{fieldErrors.name}</p>
+                  )}
                 </div>
 
                 <div className="relative group">
@@ -124,8 +162,13 @@ export default function Contact() {
                     id="phone"
                     required
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                    onChange={(e) => {
+                      setFormData({ ...formData, phone: e.target.value });
+                      if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: undefined }));
+                    }}
+                    className={`w-full bg-transparent border-b py-3 text-slate-900 font-light focus:outline-none transition-colors peer placeholder-transparent ${
+                      fieldErrors.phone ? "border-red-400 focus:border-red-500" : "border-slate-300 focus:border-teal-forest"
+                    }`}
                     placeholder="Phone Number"
                     disabled={isSubmitting}
                     suppressHydrationWarning
@@ -136,6 +179,9 @@ export default function Contact() {
                   >
                     Phone Number
                   </label>
+                  {fieldErrors.phone && (
+                    <p className="mt-1 text-xs text-red-500 font-light">{fieldErrors.phone}</p>
+                  )}
                 </div>
               </div>
 
@@ -145,8 +191,13 @@ export default function Contact() {
                   id="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent"
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                  }}
+                  className={`w-full bg-transparent border-b py-3 text-slate-900 font-light focus:outline-none transition-colors peer placeholder-transparent ${
+                    fieldErrors.email ? "border-red-400 focus:border-red-500" : "border-slate-300 focus:border-teal-forest"
+                  }`}
                   placeholder="Email Address"
                   disabled={isSubmitting}
                   suppressHydrationWarning
@@ -157,6 +208,9 @@ export default function Contact() {
                 >
                   Email Address
                 </label>
+                {fieldErrors.email && (
+                  <p className="mt-1 text-xs text-red-500 font-light">{fieldErrors.email}</p>
+                )}
               </div>
 
               <div className="relative group">
@@ -184,7 +238,7 @@ export default function Contact() {
                   animate={{ opacity: 1, y: 0 }}
                   className="p-4 bg-teal-50 border border-teal-200 text-teal-800 text-sm font-light rounded-2xl"
                 >
-                  Thank you! Your requirements have been submitted successfully. Our team will get back to you shortly.
+                  {statusMessage}
                 </motion.div>
               )}
 
@@ -194,7 +248,7 @@ export default function Contact() {
                   animate={{ opacity: 1, y: 0 }}
                   className="p-4 bg-red-50 border border-red-200 text-red-800 text-sm font-light rounded-2xl"
                 >
-                  Something went wrong. Please try again or contact us directly.
+                  {statusMessage}
                 </motion.div>
               )}
 

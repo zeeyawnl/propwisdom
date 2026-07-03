@@ -129,12 +129,22 @@ export async function getPropertiesSupabase(filters: PropertyQuery) {
   if (max) query = query.lte("price", max);
 
   // Apply sorting
+  // Always use featured → primary sort → created_at → id for stable, deterministic ordering.
+  // The created_at + id tiebreakers are essential when many rows share the same timestamp
+  // (e.g. bulk-imported properties).
   const offset = (page - 1) * limit;
+  const isByPrice = sort === "price_asc" || sort === "price_desc";
   query = query
     .order("featured", { ascending: false })
-    .order(sort === "price_asc" || sort === "price_desc" ? "price" : "created_at", {
-      ascending: sort === "price_asc",
-    })
+    .order(isByPrice ? "price" : "created_at", { ascending: sort === "price_asc" });
+
+  // For price sorts, add created_at as an additional stable tiebreaker
+  if (isByPrice) {
+    query = query.order("created_at", { ascending: false });
+  }
+
+  query = query
+    .order("id", { ascending: false })
     .range(offset, offset + limit - 1);
 
   const { data, error, count } = await query;

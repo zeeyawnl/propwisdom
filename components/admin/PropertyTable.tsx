@@ -11,7 +11,17 @@ const STATUS_COLOR: Record<string, string> = {
   RENTED: "bg-amber-100 text-amber-700 border-amber-200",
 };
 
-export default function PropertyTable({ properties }: { properties: Property[] }) {
+interface PropertyTableProps {
+  properties: Property[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export default function PropertyTable({ properties, pagination }: PropertyTableProps) {
   const router = useRouter();
   const [deleting, setDeleting] = useState<string | null>(null);
   const [toggling, setToggling] = useState<string | null>(null);
@@ -49,75 +59,102 @@ export default function PropertyTable({ properties }: { properties: Property[] }
 
   if (!properties.length) {
     return (
-      <div className="p-12 text-center text-slate-500 border-2 border-dashed border-slate-200 rounded-xl">
+      <div className="p-12 text-center text-slate-500 border-2 border-dashed border-slate-200 rounded-xl bg-white shadow-sm">
         No properties found. Add your first listing.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200">
-      <table className="w-full text-sm border-collapse">
-        <thead className="bg-slate-50 border-b border-slate-200">
-          <tr className="text-left font-semibold text-slate-700">
-            <th className="px-5 py-4">Title</th>
-            <th className="px-5 py-4">Location</th>
-            <th className="px-5 py-4">Display Price</th>
-            <th className="px-5 py-4">Actual Price</th>
-            <th className="px-5 py-4">Date Added</th>
-            <th className="px-5 py-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-600">
-          {properties.map((p) => (
-            <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
-              <td className="px-5 py-4 font-medium text-slate-900">{p.title ?? "Untitled"}</td>
-              <td className="px-5 py-4 text-slate-500 whitespace-nowrap">{p.location ?? "No location"}</td>
-              <td className="px-5 py-4 font-mono text-slate-900">
-                {p.priceLabel || `₹${(p.price ?? 0).toLocaleString("en-IN")}`}
-              </td>
-              <td className="px-5 py-4 font-mono text-teal-700 font-semibold bg-teal-50/50">
-                ₹{(p.price ?? 0).toLocaleString("en-IN")}
-              </td>
-              <td className="px-5 py-4 text-slate-500 whitespace-nowrap">
-                {p.createdAt ? new Date(p.createdAt).toLocaleDateString("en-IN", {
-                  day: "numeric", month: "short", year: "numeric"
-                }) : "N/A"}
-              </td>
-              <td className="px-5 py-4 text-right">
-                <div className="flex justify-end items-center gap-3">
-                  <Link 
-                    href={`/admin/properties/${p.id}/edit`}
-                    className="text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition-all"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => toggleFeatured(p.id, !!p.featured)}
-                    disabled={toggling === p.id}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
-                      p.featured 
-                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' 
-                      : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'
-                    }`}
-                  >
-                    {toggling === p.id ? "..." : p.featured ? "Featured" : "Boost"}
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    disabled={deleting === p.id}
-                    className="p-1 px-3 text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                  >
-                    {deleting === p.id ? "..." : "Delete"}
-                  </button>
-                </div>
-              </td>
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+      <div className="overflow-x-auto rounded-t-xl">
+        <table className="w-full text-sm border-collapse">
+          <thead className="bg-slate-50 border-b border-slate-200">
+            <tr className="text-left font-semibold text-slate-700">
+              <th className="px-5 py-4">Title</th>
+              <th className="px-5 py-4">Location</th>
+              <th className="px-5 py-4">Display Price</th>
+              <th className="px-5 py-4">Actual Price</th>
+              <th className="px-5 py-4">Date Added</th>
+              <th className="px-5 py-4 text-right">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-100 text-slate-600">
+            {properties.map((p) => (
+              <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
+                <td className="px-5 py-4 font-medium text-slate-900">{p.title ?? "Untitled"}</td>
+                <td className="px-5 py-4 text-slate-500 whitespace-nowrap">{p.location ?? "No location"}</td>
+                <td className="px-5 py-4 font-mono text-slate-900">
+                  {p.priceLabel || `₹${(p.price ?? 0).toLocaleString("en-IN")}`}
+                </td>
+                <td className="px-5 py-4 font-mono text-teal-700 font-semibold bg-teal-50/50">
+                  ₹{(p.price ?? 0).toLocaleString("en-IN")}
+                </td>
+                <td className="px-5 py-4 text-slate-500 whitespace-nowrap">
+                  {p.createdAt ? new Date(p.createdAt).toLocaleDateString("en-IN", {
+                    day: "numeric", month: "short", year: "numeric"
+                  }) : "N/A"}
+                </td>
+                <td className="px-5 py-4 text-right">
+                  <div className="flex justify-end items-center gap-3">
+                    <Link 
+                      href={`/admin/properties/${p.id}/edit`}
+                      className="text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition-all"
+                    >
+                      Edit
+                    </Link>
+
+                    <button
+                      onClick={() => toggleFeatured(p.id, !!p.featured)}
+                      disabled={toggling === p.id}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
+                        p.featured 
+                        ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100' 
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'
+                      }`}
+                    >
+                      {toggling === p.id ? "..." : p.featured ? "Featured" : "Boost"}
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(p.id)}
+                      disabled={deleting === p.id}
+                      className="p-1 px-3 text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                    >
+                      {deleting === p.id ? "..." : "Delete"}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between px-5 py-4 border-t border-slate-200 bg-slate-50 rounded-b-xl">
+        <div className="text-xs text-slate-500">
+          Showing <span className="font-medium text-slate-900">{pagination.total > 0 ? ((pagination.page - 1) * pagination.limit) + 1 : 0}</span> to{" "}
+          <span className="font-medium text-slate-900">{Math.min(pagination.page * pagination.limit, pagination.total)}</span> of{" "}
+          <span className="font-medium text-slate-900">{pagination.total}</span> properties
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push(`/admin/properties?page=${pagination.page - 1}`)}
+            disabled={pagination.page <= 1}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => router.push(`/admin/properties?page=${pagination.page + 1}`)}
+            disabled={pagination.page >= pagination.totalPages}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

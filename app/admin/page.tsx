@@ -1,28 +1,7 @@
-import Link from "next/link";
-import { getPropertiesSupabase } from "@/lib/supabase/queries";
-import PropertyTable from "@/components/admin/PropertyTable";
-import { type Property } from "@/lib/types/property";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function PropertiesPage() {
-  const { data: properties } = await getPropertiesSupabase({
-    page: 1,
-    limit: 100,
-    sort: "latest",
-  });
-
-  return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
-        <h1>Properties</h1>
-
-        <Link href="/admin/properties/add">
-          <button>+ Add Property</button>
-        </Link>
-      </div>
-
-      <PropertyTable properties={properties as Property[]} />
-    </div>
-  );
+export default function AdminPage() {
+  redirect("/admin/properties");
 }

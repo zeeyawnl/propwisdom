@@ -2,11 +2,23 @@ import PropertyTable from '@/components/admin/PropertyTable';
 import Link from 'next/link';
 import { getPropertiesSupabase } from "@/lib/supabase/queries";
 import { type Property } from "@/lib/types/property";
+
 export const dynamic = "force-dynamic";
-export default async function PropertiesAdminPage() {
-  const { data: properties } = await getPropertiesSupabase({
-    page: 1,
-    limit: 100,
+
+type Props = {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+};
+
+export default async function PropertiesAdminPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const rawPage = params.page ? parseInt(params.page, 10) : 1;
+  const page = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
+
+  const { data: properties, pagination } = await getPropertiesSupabase({
+    page,
+    limit: 25,
     sort: "latest"
   });
 
@@ -26,7 +38,10 @@ export default async function PropertiesAdminPage() {
         </Link>
       </div>
 
-      <PropertyTable properties={properties as Property[]} />
+      <PropertyTable 
+        properties={properties as Property[]} 
+        pagination={pagination}
+      />
     </div>
   );
 }

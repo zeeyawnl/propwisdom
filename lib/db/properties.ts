@@ -17,9 +17,9 @@ import { PROPERTY_CATEGORIES } from "@/config/property-categories";
 
 // ✅ SORT MAP (clean + scalable)
 const SORT_MAP = {
-  price_asc: [desc(properties.featured), asc(properties.price)],
-  price_desc: [desc(properties.featured), desc(properties.price)],
-  latest: [desc(properties.featured), desc(properties.createdAt)],
+  price_asc: [desc(properties.featured), asc(properties.price), desc(properties.id)],
+  price_desc: [desc(properties.featured), desc(properties.price), desc(properties.id)],
+  latest: [desc(properties.featured), desc(properties.createdAt), desc(properties.id)],
 } as const;
 
 /**
