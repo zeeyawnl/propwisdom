@@ -2,19 +2,24 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import PropertyCard from "@/components/listings/PropertyCard";
+import PropertyEnquiryForm from "@/components/listings/PropertyEnquiryForm";
+import { type Property } from "@/types/property";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function PropertySection({
   title,
   subtitle,
   properties,
-  id
+  id,
+  category,
+  categoryLabel,
 }: {
   title: React.ReactNode;
   subtitle?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  properties: any[];
+  properties: Property[];
   id?: string;
+  category?: string;
+  categoryLabel?: string;
 }) {
   const [visibleCount, setVisibleCount] = useState(10);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -125,8 +130,7 @@ export default function PropertySection({
           ref={scrollContainerRef}
           className="flex overflow-x-auto gap-6 md:gap-8 pb-10 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-6 lg:px-12 scroll-smooth"
         >
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {visibleProperties.map((property: any, idx: number) => (
+          {visibleProperties.map((property: Property, idx: number) => (
             <div key={property.id} className="w-[85vw] md:w-[420px] lg:w-[480px] snap-center shrink-0">
               <PropertyCard property={property} index={idx} />
             </div>
@@ -150,6 +154,15 @@ export default function PropertySection({
           )}
         </div>
       </div>
+
+      {/* ── Listing Enquiry Form ── */}
+      {category && categoryLabel && (
+        <PropertyEnquiryForm
+          category={category}
+          categoryLabel={categoryLabel}
+          variant="light"
+        />
+      )}
     </div>
   );
 }

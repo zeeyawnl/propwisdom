@@ -3,6 +3,7 @@ import { getProperties } from "@/lib/db/properties";
 import PropertySection from "@/components/listings/PropertySection";
 import PropertySearchBar from "@/components/listings/PropertySearchBar";
 import { PROPERTY_CATEGORIES } from "@/config/property-categories";
+import { type Property } from "@/types/property";
 import type { Metadata } from "next";
 
 // Make the route dynamic so it always fetches fresh data
@@ -50,17 +51,17 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const hasActiveSearch = !!(params.location || params.area || params.bedrooms || params.category || params.type || params.min || params.max);
   const sort = (params.sort as "price_asc" | "price_desc" | "latest") ?? "latest";
 
-  let allProperties: any[] = [];
-  let mandateProjects: any[] = [];
-  let newResidentialProjects: any[] = [];
-  let newCommercialProjects: any[] = [];
-  let upcomingProjects: any[] = [];
-  let resaleResidentialProjects: any[] = [];
-  let resaleCommercialProjects: any[] = [];
-  let rentalResidentialProjects: any[] = [];
-  let rentalCommercialProjects: any[] = [];
-  let preLeaseProperties: any[] = [];
-  let landPlots: any[] = [];
+  let allProperties: Property[] = [];
+  let mandateProjects: Property[] = [];
+  let newResidentialProjects: Property[] = [];
+  let newCommercialProjects: Property[] = [];
+  let upcomingProjects: Property[] = [];
+  let resaleResidentialProjects: Property[] = [];
+  let resaleCommercialProjects: Property[] = [];
+  let rentalResidentialProjects: Property[] = [];
+  let rentalCommercialProjects: Property[] = [];
+  let preLeaseProperties: Property[] = [];
+  let landPlots: Property[] = [];
 
   if (hasActiveSearch) {
     const result = await getProperties({
@@ -174,6 +175,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
           // ── Single results section for search mode ──
           <PropertySection
             id="search-results"
+            category={params.category && PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES] ? params.category : undefined}
+            categoryLabel={params.category && PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES] ? PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES].label : undefined}
             title={
               params.category && PROPERTY_CATEGORIES[params.category as keyof typeof PROPERTY_CATEGORIES] ? (
                 (() => {
@@ -204,6 +207,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 1. Mandate Projects */}
             <PropertySection
               id="mandate-projects"
+              category="MANDATE_PROJECTS"
+              categoryLabel="Mandate Projects"
               title={<>Mandate <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={mandateProjects}
             />
@@ -211,6 +216,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 2. New Residential Projects */}
             <PropertySection
               id="new-residential-projects"
+              category="NEW_RESIDENTIAL_PROJECTS"
+              categoryLabel="New Residential Projects"
               title={<>New Residential <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={newResidentialProjects}
             />
@@ -218,6 +225,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 3. New Commercial Projects */}
             <PropertySection
               id="new-commercial-projects"
+              category="NEW_COMMERCIAL_PROJECTS"
+              categoryLabel="New Commercial Projects"
               title={<>New Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={newCommercialProjects}
             />
@@ -225,6 +234,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 4. Upcoming Projects */}
             <PropertySection
               id="upcoming-projects"
+              category="UPCOMING_PROJECTS"
+              categoryLabel="Upcoming Projects"
               title={<>Upcoming <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={upcomingProjects}
             />
@@ -232,6 +243,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 5. Resale Residential Properties */}
             <PropertySection
               id="resale-residential-properties"
+              category="RESALE_RESIDENTIAL_PROJECTS"
+              categoryLabel="Resale Residential Properties"
               title={<>Resale Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={resaleResidentialProjects}
             />
@@ -239,6 +252,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 6. Resale Commercial Projects */}
             <PropertySection
               id="resale-commercial-projects"
+              category="RESALE_COMMERCIAL_PROJECTS"
+              categoryLabel="Resale Commercial Projects"
               title={<>Resale Commercial <span className="font-serif italic text-teal-forest">Projects.</span></>}
               properties={resaleCommercialProjects}
             />
@@ -246,6 +261,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 7. Rental Residential Properties */}
             <PropertySection
               id="rental-residential-properties"
+              category="RENTAL_RESIDENTIAL_PROJECTS"
+              categoryLabel="Rental Residential Properties"
               title={<>Rental Residential <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={rentalResidentialProjects}
             />
@@ -253,6 +270,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 8. Rental Commercial Properties */}
             <PropertySection
               id="rental-commercial-properties"
+              category="RENTAL_COMMERCIAL_PROJECTS"
+              categoryLabel="Rental Commercial Properties"
               title={<>Rental Commercial <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={rentalCommercialProjects}
             />
@@ -260,6 +279,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 9. Pre-lease Properties */}
             <PropertySection
               id="pre-lease-properties"
+              category="PRE_LEASE_PROPERTIES"
+              categoryLabel="Pre-lease Properties"
               title={<>Pre-lease <span className="font-serif italic text-teal-forest">Properties.</span></>}
               properties={preLeaseProperties}
             />
@@ -267,6 +288,8 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {/* 10. Land & Plots */}
             <PropertySection
               id="land-plots"
+              category="LAND_PLOTS"
+              categoryLabel="Land & Plots"
               title={<>Land & <span className="font-serif italic text-teal-forest">Plots.</span></>}
               properties={landPlots}
             />

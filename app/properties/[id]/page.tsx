@@ -1,9 +1,11 @@
 import { getPropertyById } from "@/lib/db/properties";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Heart, Share2, Phone, MessageCircle } from "lucide-react";
+import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Phone, MessageCircle } from "lucide-react";
 import ImageCarousel from "@/components/listings/ImageCarousel";
 import ShareButton from "@/components/listings/ShareButton";
+import PropertyEnquiryForm from "@/components/listings/PropertyEnquiryForm";
+import { getCategoryKeyFromProperty } from "@/lib/leads/mapping";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +94,14 @@ export default async function PropertyDetailPage({ params }: Props) {
   if (!property) {
     notFound();
   }
+
+  // Derive CRM category key server-side — never exposed to the client as raw values
+  const category = getCategoryKeyFromProperty({
+    listingType:     property.listingType,
+    propertySegment: property.propertySegment ?? null,
+    projectStatus:   property.projectStatus   ?? null,
+    type:            property.type            ?? null,
+  }) ?? "NEW_RESIDENTIAL_PROJECTS"; // safe fallback
 
   const allImages = property.images && property.images.length > 0
     ? property.images
@@ -232,33 +242,38 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <span className="text-vanilla-latte text-[10px] uppercase tracking-[0.3em] font-bold mb-2 block">
                   Private Viewing
                 </span>
-                <h3 className="text-3xl font-light mb-8">
+                <h3 className="text-3xl font-light mb-6">
                   Interested in <br />
                   <span className="font-serif italic text-vanilla-latte">this property?</span>
                 </h3>
 
-                <p className="text-white/70 font-light text-sm leading-relaxed mb-10">
-                  Connect with our dedicated real estate concierge to schedule a private tour or request the comprehensive property dossier.
-                </p>
+                {/* ── Enquiry Form ── */}
+                <PropertyEnquiryForm
+                  category={category}
+                  propertyName={property.title}
+                  variant="dark"
+                />
 
-                <div className="space-y-4">
+                {/* ── Direct contact CTAs ── */}
+                <div className="mt-8 space-y-3 border-t border-white/10 pt-8">
+                  <p className="text-white/50 text-[10px] uppercase tracking-widest font-bold mb-4">Or contact directly</p>
                   <a
                     href="tel:+918975123786"
-                    className="flex items-center justify-center gap-3 w-full py-4 bg-vanilla-latte text-teal-forest uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-white transition-colors shadow-sm"
+                    className="flex items-center justify-center gap-3 w-full py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white uppercase tracking-[0.2em] text-[11px] font-bold rounded-full transition-colors backdrop-blur-md"
                   >
-                    <Phone size={16} /> Call Expert
+                    <Phone size={14} /> Call Expert
                   </a>
                   <a
                     href={`https://wa.me/918975123786?text=${encodeURIComponent(`Hi, I am interested in ${property.title} located at ${property.location}. I would like to schedule a viewing or discuss more.`)}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-[#20bd5a] transition-colors shadow-sm"
+                    className="flex items-center justify-center gap-3 w-full py-3.5 bg-[#25D366] text-white uppercase tracking-[0.2em] text-[11px] font-bold rounded-full hover:bg-[#20bd5a] transition-colors shadow-sm"
                   >
-                    <MessageCircle size={16} /> Chat on WhatsApp
+                    <MessageCircle size={14} /> Chat on WhatsApp
                   </a>
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-white/10 flex items-center gap-4">
+                <div className="mt-8 pt-6 border-t border-white/10 flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-vanilla-latte/20 flex-shrink-0 bg-white/10">
                     <img src="/assets/images/imran.png" alt="Imran Khan" className="w-full h-full object-cover object-top" />
                   </div>
