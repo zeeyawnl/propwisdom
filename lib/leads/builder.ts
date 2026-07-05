@@ -53,7 +53,7 @@ export function buildPayload(
   const category   = input.category ?? "";
   const crmFields  = category ? getCrmFields(category) : null;
   const mappedPropertyFor = crmFields?.PropertyFor ?? "";
-  const Property = crmFields?.Property ?? "";
+  const derivedProperty = crmFields?.Property ?? "";
 
   // Map input.propertyFor dropdown values to the CRM values:
   // "Buy" -> "Buy"
@@ -76,16 +76,21 @@ export function buildPayload(
 
   const preferredLocation = input.preferredLocation ?? "";
   const budget            = input.budget ?? "";
-  const configuration     = input.configuration ?? "";
   const propertyName      = input.propertyName      ?? "";
+  const property          = input.property && input.property !== "Select" ? input.property : "";
+  const type              = input.type ?? "";
 
   const message = composeMessage([
     { label: "Preferred Location", value: preferredLocation },
     { label: "Budget",             value: budget },
     { label: "Property For",       value: input.propertyFor && input.propertyFor !== "Unknown" ? input.propertyFor : undefined },
-    { label: "Configuration",      value: configuration },
+    { label: "Property",           value: property || undefined },
+    { label: "Type",               value: type || undefined },
     input.message ?? "",
   ]);
+
+  // If explicit property is selected, use it. Otherwise fallback to the derived one.
+  const finalProperty = property || derivedProperty;
 
   return {
     FirstName:    firstName,
@@ -99,8 +104,8 @@ export function buildPayload(
     Project:      propertyName,
     Pincode:      "",
     PropertyFor,
-    Property,
-    PropertyType: configuration,
+    Property:     finalProperty,
+    PropertyType: type,
     Message:      message,
     LeadSource:   "Website",
     vendor_key:   vendorKey,

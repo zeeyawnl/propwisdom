@@ -29,7 +29,8 @@ interface FormState {
   preferredLocation: string;
   budget: string;
   propertyFor: string;
-  configuration: string;
+  property: string;
+  type: string;
   message: string;
 }
 
@@ -39,7 +40,8 @@ const emptyForm: FormState = {
   preferredLocation: "",
   budget: "",
   propertyFor: "Unknown",
-  configuration: "",
+  property: "Select",
+  type: "",
   message: "",
 };
 
@@ -273,7 +275,11 @@ export default function LeadForm({
 
   function setField(field: keyof FormState) {
     return (value: string) => {
-      setForm((prev) => ({ ...prev, [field]: value }));
+      if (field === "property") {
+        setForm((prev) => ({ ...prev, property: value, type: "" }));
+      } else {
+        setForm((prev) => ({ ...prev, [field]: value }));
+      }
       if (field === "name" || field === "phone") {
         setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
       }
@@ -309,7 +315,8 @@ export default function LeadForm({
           preferredLocation: form.preferredLocation,
           budget: form.budget,
           propertyFor: form.propertyFor,
-          configuration: form.configuration,
+          property: form.property,
+          type: form.type,
           message: form.message,
           ...(category ? { category } : {}),
           ...(propertyName ? { propertyName } : {}),
@@ -338,7 +345,20 @@ export default function LeadForm({
 
   // ─── Options Arrays ──────────────────────────────────────────────────────────
   const propertyForOptions = ["Unknown", "Buy", "Resale", "Need on Rent"];
-  const configurationOptions = ["", "1 BHK", "2 BHK", "3 BHK"];
+  const propertyOptions = ["Select", "Flat", "Commercial", "Bungalow / Rowhouse / Villa", "Plot"];
+
+  function getTypeOptions(property: string): string[] {
+    if (property === "Flat") {
+      return ["", "1 BHK", "2 BHK", "3 BHK"];
+    }
+    if (property === "Commercial") {
+      return ["", "Office", "Shop", "Showroom"];
+    }
+    return [];
+  }
+
+  const showType = form.property === "Flat" || form.property === "Commercial";
+  const typeOptions = getTypeOptions(form.property);
 
   // ─── Minimal variant (homepage contact section) ─────────────────────────────
   if (variant === "minimal") {
@@ -356,8 +376,15 @@ export default function LeadForm({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <MinimalSelect id="peq-min-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
-          <MinimalSelect id="peq-min-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
+          <MinimalSelect id="peq-min-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
         </div>
+
+        {showType && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <MinimalSelect id="peq-min-type" label="Type" value={form.type} onChange={setField("type")} disabled={isSubmitting} options={typeOptions} />
+            <div className="hidden md:block" />
+          </div>
+        )}
 
         <div className="relative group">
           <textarea
@@ -415,7 +442,7 @@ export default function LeadForm({
     );
   }
 
-  // ─── Dark variant ──────────────────────────────────────────────────────────
+  // ─── Dark variant (concierge sidebar card) ──────────────────────────────────
   if (variant === "dark") {
     return (
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
@@ -424,7 +451,10 @@ export default function LeadForm({
         <DarkInput id="peq-loc" label="Preferred Location" placeholder="Preferred location" value={form.preferredLocation} onChange={setField("preferredLocation")} disabled={isSubmitting} />
         <DarkInput id="peq-budget" label="Budget" placeholder="E.g., 50 Lakhs" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
         <DarkSelect id="peq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
-        <DarkSelect id="peq-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
+        <DarkSelect id="peq-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
+        {showType && (
+          <DarkSelect id="peq-type" label="Type" value={form.type} onChange={setField("type")} disabled={isSubmitting} options={typeOptions} />
+        )}
         <DarkInput id="peq-message" label="Requirements" placeholder={propertyName ? `I'm interested in ${propertyName}` : "Your message..."} value={form.message} onChange={setField("message")} disabled={isSubmitting} textarea />
 
         <AnimatePresence mode="wait">
@@ -497,13 +527,21 @@ export default function LeadForm({
                 <LightInput id="leq-budget" label="Budget" placeholder="E.g., 50 Lakhs" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
               </div>
 
-              {/* Row 3: Property For + Configuration */}
+              {/* Row 3: Property For + Property */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
                 <LightSelect id="leq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
-                <LightSelect id="leq-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
+                <LightSelect id="leq-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
               </div>
 
-              {/* Row 4: Requirements */}
+              {/* Row 4: Dynamic Type */}
+              {showType && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+                  <LightSelect id="leq-type" label="Type" value={form.type} onChange={setField("type")} disabled={isSubmitting} options={typeOptions} />
+                  <div className="hidden md:block" />
+                </div>
+              )}
+
+              {/* Row 5: Requirements */}
               <div className="flex flex-col gap-1.5 w-full">
                 <label htmlFor="leq-message" className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
                   Requirements
