@@ -208,7 +208,7 @@ export default function Footer() {
       {/* Bottom Copyright Bar */}
       <div className="relative w-full px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-white/40 border-t border-white/10 z-20 bg-teal-forest">
         <p>&copy; {new Date().getFullYear()} PropWisdom.</p>
-        <p>Designed for Excellence.</p>
+        <p>Designed by <a href="mailto:zeeya21.tech@gmail.com" className="hover:text-vanilla-latte transition-colors">zeeya21.tech@gmail.com</a>.</p>
       </div>
 
     </footer>

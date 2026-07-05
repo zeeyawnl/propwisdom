@@ -7,17 +7,18 @@ import { Send, Loader2 } from "lucide-react";
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface Props {
-  /** Category key from LEAD_CATEGORY_MAP — determines PropertyFor/Property server-side. */
-  category: string;
+  /** Optional category key — determines PropertyFor/Property server-side if provided. */
+  category?: string;
   /** Shown in the light variant heading: "Can't find the right {categoryLabel}?" */
   categoryLabel?: string;
   /** When set, the payload includes this as the CRM Project field. */
   propertyName?: string;
   /**
-   * "light" (default) — full 9-field split-panel form used on listing pages.
-   * "dark"            — compact 4-field form styled for the teal sticky card.
+   * "light"   — full split-panel form used on listing pages.
+   * "dark"    — compact form styled for the teal sticky card.
+   * "minimal" — form with bottom borders and floating labels for home/contact page.
    */
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "minimal";
 }
 
 // ─── Field state ──────────────────────────────────────────────────────────────
@@ -25,24 +26,26 @@ interface Props {
 interface FormState {
   name: string;
   phone: string;
-  email: string;
-  city: string;
-  location: string;
-  budgetMin: string;
-  budgetMax: string;
+  preferredLocation: string;
+  budget: string;
+  propertyFor: string;
   configuration: string;
   message: string;
 }
 
 const emptyForm: FormState = {
-  name: "", phone: "", email: "", city: "",
-  location: "", budgetMin: "", budgetMax: "", configuration: "", message: "",
+  name: "",
+  phone: "",
+  preferredLocation: "",
+  budget: "",
+  propertyFor: "Unknown",
+  configuration: "",
+  message: "",
 };
 
 interface FieldErrors {
   name?: string;
   phone?: string;
-  email?: string;
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -76,6 +79,38 @@ function LightInput({
           }`}
       />
       {error && <p className="mt-1 text-xs text-red-500 font-light">{error}</p>}
+    </div>
+  );
+}
+
+function LightSelect({
+  id, label, value, onChange, disabled, options,
+}: {
+  id: string; label: string;
+  value: string; onChange: (v: string) => void;
+  disabled?: boolean; options: string[];
+}) {
+  return (
+    <div className="flex flex-col gap-1.5 w-full relative">
+      <label htmlFor={id} className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className="w-full bg-slate-50/50 border border-slate-200 px-4 py-3.5 pr-8 text-sm text-slate-900 rounded-xl transition-all duration-300 outline-none font-light hover:border-slate-300 focus:bg-white focus:border-teal-forest focus:ring-2 focus:ring-teal-forest/10 appearance-none"
+        >
+          {options.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">▼</span>
+      </div>
     </div>
   );
 }
@@ -125,9 +160,106 @@ function DarkInput({
   );
 }
 
+function DarkSelect({
+  id, label, value, onChange, disabled, options,
+}: {
+  id: string; label: string;
+  value: string; onChange: (v: string) => void;
+  disabled?: boolean; options: string[];
+}) {
+  return (
+    <div className="flex flex-col gap-1.5 w-full relative">
+      <label htmlFor={id} className="text-[10px] uppercase tracking-widest font-bold text-white/40">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className="w-full bg-white/5 border border-white/10 px-4 py-3.5 pr-8 text-sm text-white rounded-xl transition-all duration-300 outline-none font-light hover:border-white/20 focus:border-vanilla-latte focus:bg-white/10 focus:ring-2 focus:ring-vanilla-latte/10 appearance-none"
+        >
+          {options.map((opt) => (
+            <option key={opt} value={opt} className="bg-slate-900 text-white">
+              {opt}
+            </option>
+          ))}
+        </select>
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40 text-xs">▼</span>
+      </div>
+    </div>
+  );
+}
+
+function MinimalInput({
+  id, type = "text", label, placeholder, value, onChange, disabled, error,
+}: {
+  id: string; type?: string; label: string; placeholder: string;
+  value: string; onChange: (v: string) => void;
+  disabled?: boolean; error?: string;
+}) {
+  return (
+    <div className="relative group w-full">
+      <input
+        type={type}
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full bg-transparent border-b py-3 text-slate-900 font-light focus:outline-none transition-colors peer placeholder-transparent ${
+          error ? "border-red-400 focus:border-red-500" : "border-slate-300 focus:border-teal-forest"
+        }`}
+        placeholder={placeholder}
+        disabled={disabled}
+        suppressHydrationWarning
+      />
+      <label
+        htmlFor={id}
+        className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+      >
+        {label}
+      </label>
+      {error && <p className="mt-1 text-xs text-red-500 font-light">{error}</p>}
+    </div>
+  );
+}
+
+function MinimalSelect({
+  id, label, value, onChange, disabled, options,
+}: {
+  id: string; label: string;
+  value: string; onChange: (v: string) => void;
+  disabled?: boolean; options: string[];
+}) {
+  return (
+    <div className="relative group w-full">
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        className="w-full bg-transparent border-b py-3 text-slate-900 font-light focus:outline-none transition-colors peer border-slate-300 focus:border-teal-forest appearance-none"
+      >
+        {options.map((opt) => (
+          <option key={opt} value={opt} className="bg-white text-slate-900">
+            {opt}
+          </option>
+        ))}
+      </select>
+      <span className="absolute right-2 top-4 pointer-events-none text-slate-400 text-xs">▼</span>
+      <label
+        htmlFor={id}
+        className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-focus:text-teal-forest"
+      >
+        {label}
+      </label>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function PropertyEnquiryForm({
+export default function LeadForm({
   category,
   categoryLabel = "property",
   propertyName,
@@ -142,7 +274,9 @@ export default function PropertyEnquiryForm({
   function setField(field: keyof FormState) {
     return (value: string) => {
       setForm((prev) => ({ ...prev, [field]: value }));
-      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+      if (field === "name" || field === "phone") {
+        setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+      }
     };
   }
 
@@ -152,8 +286,6 @@ export default function PropertyEnquiryForm({
       errs.name = "Please enter your full name (at least 2 characters).";
     if (!/^\d{10}$/.test(form.phone.replace(/\s+/g, "")))
       errs.phone = "Please enter a valid 10-digit phone number.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      errs.email = "Please enter a valid email address.";
     return errs;
   }
 
@@ -168,21 +300,19 @@ export default function PropertyEnquiryForm({
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/leads", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
           phone: form.phone,
-          email: form.email,
-          message: form.message,
-          category,
-          city: form.city,
-          location: form.location,
-          budgetMin: form.budgetMin,
-          budgetMax: form.budgetMax,
+          preferredLocation: form.preferredLocation,
+          budget: form.budget,
+          propertyFor: form.propertyFor,
           configuration: form.configuration,
-          propertyName: propertyName ?? "",
+          message: form.message,
+          ...(category ? { category } : {}),
+          ...(propertyName ? { propertyName } : {}),
         }),
       });
 
@@ -206,14 +336,96 @@ export default function PropertyEnquiryForm({
     }
   }
 
+  // ─── Options Arrays ──────────────────────────────────────────────────────────
+  const propertyForOptions = ["Unknown", "Buy", "Resale", "Need on Rent"];
+  const configurationOptions = ["", "1 BHK", "2 BHK", "3 BHK"];
+
+  // ─── Minimal variant (homepage contact section) ─────────────────────────────
+  if (variant === "minimal") {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <MinimalInput id="peq-min-name" label="Full Name *" placeholder="Full Name" value={form.name} onChange={setField("name")} disabled={isSubmitting} error={fieldErrors.name} />
+          <MinimalInput id="peq-min-phone" label="Phone Number *" placeholder="Phone Number" value={form.phone} onChange={setField("phone")} disabled={isSubmitting} error={fieldErrors.phone} type="tel" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <MinimalInput id="peq-min-loc" label="Preferred Location" placeholder="Preferred Location" value={form.preferredLocation} onChange={setField("preferredLocation")} disabled={isSubmitting} />
+          <MinimalInput id="peq-min-budget" label="Budget" placeholder="Budget" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <MinimalSelect id="peq-min-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
+          <MinimalSelect id="peq-min-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
+        </div>
+
+        <div className="relative group">
+          <textarea
+            id="peq-min-message"
+            rows={4}
+            value={form.message}
+            onChange={(e) => setField("message")(e.target.value)}
+            className="w-full bg-transparent border-b border-slate-300 py-3 text-slate-900 font-light focus:outline-none focus:border-teal-forest transition-colors peer placeholder-transparent resize-none"
+            placeholder="Tell us about your requirements..."
+            disabled={isSubmitting}
+          />
+          <label
+            htmlFor="peq-min-message"
+            className="absolute left-0 -top-5 text-[11px] uppercase tracking-widest text-slate-400 font-bold transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-focus:-top-5 peer-focus:text-[11px] peer-focus:tracking-widest peer-focus:font-bold peer-focus:text-teal-forest"
+          >
+            Requirements
+          </label>
+        </div>
+
+        {status === "success" && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-teal-50 border border-teal-200 text-teal-800 text-sm font-light rounded-2xl">
+            {statusMessage}
+          </motion.div>
+        )}
+
+        {status === "error" && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-red-50 border border-red-200 text-red-800 text-sm font-light rounded-2xl">
+            {statusMessage}
+          </motion.div>
+        )}
+
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            suppressHydrationWarning
+            className="group flex items-center gap-4 px-8 py-4 bg-teal-forest text-vanilla-latte uppercase text-[11px] tracking-[0.3em] font-bold hover:bg-teal-forest/90 transition-all rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <>
+                Submitting
+                <Loader2 size={14} className="animate-spin" />
+              </>
+            ) : (
+              <>
+                Submit
+                <Send size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+    );
+  }
+
   // ─── Dark variant ──────────────────────────────────────────────────────────
   if (variant === "dark") {
     return (
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-        <DarkInput id="peq-name" label="Full Name" placeholder="Your full name" value={form.name} onChange={setField("name")} disabled={isSubmitting} error={fieldErrors.name} />
-        <DarkInput id="peq-phone" label="Phone Number" placeholder="10-digit number" value={form.phone} onChange={setField("phone")} disabled={isSubmitting} error={fieldErrors.phone} type="tel" />
-        <DarkInput id="peq-email" label="Email Address" placeholder="Your email address" value={form.email} onChange={setField("email")} disabled={isSubmitting} error={fieldErrors.email} type="email" />
-        <DarkInput id="peq-message" label="Message" placeholder={propertyName ? `I'm interested in ${propertyName}` : "Your message..."} value={form.message} onChange={setField("message")} disabled={isSubmitting} textarea />
+        <DarkInput id="peq-name" label="Full Name *" placeholder="Your full name" value={form.name} onChange={setField("name")} disabled={isSubmitting} error={fieldErrors.name} />
+        <DarkInput id="peq-phone" label="Phone Number *" placeholder="10-digit number" value={form.phone} onChange={setField("phone")} disabled={isSubmitting} error={fieldErrors.phone} type="tel" />
+        <DarkInput id="peq-loc" label="Preferred Location" placeholder="Preferred location" value={form.preferredLocation} onChange={setField("preferredLocation")} disabled={isSubmitting} />
+        <DarkInput id="peq-budget" label="Budget" placeholder="E.g., 50 Lakhs" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
+        <DarkSelect id="peq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
+        <DarkSelect id="peq-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
+        <DarkInput id="peq-message" label="Requirements" placeholder={propertyName ? `I'm interested in ${propertyName}` : "Your message..."} value={form.message} onChange={setField("message")} disabled={isSubmitting} textarea />
 
         <AnimatePresence mode="wait">
           {status === "success" && (
@@ -275,32 +487,26 @@ export default function PropertyEnquiryForm({
 
               {/* Row 1: Name + Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                <LightInput id="leq-name" label="Full Name" placeholder="Your full name" value={form.name} onChange={setField("name")} disabled={isSubmitting} error={fieldErrors.name} />
-                <LightInput id="leq-phone" label="Phone Number" placeholder="10-digit number" value={form.phone} onChange={setField("phone")} disabled={isSubmitting} error={fieldErrors.phone} type="tel" />
+                <LightInput id="leq-name" label="Full Name *" placeholder="Your full name" value={form.name} onChange={setField("name")} disabled={isSubmitting} error={fieldErrors.name} />
+                <LightInput id="leq-phone" label="Phone Number *" placeholder="10-digit number" value={form.phone} onChange={setField("phone")} disabled={isSubmitting} error={fieldErrors.phone} type="tel" />
               </div>
 
-              {/* Row 2: Email */}
-              <LightInput id="leq-email" label="Email Address" placeholder="Your email address" value={form.email} onChange={setField("email")} disabled={isSubmitting} error={fieldErrors.email} type="email" />
-
-              {/* Row 3: City + Location */}
+              {/* Row 2: Location + Budget */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                <LightInput id="leq-city" label="Preferred City" placeholder="Preferred city" value={form.city} onChange={setField("city")} disabled={isSubmitting} />
-                <LightInput id="leq-location" label="Preferred Location" placeholder="Preferred location" value={form.location} onChange={setField("location")} disabled={isSubmitting} />
+                <LightInput id="leq-loc" label="Preferred Location" placeholder="Preferred location" value={form.preferredLocation} onChange={setField("preferredLocation")} disabled={isSubmitting} />
+                <LightInput id="leq-budget" label="Budget" placeholder="E.g., 50 Lakhs" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
               </div>
 
-              {/* Row 4: Budget Min + Budget Max */}
+              {/* Row 3: Property For + Configuration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                <LightInput id="leq-budget-min" label="Budget Min" placeholder="E.g., 50 Lakhs" value={form.budgetMin} onChange={setField("budgetMin")} disabled={isSubmitting} />
-                <LightInput id="leq-budget-max" label="Budget Max" placeholder="E.g., 1 Crore" value={form.budgetMax} onChange={setField("budgetMax")} disabled={isSubmitting} />
+                <LightSelect id="leq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
+                <LightSelect id="leq-config" label="Configuration" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} options={configurationOptions} />
               </div>
 
-              {/* Row 5: Configuration */}
-              <LightInput id="leq-config" label="Configuration" placeholder="E.g., 2 BHK, Office Space" value={form.configuration} onChange={setField("configuration")} disabled={isSubmitting} />
-
-              {/* Row 6: Message */}
+              {/* Row 4: Requirements */}
               <div className="flex flex-col gap-1.5 w-full">
                 <label htmlFor="leq-message" className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
-                  Additional Requirements
+                  Requirements
                 </label>
                 <textarea
                   id="leq-message"

@@ -200,6 +200,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             }
             subtitle={`${allProperties.length} propert${allProperties.length === 1 ? "y" : "ies"} found`}
             properties={allProperties}
+            showEnquiryForm={Boolean(params.category)}
           />
         ) : (
           // ── Regular view: 10 dedicated sections in display order ──

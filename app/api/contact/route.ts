@@ -3,8 +3,8 @@ import { leadSchema } from "@/lib/leads/schemas";
 import { buildPayload } from "@/lib/leads/builder";
 import { submitLead } from "@/lib/leads/service";
 
-// POST /api/leads
-// Legacy route kept for backward compatibility
+// POST /api/contact
+// Handles the new unified lead form payload
 
 export async function POST(req: Request) {
   try {
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const vendorKey = process.env.LEADPLUSS_VENDOR_KEY;
 
     if (!apiUrl || !vendorKey) {
-      console.error("[leads/route] LeadPluss env vars not set.");
+      console.error("[contact/route] LeadPluss env vars not set.");
       return NextResponse.json(
         { success: false, error: "Server configuration error." },
         { status: 500 }
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Internal server error";
-    console.error("[leads/route] Unexpected error:", error);
+    console.error("[contact/route] Unexpected error:", error);
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

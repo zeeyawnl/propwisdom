@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ChevronLeft, MapPin, Bed, Bath, Maximize, Calendar, Phone, MessageCircle } from "lucide-react";
 import ImageCarousel from "@/components/listings/ImageCarousel";
 import ShareButton from "@/components/listings/ShareButton";
-import PropertyEnquiryForm from "@/components/listings/PropertyEnquiryForm";
 import { getCategoryKeyFromProperty } from "@/lib/leads/mapping";
 import type { Metadata } from "next";
 
@@ -246,13 +245,6 @@ export default async function PropertyDetailPage({ params }: Props) {
                   Interested in <br />
                   <span className="font-serif italic text-vanilla-latte">this property?</span>
                 </h3>
-
-                {/* ── Enquiry Form ── */}
-                <PropertyEnquiryForm
-                  category={category}
-                  propertyName={property.title}
-                  variant="dark"
-                />
 
                 {/* ── Direct contact CTAs ── */}
                 <div className="mt-8 space-y-3 border-t border-white/10 pt-8">

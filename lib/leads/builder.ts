@@ -1,5 +1,5 @@
 import { getCrmFields } from "./mapping";
-import type { HomepageLeadInput, ListingLeadInput } from "./schemas";
+import type { LeadInput } from "./schemas";
 
 // ─── CRM payload type ─────────────────────────────────────────────────────────
 
@@ -32,11 +32,6 @@ function splitName(fullName: string): { firstName: string; lastName: string } {
   };
 }
 
-function buildBudgetString(min?: string, max?: string): string {
-  const parts = [min, max].filter(Boolean);
-  return parts.length > 0 ? parts.join(" – ") : "";
-}
-
 function composeMessage(parts: Array<{ label: string; value?: string } | string>): string {
   return parts
     .map((p) => (typeof p === "string" ? p : p.value ? `${p.label}: ${p.value}` : ""))
@@ -49,34 +44,46 @@ function composeMessage(parts: Array<{ label: string; value?: string } | string>
 // Accepts validated form data and a vendorKey (injected by the API route).
 
 export function buildPayload(
-  input: HomepageLeadInput | ListingLeadInput,
+  input: LeadInput,
   vendorKey: string
 ): CrmPayload {
   const { firstName, lastName } = splitName(input.name);
 
-  // Determine if this is a listing-context lead
-  const isListing = "category" in input;
-  const listing   = isListing ? (input as ListingLeadInput) : null;
+  // Derive CRM values from category mapping if category is provided
+  const category   = input.category ?? "";
+  const crmFields  = category ? getCrmFields(category) : null;
+  const mappedPropertyFor = crmFields?.PropertyFor ?? "";
+  const Property = crmFields?.Property ?? "";
 
-  // CRM classification — empty strings for general homepage enquiry
-  const crmFields      = listing ? getCrmFields(listing.category) : null;
-  const PropertyFor    = crmFields?.PropertyFor ?? "";
-  const Property       = crmFields?.Property    ?? "";
+  // Map input.propertyFor dropdown values to the CRM values:
+  // "Buy" -> "Buy"
+  // "Resale" -> "Resale"
+  // "Need on Rent" -> "NeedOnRent"
+  // "Unknown" -> ""
+  let PropertyFor = "";
+  if (input.propertyFor === "Buy") {
+    PropertyFor = "Buy";
+  } else if (input.propertyFor === "Resale") {
+    PropertyFor = "Resale";
+  } else if (input.propertyFor === "Need on Rent" || input.propertyFor === "NeedOnRent") {
+    PropertyFor = "NeedOnRent";
+  }
 
-  // Optional preference fields
-  const city          = listing?.city          ?? "";
-  const location      = listing?.location      ?? "";
-  const budgetMin     = listing?.budgetMin      ?? "";
-  const budgetMax     = listing?.budgetMax      ?? "";
-  const configuration = listing?.configuration  ?? "";
-  const propertyName  = listing?.propertyName   ?? "";
-  const budget        = buildBudgetString(budgetMin, budgetMax);
+  // If PropertyFor was "Unknown" or not selected, fall back to derived/mapped category PropertyFor
+  if (!PropertyFor) {
+    PropertyFor = mappedPropertyFor;
+  }
+
+  const preferredLocation = input.preferredLocation ?? "";
+  const budget            = input.budget ?? "";
+  const configuration     = input.configuration ?? "";
+  const propertyName      = input.propertyName      ?? "";
 
   const message = composeMessage([
-    { label: "City",          value: city          },
-    { label: "Location",      value: location      },
-    { label: "Budget",        value: budget        },
-    { label: "Configuration", value: configuration },
+    { label: "Preferred Location", value: preferredLocation },
+    { label: "Budget",             value: budget },
+    { label: "Property For",       value: input.propertyFor && input.propertyFor !== "Unknown" ? input.propertyFor : undefined },
+    { label: "Configuration",      value: configuration },
     input.message ?? "",
   ]);
 
@@ -85,10 +92,10 @@ export function buildPayload(
     LastName:     lastName,
     ISD:          null,
     Phone:        input.phone.replace(/\s+/g, ""),
-    EmailId:      input.email.trim(),
+    EmailId:      "", // Removed email completely
     State:        "",
-    City:         city,
-    Location:     location,
+    City:         "",
+    Location:     preferredLocation,
     Project:      propertyName,
     Pincode:      "",
     PropertyFor,

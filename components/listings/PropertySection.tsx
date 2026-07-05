@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import PropertyCard from "@/components/listings/PropertyCard";
-import PropertyEnquiryForm from "@/components/listings/PropertyEnquiryForm";
+import LeadForm from "@/components/listings/LeadForm";
 import { type Property } from "@/types/property";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -13,6 +14,7 @@ export default function PropertySection({
   id,
   category,
   categoryLabel,
+  showEnquiryForm = false,
 }: {
   title: React.ReactNode;
   subtitle?: string;
@@ -20,6 +22,7 @@ export default function PropertySection({
   id?: string;
   category?: string;
   categoryLabel?: string;
+  showEnquiryForm?: boolean;
 }) {
   const [visibleCount, setVisibleCount] = useState(10);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -76,9 +79,19 @@ export default function PropertySection({
         </div>
 
         <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-2 md:mt-0">
-          <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 whitespace-nowrap">
-            Showing <span className="text-teal-forest">{visibleProperties.length}</span> of {properties.length}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 whitespace-nowrap">
+              Showing <span className="text-teal-forest">{visibleProperties.length}</span> of {properties.length}
+            </p>
+            {category && (
+              <Link
+                href={`/properties?category=${category}`}
+                className="text-[10px] uppercase tracking-[0.2em] font-bold text-teal-forest hover:text-slate-900 border-b border-teal-forest/20 hover:border-slate-900/40 pb-0.5 transition-colors whitespace-nowrap"
+              >
+                View All
+              </Link>
+            )}
+          </div>
           <div className={`flex md:hidden items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-teal-forest transition-opacity duration-300 ${canScrollRight ? "opacity-100 animate-pulse" : "opacity-0 pointer-events-none"}`}>
             <span>Swipe</span>
             <ArrowRight size={14} />
@@ -156,8 +169,8 @@ export default function PropertySection({
       </div>
 
       {/* ── Listing Enquiry Form ── */}
-      {category && categoryLabel && (
-        <PropertyEnquiryForm
+      {showEnquiryForm && category && categoryLabel && (
+        <LeadForm
           category={category}
           categoryLabel={categoryLabel}
           variant="light"
