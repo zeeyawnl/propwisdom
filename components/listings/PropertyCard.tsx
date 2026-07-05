@@ -33,6 +33,10 @@ export default function PropertyCard({ property, index }: { property: Property; 
   const waMessage = `Hi, I am interested in ${property.title} located at ${property.location}. I would like to discuss more.`;
   const waUrl = `https://wa.me/918975123786?text=${encodeURIComponent(waMessage)}`;
 
+  const isResaleResidential = property.listingType === "SALE" && property.projectStatus === "RESALE" && property.propertySegment === "RESIDENTIAL";
+  const isRentalResidential = property.listingType === "RENTAL" && property.propertySegment === "RESIDENTIAL";
+  const shouldCover = isResaleResidential || isRentalResidential;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -49,7 +53,7 @@ export default function PropertyCard({ property, index }: { property: Property; 
         <img
           src={coverImage}
           alt={property.title}
-          className="w-full h-full object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+          className={`w-full h-full ${shouldCover ? "object-cover" : "object-contain"} transition-transform duration-[1.5s] ease-out group-hover:scale-105`}
         />
 
         {/* Subtle top gradient to ensure badge readability */}
