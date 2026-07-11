@@ -76,7 +76,8 @@ export function buildPayload(
 
   const preferredLocation = input.preferredLocation ?? "";
   const budget            = input.budget ?? "";
-  const propertyName      = input.propertyName      ?? "";
+  const propertyName      = input.propertyName ?? "";
+  const userProject       = input.project ?? "";
   const property          = input.property && input.property !== "Select" ? input.property : "";
   const type              = input.type ?? "";
 
@@ -92,6 +93,10 @@ export function buildPayload(
   // If explicit property is selected, use it. Otherwise fallback to the derived one.
   const finalProperty = property || derivedProperty;
 
+  // CRM Project field: listing-page propertyName takes top priority,
+  // then the user’s autocomplete selection, then nothing.
+  const finalProject = propertyName || userProject;
+
   return {
     FirstName:    firstName,
     LastName:     lastName,
@@ -101,7 +106,7 @@ export function buildPayload(
     State:        "",
     City:         "",
     Location:     preferredLocation,
-    Project:      propertyName,
+    Project:      finalProject,
     Pincode:      "",
     PropertyFor,
     Property:     finalProperty,

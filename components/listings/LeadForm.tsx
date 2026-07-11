@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2 } from "lucide-react";
+import ProjectAutocomplete from "@/components/forms/ProjectAutocomplete";
+import { projects } from "@/lib/projects";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -32,6 +34,7 @@ interface FormState {
   property: string;
   type: string;
   message: string;
+  project: string;
 }
 
 const emptyForm: FormState = {
@@ -43,6 +46,7 @@ const emptyForm: FormState = {
   property: "Select",
   type: "",
   message: "",
+  project: "",
 };
 
 interface FieldErrors {
@@ -318,6 +322,7 @@ export default function LeadForm({
           property: form.property,
           type: form.type,
           message: form.message,
+          project: form.project,
           ...(category ? { category } : {}),
           ...(propertyName ? { propertyName } : {}),
         }),
@@ -377,6 +382,18 @@ export default function LeadForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <MinimalSelect id="peq-min-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
           <MinimalSelect id="peq-min-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <ProjectAutocomplete
+            projects={projects}
+            value={form.project}
+            onChange={setField("project")}
+            placeholder="Search Project"
+            disabled={isSubmitting}
+            variant="minimal"
+          />
+          <div className="hidden md:block" />
         </div>
 
         {showType && (
@@ -452,6 +469,14 @@ export default function LeadForm({
         <DarkInput id="peq-budget" label="Budget" placeholder="E.g., 50 Lakhs" value={form.budget} onChange={setField("budget")} disabled={isSubmitting} />
         <DarkSelect id="peq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
         <DarkSelect id="peq-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
+        <ProjectAutocomplete
+          projects={projects}
+          value={form.project}
+          onChange={setField("project")}
+          placeholder="Search Project"
+          disabled={isSubmitting}
+          variant="dark"
+        />
         {showType && (
           <DarkSelect id="peq-type" label="Type" value={form.type} onChange={setField("type")} disabled={isSubmitting} options={typeOptions} />
         )}
@@ -531,6 +556,19 @@ export default function LeadForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
                 <LightSelect id="leq-for" label="Property For" value={form.propertyFor} onChange={setField("propertyFor")} disabled={isSubmitting} options={propertyForOptions} />
                 <LightSelect id="leq-prop" label="Property" value={form.property} onChange={setField("property")} disabled={isSubmitting} options={propertyOptions} />
+              </div>
+
+              {/* Row 3b: Project */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+                <ProjectAutocomplete
+                  projects={projects}
+                  value={form.project}
+                  onChange={setField("project")}
+                  placeholder="Search Project"
+                  disabled={isSubmitting}
+                  variant="light"
+                />
+                <div className="hidden md:block" />
               </div>
 
               {/* Row 4: Dynamic Type */}

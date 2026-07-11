@@ -23,6 +23,8 @@ export const leadSchema = z.object({
   message:           z.string().optional(),
   category:          z.string().optional(),
   propertyName:      z.string().optional(),
+  /** User-selected project from the autocomplete field on the enquiry form. */
+  project:           z.string().optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
